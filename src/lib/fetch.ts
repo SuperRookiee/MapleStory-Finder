@@ -58,7 +58,7 @@ export const GetWithParams =
     <T extends Record<string, string>>(handler: ParamHandler<T>) =>
         async (
             req: Request,
-            context: { params: Record<string, string> }
+            context: { params: Promise<Record<string, string>> }
         ): Promise<Response> => {
             try {
                 const url = new URL(req.url);
@@ -146,10 +146,14 @@ export const Patch =
 
 export const PatchWithParams =
     <T, P>(handler: (params: P, body: T) => Promise<unknown>) =>
-        async (req: Request, context: { params: P }): Promise<Response> => {
+        async (
+            req: Request,
+            context: { params: Promise<P> }
+        ): Promise<Response> => {
             try {
                 const body = (await req.json()) as T;
-                const result = await handler(context.params, body);
+                const params = await context.params;
+                const result = await handler(params, body);
 
                 if (isErrorResponse(result)) {
                     return NextResponse.json(result, {
