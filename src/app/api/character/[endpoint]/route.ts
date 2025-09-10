@@ -1,10 +1,11 @@
 import axios, { AxiosError } from "axios";
+import { NextRequest } from "next/server";
 import { GetWithParams } from "@/lib/fetch";
 import { Failed, Success } from "@/lib/message";
 
 export async function GET(
-    req: Request,
-    context: { params: { endpoint: string } }
+    req: NextRequest,
+    context: { params: Promise<{ endpoint: string }> }
 ) {
     const apiKey = req.headers.get("x-nxopen-api-key");
 
