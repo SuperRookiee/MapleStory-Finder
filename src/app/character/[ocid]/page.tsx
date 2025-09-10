@@ -35,6 +35,7 @@ export default function CharacterDetail({ params }: { params: Promise<{ ocid: st
         const load = async () => {
             try {
                 const [basic, popularity, stat, hyper, propensity, ability, itemEquip, cashEquip, symbolEquip, setEffect, beauty, android, pet, skill, linkSkill, vMatrix, hexaMatrix, hexaStat, dojang, otherStat, ring] = await Promise.all([
+
                     findCharacterBasic(ocid),
                     findCharacterPopularity(ocid),
                     findCharacterStat(ocid),
@@ -56,6 +57,8 @@ export default function CharacterDetail({ params }: { params: Promise<{ ocid: st
                     findCharacterDojang(ocid),
                     findCharacterOtherStat(ocid),
                     findCharacterRingExchange(ocid),
+                    findCharacterOtherStat(params.ocid),
+                    findCharacterRingExchange(params.ocid
                 ]);
                 setData({
                     basic,
@@ -85,7 +88,10 @@ export default function CharacterDetail({ params }: { params: Promise<{ ocid: st
             }
         };
         load();
+
     }, [ocid, router]);
+
+
 
     if (!data) return <div className="p-4">Loading...</div>;
 

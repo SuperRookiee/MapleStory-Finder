@@ -36,5 +36,5 @@ export async function GET(
         }
     });
 
-    return handler(req, context);
+    returrn handler(req, context);
 }
