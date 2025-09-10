@@ -4,10 +4,11 @@ type Handler<T> = (body: T) => Promise<unknown>;
 type ParamHandler<T> = (params: T) => Promise<unknown>;
 
 interface IErrorResponse {
-    options: ErrorOptions | undefined;
     error: {
         message: string;
     };
+    status?: number;
+    options?: ErrorOptions;
 }
 
 class CustomError extends Error {
@@ -37,25 +38,47 @@ export const Get =
                 const url = new URL(req.url);
                 const query = Object.fromEntries(url.searchParams.entries()) as unknown as T;
                 const result = await handler(query);
-                if (isErrorResponse(result)) throw new Error(result.error.message); // result에 error가 있으면 Error
-                return NextResponse.json(result);
+                if (isErrorResponse(result)) {
+                    return NextResponse.json(result, {
+                        status: result.status ?? 400,
+                    });
+                }
+                return NextResponse.json(result, {
+                    status: (result as { status?: number }).status ?? 200,
+                });
             } catch (error) {
-                return NextResponse.json({ error: { message: (error as Error).message } }, { status: 400 });
+                return NextResponse.json(
+                    { error: { message: (error as Error).message } },
+                    { status: 400 }
+                );
             }
         };
 
 export const GetWithParams =
     <T extends Record<string, string>>(handler: ParamHandler<T>) =>
-        async (req: Request, context: { params: Record<string, string> }): Promise<Response> => {
+        async (
+            req: Request,
+            context: { params: Record<string, string> }
+        ): Promise<Response> => {
             try {
                 const url = new URL(req.url);
                 const queryParams = Object.fromEntries(url.searchParams.entries());
                 const dynamicParams = await context.params; // params 추출
 
-                const result = await handler({ ...queryParams, ...dynamicParams } as T);
-                if (isErrorResponse(result)) throw new Error(result.error.message);
+                const result = await handler({
+                    ...queryParams,
+                    ...dynamicParams,
+                } as T);
 
-                return NextResponse.json(result);
+                if (isErrorResponse(result)) {
+                    return NextResponse.json(result, {
+                        status: result.status ?? 400,
+                    });
+                }
+
+                return NextResponse.json(result, {
+                    status: (result as { status?: number }).status ?? 200,
+                });
             } catch (error) {
                 return NextResponse.json(
                     { error: { message: (error as Error).message } },
@@ -71,22 +94,29 @@ export const Post =
                 const body = (await req.json()) as T;
                 const result = await handler(body);
                 if (isErrorResponse(result)) {
-                    const { error, options } = result as IErrorResponse;
-                    throw new CustomError(error.message, options);
+                    const { error, options, status } = result as IErrorResponse;
+                    throw new CustomError(error.message, { ...(options ?? {}), status });
                 }
-                return NextResponse.json(result);
+                return NextResponse.json(result, {
+                    status: (result as { status?: number }).status ?? 200,
+                });
             } catch (error) {
                 if (error instanceof CustomError) {
+                    const { status, ...options } =
+                        (error.data as { status?: number } & Record<string, unknown>) || {};
                     return NextResponse.json(
                         {
                             error: { message: error.message },
-                            options: error.data as object, // 여기서 options 안의 내용 포함시킴
+                            ...(Object.keys(options).length ? { options } : {}),
                         },
-                        { status: 400 }
+                        { status: typeof status === "number" ? status : 400 }
                     );
                 }
 
-                return NextResponse.json({ error: { message: (error as Error).message } }, { status: 400 });
+                return NextResponse.json(
+                    { error: { message: (error as Error).message } },
+                    { status: 400 }
+                );
             }
         };
 
@@ -97,11 +127,20 @@ export const Patch =
                 const body = (await req.json()) as T;
                 const result = await handler(body);
 
-                if (isErrorResponse(result)) throw new Error(result.error.message);
+                if (isErrorResponse(result)) {
+                    return NextResponse.json(result, {
+                        status: result.status ?? 400,
+                    });
+                }
 
-                return NextResponse.json(result);
+                return NextResponse.json(result, {
+                    status: (result as { status?: number }).status ?? 200,
+                });
             } catch (error) {
-                return NextResponse.json({ error: { message: (error as Error).message } }, { status: 400 });
+                return NextResponse.json(
+                    { error: { message: (error as Error).message } },
+                    { status: 400 }
+                );
             }
         };
 
@@ -112,11 +151,20 @@ export const PatchWithParams =
                 const body = (await req.json()) as T;
                 const result = await handler(context.params, body);
 
-                if (isErrorResponse(result)) throw new Error(result.error.message);
+                if (isErrorResponse(result)) {
+                    return NextResponse.json(result, {
+                        status: result.status ?? 400,
+                    });
+                }
 
-                return NextResponse.json(result);
+                return NextResponse.json(result, {
+                    status: (result as { status?: number }).status ?? 200,
+                });
             } catch (error) {
-                return NextResponse.json({ error: { message: (error as Error).message } }, { status: 400 });
+                return NextResponse.json(
+                    { error: { message: (error as Error).message } },
+                    { status: 400 }
+                );
             }
         };
 
@@ -127,11 +175,20 @@ export const Delete =
                 const body = (await req.json()) as T;
                 const result = await handler(body);
 
-                if (isErrorResponse(result)) throw new Error(result.error.message);
+                if (isErrorResponse(result)) {
+                    return NextResponse.json(result, {
+                        status: result.status ?? 400,
+                    });
+                }
 
-                return NextResponse.json(result);
+                return NextResponse.json(result, {
+                    status: (result as { status?: number }).status ?? 200,
+                });
             } catch (error) {
-                return NextResponse.json({ error: { message: (error as Error).message } }, { status: 400 });
+                return NextResponse.json(
+                    { error: { message: (error as Error).message } },
+                    { status: 400 }
+                );
             }
         };
 

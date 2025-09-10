@@ -5,8 +5,15 @@ import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
 import { useApiKeyStore } from "@/store/apiKeyStore"
 import { toast } from "sonner"
-import { findCharacterList } from "@/fetch/character.fetch"
+import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch"
 import CharacterCard from "@/components/character-card"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 interface CharacterSummary {
     ocid: string
@@ -14,12 +21,14 @@ interface CharacterSummary {
     world_name: string
     character_class: string
     character_level: number
+    image?: string
 }
 
 export default function Home() {
     const router = useRouter()
     const setApiKey = useApiKeyStore((s) => s.setApiKey)
     const [characters, setCharacters] = useState<CharacterSummary[]>([])
+    const [displayCharacters, setDisplayCharacters] = useState<CharacterSummary[]>([])
     const [worldFilter, setWorldFilter] = useState("전체월드")
 
     useEffect(() => {
@@ -37,7 +46,8 @@ export default function Home() {
 
             try {
                 findCharacterList().then(data => {
-                    setCharacters(data.characters)
+                    const sorted = data.characters.sort((a, b) => b.character_level - a.character_level)
+                    setCharacters(sorted)
                 });
             } catch (err: unknown) {
                 if (err instanceof Error) {
@@ -49,25 +59,38 @@ export default function Home() {
         load()
     }, [router, setApiKey])
 
+    useEffect(() => {
+        const filtered = characters.filter(c => worldFilter === "전체월드" || c.world_name === worldFilter)
+        Promise.all(
+            filtered.map(async c => {
+                try {
+                    const data = await findCharacterBasic(c.ocid)
+                    return { ...c, image: data.character_image }
+                } catch {
+                    return c
+                }
+            })
+        ).then(setDisplayCharacters)
+    }, [characters, worldFilter])
+
     const worlds = ["전체월드", ...Array.from(new Set(characters.map(c => c.world_name)))]
 
     return (
         <div className="p-4">
-            <select
-                value={worldFilter}
-                onChange={(e) => setWorldFilter(e.target.value)}
-                className="mb-4 rounded border p-2"
-            >
-                {worlds.map(world => (
-                    <option key={world} value={world}>{world}</option>
-                ))}
-            </select>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {characters
-                    .filter(c => worldFilter === "전체월드" || c.world_name === worldFilter)
-                    .map((c) => (
-                        <CharacterCard key={c.ocid} character={c} />
+            <Select value={worldFilter} onValueChange={setWorldFilter}>
+                <SelectTrigger className="mb-4 w-[180px]">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                    {worlds.map(world => (
+                        <SelectItem key={world} value={world}>{world}</SelectItem>
                     ))}
+                </SelectContent>
+            </Select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {displayCharacters.map((c) => (
+                    <CharacterCard key={c.ocid} character={c} />
+                ))}
             </div>
         </div>
     )
