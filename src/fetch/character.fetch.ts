@@ -1,8 +1,8 @@
 import axios from "axios";
-import { useApiKeyStore } from "@/store/apiKeyStore";
+import { useUserStore } from "@/store/userStore";
 
 export const findCharacterList = async () => {
-    const apiKey = useApiKeyStore.getState().apiKey;
+    const apiKey = useUserStore.getState().user.apiKey;
     const response = await axios.get(`/api/character/list`, {
         headers: { "x-nxopen-api-key": apiKey ?? "" },
     });
@@ -13,7 +13,7 @@ const callCharacterApi = async (
     endpoint: string,
     params: Record<string, string>
 ) => {
-    const apiKey = useApiKeyStore.getState().apiKey;
+    const apiKey = useUserStore.getState().user.apiKey;
     const response = await axios.get(`/api/character/${endpoint}`, {
         headers: { "x-nxopen-api-key": apiKey ?? "" },
         params,

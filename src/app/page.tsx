@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/supabaseClient"
-import { useApiKeyStore } from "@/store/apiKeyStore"
+import { useUserStore } from "@/store/userStore"
 import { toast } from "sonner"
 import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch"
 import CharacterCard from "@/components/character-card"
@@ -26,7 +26,7 @@ interface CharacterSummary {
 
 export default function Home() {
     const router = useRouter()
-    const setApiKey = useApiKeyStore((s) => s.setApiKey)
+    const setApiKey = useUserStore((s) => s.setApiKey)
     const [characters, setCharacters] = useState<CharacterSummary[]>([])
     const [displayCharacters, setDisplayCharacters] = useState<CharacterSummary[]>([])
     const [worldFilter, setWorldFilter] = useState("전체월드")

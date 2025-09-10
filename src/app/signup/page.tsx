@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { useApiKeyStore } from '@/store/apiKeyStore';
+import { useUserStore } from '@/store/userStore';
 import { Button } from '@/component/ui/button';
 import { Input } from '@/component/ui/input';
 import { Label } from '@/component/ui/label';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 export default function SignUpPage() {
   const router = useRouter();
-  const setApiKey = useApiKeyStore((s) => s.setApiKey);
+  const setApiKey = useUserStore((s) => s.setApiKey);
   const [form, setForm] = useState({ email: '', password: '', apiKey: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
