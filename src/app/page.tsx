@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { useApiKeyStore } from '@/store/apiKeyStore';
 import { Card } from '@/components/ui/card';
 import { api } from '@/lib/api';
+import { toast } from 'sonner';
 
 interface Character {
   character_name: string;
@@ -38,6 +39,7 @@ export default function Home() {
         setCharacters(res.map((r) => r.data as Character));
       } catch (err) {
         console.error(err);
+        toast.error('Failed to load characters');
       }
     });
   }, [router, setApiKey]);

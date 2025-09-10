@@ -8,6 +8,7 @@ import { useApiKeyStore } from '@/store/apiKeyStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function SignInPage() {
       password: form.password,
     });
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
     const apiKey = data.user?.user_metadata?.nexon_api_key;
