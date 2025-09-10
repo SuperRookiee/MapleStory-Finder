@@ -46,7 +46,8 @@ export default function Home() {
 
             try {
                 findCharacterList().then(data => {
-                    setCharacters(data.characters)
+                    const sorted = data.characters.sort((a, b) => b.character_level - a.character_level)
+                    setCharacters(sorted)
                 });
             } catch (err: unknown) {
                 if (err instanceof Error) {

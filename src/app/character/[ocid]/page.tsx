@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     findCharacterBasic,
@@ -26,7 +26,8 @@ import {
     findCharacterRingExchange,
 } from "@/fetch/character.fetch";
 
-export default function CharacterDetail({ params }: { params: { ocid: string } }) {
+export default function CharacterDetail({ params }: { params: Promise<{ ocid: string }> }) {
+    const { ocid } = React.use(params);
     const router = useRouter();
     const [data, setData] = useState<Record<string, unknown> | null>(null);
 
@@ -34,27 +35,30 @@ export default function CharacterDetail({ params }: { params: { ocid: string } }
         const load = async () => {
             try {
                 const [basic, popularity, stat, hyper, propensity, ability, itemEquip, cashEquip, symbolEquip, setEffect, beauty, android, pet, skill, linkSkill, vMatrix, hexaMatrix, hexaStat, dojang, otherStat, ring] = await Promise.all([
-                    findCharacterBasic(params.ocid),
-                    findCharacterPopularity(params.ocid),
-                    findCharacterStat(params.ocid),
-                    findCharacterHyperStat(params.ocid),
-                    findCharacterPropensity(params.ocid),
-                    findCharacterAbility(params.ocid),
-                    findCharacterItemEquipment(params.ocid),
-                    findCharacterCashItemEquipment(params.ocid),
-                    findCharacterSymbolEquipment(params.ocid),
-                    findCharacterSetEffect(params.ocid),
-                    findCharacterBeautyEquipment(params.ocid),
-                    findCharacterAndroidEquipment(params.ocid),
-                    findCharacterPetEquipment(params.ocid),
-                    findCharacterSkill(params.ocid),
-                    findCharacterLinkSkill(params.ocid),
-                    findCharacterVMatrix(params.ocid),
-                    findCharacterHexaMatrix(params.ocid),
-                    findCharacterHexaMatrixStat(params.ocid),
-                    findCharacterDojang(params.ocid),
+
+                    findCharacterBasic(ocid),
+                    findCharacterPopularity(ocid),
+                    findCharacterStat(ocid),
+                    findCharacterHyperStat(ocid),
+                    findCharacterPropensity(ocid),
+                    findCharacterAbility(ocid),
+                    findCharacterItemEquipment(ocid),
+                    findCharacterCashItemEquipment(ocid),
+                    findCharacterSymbolEquipment(ocid),
+                    findCharacterSetEffect(ocid),
+                    findCharacterBeautyEquipment(ocid),
+                    findCharacterAndroidEquipment(ocid),
+                    findCharacterPetEquipment(ocid),
+                    findCharacterSkill(ocid),
+                    findCharacterLinkSkill(ocid),
+                    findCharacterVMatrix(ocid),
+                    findCharacterHexaMatrix(ocid),
+                    findCharacterHexaMatrixStat(ocid),
+                    findCharacterDojang(ocid),
+                    findCharacterOtherStat(ocid),
+                    findCharacterRingExchange(ocid),
                     findCharacterOtherStat(params.ocid),
-                    findCharacterRingExchange(params.ocid),
+                    findCharacterRingExchange(params.ocid
                 ]);
                 setData({
                     basic,
@@ -84,7 +88,10 @@ export default function CharacterDetail({ params }: { params: { ocid: string } }
             }
         };
         load();
-    }, [params.ocid, router]);
+
+    }, [ocid, router]);
+
+
 
     if (!data) return <div className="p-4">Loading...</div>;
 
