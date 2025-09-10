@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import { useApiKeyStore } from '@/store/apiKeyStore';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/component/ui/button';
+import { Input } from '@/component/ui/input';
+import { Label } from '@/component/ui/label';
 import { toast } from 'sonner';
 
 export default function SignUpPage() {
