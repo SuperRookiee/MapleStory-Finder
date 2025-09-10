@@ -45,10 +45,13 @@ export default function Home() {
             if (key) setApiKey(key)
 
             try {
-                findCharacterList().then(data => {
-                    const sorted = data.characters.sort((a, b) => b.character_level - a.character_level)
+                findCharacterList().then((data: { characters: CharacterSummary[] }) => {
+                    const sorted = data.characters.sort(
+                        (a: CharacterSummary, b: CharacterSummary) =>
+                            b.character_level - a.character_level
+                    )
                     setCharacters(sorted)
-                });
+                })
             } catch (err: unknown) {
                 if (err instanceof Error) {
                     toast.error(err.message)
