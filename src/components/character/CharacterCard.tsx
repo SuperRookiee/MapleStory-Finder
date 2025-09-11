@@ -1,10 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { Button } from "@/components/ui/button";
 import { ICharacterSummary } from "@/interface/ICharacterSummary";
 
@@ -21,38 +19,10 @@ const CharacterCard = ({
     onToggleFavorite,
     onSelect,
 }: ICharacterCardProps) => {
-    const [image, setImage] = useState<string | null>(character.image ?? null);
-    const ref = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!ref.current || image) return;
-
-        const observer = new IntersectionObserver(
-            async ([entry], obs) => {
-                if (entry.isIntersecting) {
-                    try {
-                        const data = await findCharacterBasic(character.ocid);
-                        setImage(data.character_image);
-                    } catch {
-                        // ignore
-                    } finally {
-                        obs.disconnect();
-                    }
-                }
-            },
-            { threshold: 0.25, rootMargin: "200px" }
-        );
-
-        observer.observe(ref.current);
-
-        return () => observer.disconnect();
-    }, [character.ocid, image]);
-
     return (
         <Card
             className={`p-4 flex flex-col relative w-full ${onSelect ? "cursor-pointer" : ""}`}
             onClick={onSelect}
-            ref={ref}
         >
             {/* 즐겨찾기 버튼 */}
             <div className="absolute top-2 right-2 z-10">
@@ -70,9 +40,9 @@ const CharacterCard = ({
 
             {/* 캐릭터 이미지 */}
             <div className="relative w-full aspect-[4/3] mb-4">
-                {image && (
+                {character.image && (
                     <Image
-                        src={image}
+                        src={character.image}
                         alt={character.character_name}
                         className="object-contain"
                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
