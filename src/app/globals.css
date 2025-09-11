@@ -7,7 +7,8 @@
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+      --font-mono: var(--font-geist-mono);
+      --font-maplestory: var(--font-maplestory);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,6 +46,7 @@
 
 :root {
     --radius: 0.65rem;
+    --header-height: 3rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --card: oklch(1 0 0);

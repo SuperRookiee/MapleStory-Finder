@@ -19,12 +19,12 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
 
   return (
-      <main className="flex flex-col h-screen">
-          <Header />
-          <main className="flex-1 p-4 overflow-hidden" style={{ height: 'calc(100vh - 3rem)' }}>
-              {children}
-          </main>
-      </main>
+        <main className="flex flex-col h-screen">
+            <Header />
+            <main className="flex-1 p-4 overflow-hidden h-[calc(100vh-var(--header-height))]">
+                {children}
+            </main>
+        </main>
   );
 };
 

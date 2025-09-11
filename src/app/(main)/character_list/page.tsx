@@ -5,8 +5,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { findCharacterList } from "@/fetchs/character.fetch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
-import { addFavorite, getFavorites, removeFavorite, } from "@/fetchs/favorite.fetch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
 import CharacterCell from "@/components/Character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -91,7 +91,7 @@ const CharacterList = () => {
     const worlds = ["전체월드", ...Array.from(new Set(characters.map((c) => c.world_name)))];
 
     return (
-        <>
+        <div className="flex h-[calc(100vh-var(--header-height))] flex-col">
             {/* 서버 선택 */}
             <Select value={worldFilter} onValueChange={setWorldFilter}>
                 <SelectTrigger className="mb-4 w-[180px]">
@@ -107,14 +107,14 @@ const CharacterList = () => {
             </Select>
 
             {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                     {Array.from({ length: 6 }).map((_, i) => (
                         <CharacterCardSkeleton key={i} />
                     ))}
                 </div>
             ) : (
-                <ScrollArea className="w-full h-5/6 rounded-md border p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <ScrollArea className="w-full flex-1 rounded-md border p-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                         {displayCharacters.map((character) => (
                             <CharacterCell
                                 key={character.ocid}
@@ -126,7 +126,7 @@ const CharacterList = () => {
                     </div>
                 </ScrollArea>
             )}
-        </>
+        </div>
     );
 };
 
