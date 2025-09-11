@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, unstable_ViewTransition as ViewTransition } from 'react';
 import Image from 'next/image';
 import {
   findCharacterBasic,
@@ -117,8 +117,9 @@ export default function CharacterDetail({ ocid }: { ocid: string }) {
 
   const basic = data.basic as CharacterBasic;
 
-  return (
-    <div className="p-4 space-y-6">
+    return (
+      <ViewTransition enter="fade" exit="fade">
+      <div className="p-4 space-y-6">
       {basic?.character_image && (
         <div className="relative w-64 h-64 mx-auto">
           <Image
@@ -139,6 +140,7 @@ export default function CharacterDetail({ ocid }: { ocid: string }) {
           </pre>
         </section>
       ))}
-    </div>
-  );
-}
+      </div>
+      </ViewTransition>
+    );
+  }
