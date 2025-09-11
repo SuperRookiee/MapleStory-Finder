@@ -18,6 +18,7 @@ import { Menu } from "lucide-react";
 
 export default function Header() {
   const pathname = usePathname();
+
   const [email, setEmail] = useState<string | null>(null);
   const router = useRouter();
   const setUser = useUserStore((s) => s.setUser);
