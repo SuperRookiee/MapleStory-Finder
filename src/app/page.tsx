@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabaseClient"
 import { useUserStore } from "@/store/userStore"
 import { toast } from "sonner"
 import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch"
-import CharacterCard from "@/components/character-card"
+import CharacterCard from "@/components/characterCard"
 import {
     Select,
     SelectContent,
@@ -37,7 +37,7 @@ export default function Home() {
             const session = data.session
 
             if (!session) {
-                router.push("/signin")
+                router.push("/sign_in")
                 return
             }
 

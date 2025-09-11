@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import { useUserStore } from '@/store/userStore';
-import { Button } from '@/component/ui/button';
-import { Input } from '@/component/ui/input';
-import { Label } from '@/component/ui/label';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
 export default function SignInPage() {
@@ -78,7 +78,7 @@ export default function SignInPage() {
           </Button>
           <p className="text-sm text-center">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline">
+            <Link href="/sign_up" className="underline">
               Sign up
             </Link>
           </p>
