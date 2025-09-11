@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { findCharacterBasic } from "@/fetch/character.fetch";
+import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { Button } from "@/components/ui/button";
 
 interface CharacterSummary {

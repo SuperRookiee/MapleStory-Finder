@@ -1,30 +1,8 @@
 'use client'
 
-import React, { useEffect, useState, unstable_ViewTransition as ViewTransition } from 'react';
+import React, { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import Image from 'next/image';
-import {
-    findCharacterBasic,
-    findCharacterPopularity,
-    findCharacterStat,
-    findCharacterHyperStat,
-    findCharacterPropensity,
-    findCharacterAbility,
-    findCharacterItemEquipment,
-    findCharacterCashItemEquipment,
-    findCharacterSymbolEquipment,
-    findCharacterSetEffect,
-    findCharacterBeautyEquipment,
-    findCharacterAndroidEquipment,
-    findCharacterPetEquipment,
-    findCharacterSkill,
-    findCharacterLinkSkill,
-    findCharacterVMatrix,
-    findCharacterHexaMatrix,
-    findCharacterHexaMatrixStat,
-    findCharacterDojang,
-    findCharacterOtherStat,
-    findCharacterRingExchange,
-} from '@/fetch/character.fetch';
+import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { Spinner } from '@/components/ui/spinner';
 
 interface CharacterBasic {

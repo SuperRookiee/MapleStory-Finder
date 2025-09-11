@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect, useState, unstable_ViewTransition as ViewTransition } from "react";
+import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import CharacterCard from "@/components/Character/CharacterCard";
 import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
 import { Button } from "@/components/ui/button";
-import { findCharacterBasic } from "@/fetch/character.fetch";
-import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
+import { findCharacterBasic } from "@/fetchs/character.fetch";
+import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 
 interface ICharacterSummary {
     ocid: string;

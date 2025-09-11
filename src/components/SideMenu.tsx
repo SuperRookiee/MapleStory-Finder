@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetTrigger, SheetContent, SheetHeader as SheetContentHeader, SheetTitle, SheetClose, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader as SheetContentHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
@@ -18,8 +18,8 @@ const SideMenu = () => {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="sm">
-                    <Menu />
+                <Button variant="ghost" size="sm" className="hover:bg-transparent">
+                    <Menu className='text-white'/>
                 </Button>
             </SheetTrigger>
             <SheetContent side="right">

@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
-import { findCharacterList } from "@/fetch/character.fetch";
+import { findCharacterList } from "@/fetchs/character.fetch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
-import { addFavorite, getFavorites, removeFavorite, } from "@/fetch/favorite.fetch";
+import { addFavorite, getFavorites, removeFavorite, } from "@/fetchs/favorite.fetch";
 import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
 import CharacterCell from "@/components/Character/CharacterCell";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CharacterSummary {
     ocid: string;
@@ -77,7 +78,6 @@ const CharacterList = () => {
     }, [characters, worldFilter]);
 
     const toggleFavorite = async (ocid: string) => {
-        console.log("실행?")
         if (!userId) return;
         if (favorites.includes(ocid)) {
             await removeFavorite(userId, ocid);
@@ -91,7 +91,7 @@ const CharacterList = () => {
     const worlds = ["전체월드", ...Array.from(new Set(characters.map((c) => c.world_name)))];
 
     return (
-        <div className="p-4">
+        <>
             {/* 서버 선택 */}
             <Select value={worldFilter} onValueChange={setWorldFilter}>
                 <SelectTrigger className="mb-4 w-[180px]">
@@ -113,18 +113,20 @@ const CharacterList = () => {
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {displayCharacters.map((character) => (
-                        <CharacterCell
-                            key={character.ocid}
-                            character={character}
-                            favorites={favorites}
-                            toggleFavorite={toggleFavorite}
-                        />
-                    ))}
-                </div>
+                <ScrollArea className="w-full h-5/6 rounded-md border p-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {displayCharacters.map((character) => (
+                            <CharacterCell
+                                key={character.ocid}
+                                character={character}
+                                favorites={favorites}
+                                toggleFavorite={toggleFavorite}
+                            />
+                        ))}
+                    </div>
+                </ScrollArea>
             )}
-        </div>
+        </>
     );
 };
 
