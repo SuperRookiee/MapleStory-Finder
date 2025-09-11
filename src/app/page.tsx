@@ -1,96 +1,109 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabaseClient"
-import { useUserStore } from "@/store/userStore"
-import { toast } from "sonner"
-import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch"
-import CharacterCard from "@/components/characterCard"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import CharacterCard from "@/components/characterCard";
+import CharacterDetail from "@/components/characterDetail";
+import { findCharacterBasic } from "@/fetch/character.fetch";
+import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
 
 interface ICharacterSummary {
-    ocid: string
-    character_name: string
-    world_name: string
-    character_class: string
-    character_level: number
-    image?: string
+    ocid: string;
+    character_name: string;
+    world_name: string;
+    character_class: string;
+    character_level: number;
+    image?: string;
 }
 
 const Home = () => {
-    const router = useRouter()
-    const setApiKey = useUserStore((s) => s.setApiKey)
-    const [characters, setCharacters] = useState<ICharacterSummary[]>([])
-    const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([])
-    const [worldFilter, setWorldFilter] = useState("전체월드")
+    const router = useRouter();
+    const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
+    const [favorites, setFavorites] = useState<ICharacterSummary[]>([]);
+    const [selected, setSelected] = useState<string | null>(null);
 
     useEffect(() => {
         const load = async () => {
-            const { data } = await supabase.auth.getSession()
-            const session = data.session
+            const { data } = await supabase.auth.getSession();
+            const session = data.session;
 
             if (!session) {
-                router.push("/sign_in")
-                return
+                router.push("/sign_in");
+                return;
             }
 
-            const key = session.user.user_metadata?.nexon_api_key
-            if (key) setApiKey(key)
-
-            try {
-                findCharacterList().then((data: { characters: ICharacterSummary[] }) => {
-                    const sorted = data.characters.sort(
-                        (a: ICharacterSummary, b: ICharacterSummary) =>
-                            b.character_level - a.character_level
-                    )
-                    setCharacters(sorted)
+            setUser({ id: session.user.id, email: session.user.email ?? undefined });
+            const favOcids = await getFavorites(session.user.id);
+            const chars = await Promise.all(
+                favOcids.map(async (ocid) => {
+                    const data = await findCharacterBasic(ocid);
+                    return {
+                        ocid,
+                        character_name: data.character_name,
+                        world_name: data.world_name,
+                        character_class: data.character_class,
+                        character_level: data.character_level,
+                        image: data.character_image,
+                    } as ICharacterSummary;
                 })
-            } catch (err: unknown) {
-                if (err instanceof Error) {
-                    toast.error(err.message)
-                }
-            }
+            );
+            setFavorites(chars);
+        };
+
+        load();
+    }, [router]);
+
+    const toggleFavorite = async (ocid: string) => {
+        if (!user) return;
+        if (favorites.find(f => f.ocid === ocid)) {
+            await removeFavorite(user.id, ocid);
+            setFavorites(favorites.filter(f => f.ocid !== ocid));
+            if (selected === ocid) setSelected(null);
+        } else {
+            await addFavorite(user.id, ocid);
+            const data = await findCharacterBasic(ocid);
+            setFavorites([
+                ...favorites,
+                {
+                    ocid,
+                    character_name: data.character_name,
+                    world_name: data.world_name,
+                    character_class: data.character_class,
+                    character_level: data.character_level,
+                    image: data.character_image,
+                },
+            ]);
         }
-
-        load()
-    }, [router, setApiKey])
-
-    useEffect(() => {
-        const filtered = characters.filter(c => worldFilter === "전체월드" || c.world_name === worldFilter)
-        Promise.all(
-            filtered.map(async c => {
-                try {
-                    const data = await findCharacterBasic(c.ocid)
-                    return { ...c, image: data.character_image }
-                } catch {
-                    return c
-                }
-            })
-        ).then(setDisplayCharacters)
-    }, [characters, worldFilter])
-
-    const worlds = ["전체월드", ...Array.from(new Set(characters.map(c => c.world_name)))]
+    };
 
     return (
-        <div className="p-4">
-            <Select value={worldFilter} onValueChange={setWorldFilter}>
-                <SelectTrigger className="mb-4 w-[180px]">
-                    <SelectValue/>
-                </SelectTrigger>
-                <SelectContent>
-                    {worlds.map(world => (
-                        <SelectItem key={world} value={world}>{world}</SelectItem>
+        <div className="flex h-screen">
+            <div className="w-1/3 border-r overflow-y-auto p-4">
+                <div className="mb-4">
+                    <p className="font-bold">{user?.email}</p>
+                </div>
+                <div className="space-y-4">
+                    {favorites.map((c) => (
+                        <CharacterCard
+                            key={c.ocid}
+                            character={c}
+                            isFavorite
+                            onToggleFavorite={() => toggleFavorite(c.ocid)}
+                            onSelect={() => setSelected(c.ocid)}
+                        />
                     ))}
-                </SelectContent>
-            </Select>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {displayCharacters.map((c) => (
-                    <CharacterCard key={c.ocid} character={c}/>
-                ))}
+                </div>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+                {selected ? (
+                    <CharacterDetail ocid={selected} />
+                ) : (
+                    <div className="p-4">캐릭터를 선택하세요</div>
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Home;
