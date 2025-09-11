@@ -10,25 +10,18 @@ import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fet
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ICharacterSummary } from "@/interface/ICharacterSummary";
 
-interface CharacterSummary {
-    ocid: string;
-    character_name: string;
-    world_name: string;
-    character_class: string;
-    character_level: number;
-}
-
-interface CharacterListResponse {
+interface ICharacterListResponse {
     message: string;
     status: number;
-    characters: CharacterSummary[];
+    characters: ICharacterSummary[];
 }
 
 const CharacterList = () => {
     const setApiKey = useUserStore((s) => s.setApiKey);
-    const [characters, setCharacters] = useState<CharacterSummary[]>([]);
-    const [displayCharacters, setDisplayCharacters] = useState<CharacterSummary[]>([]);
+    const [characters, setCharacters] = useState<ICharacterSummary[]>([]);
+    const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState("전체월드");
     const [favorites, setFavorites] = useState<string[]>([]);
     const [userId, setUserId] = useState<string | null>(null);
@@ -50,7 +43,7 @@ const CharacterList = () => {
             if (key) setApiKey(key);
 
             try {
-                const res: CharacterListResponse = await findCharacterList();
+                const res: ICharacterListResponse = await findCharacterList();
                 const list = res.characters ?? [];
                 const sorted = list.sort((a, b) => b.character_level - a.character_level);
 

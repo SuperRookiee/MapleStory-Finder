@@ -1,14 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { Button, ButtonProps } from '@/components/ui/button';
+import { Button, IButtonProps } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface LoadingButtonProps extends ButtonProps {
+interface ILoadingButtonProps extends IButtonProps {
   isLoading?: boolean;
 }
 
-const LoadingButton = React.forwardRef<HTMLButtonElement, LoadingButtonProps>(
+const LoadingButton = React.forwardRef<HTMLButtonElement, ILoadingButtonProps>(
   ({ isLoading, children, disabled, ...props }, ref) => {
     return (
       <Button ref={ref} disabled={isLoading || disabled} {...props}>

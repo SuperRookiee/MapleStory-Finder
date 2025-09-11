@@ -11,15 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
-
-interface ICharacterSummary {
-    ocid: string;
-    character_name: string;
-    world_name: string;
-    character_class: string;
-    character_level: number;
-    image?: string;
-}
+import { ICharacterSummary } from "@/interface/ICharacterSummary";
 
 const Home = () => {
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
