@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import { ViewTransitions } from "next/view-transitions";
+import { useEffect, useState, unstable_ViewTransition as ViewTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -92,7 +91,7 @@ const Home = () => {
     };
 
     return (
-        <ViewTransitions enter="fade" exit="fade">
+        <ViewTransition enter="fade" exit="fade">
         <div className="flex h-screen">
             <div className="w-1/3 border-r overflow-y-auto p-4">
                 <div className="space-y-4">
@@ -136,7 +135,7 @@ const Home = () => {
                 )}
             </div>
         </div>
-        </ViewTransitions>
+        </ViewTransition>
     );
 };
 
