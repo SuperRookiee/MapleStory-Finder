@@ -5,18 +5,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { findCharacterList } from "@/fetch/character.fetch";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import {
-    getFavorites,
-    addFavorite,
-    removeFavorite,
-} from "@/fetch/favorite.fetch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
+import { addFavorite, getFavorites, removeFavorite, } from "@/fetch/favorite.fetch";
 import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
 import CharacterCell from "@/components/Character/CharacterCell";
 
@@ -87,6 +77,7 @@ const CharacterList = () => {
     }, [characters, worldFilter]);
 
     const toggleFavorite = async (ocid: string) => {
+        console.log("실행?")
         if (!userId) return;
         if (favorites.includes(ocid)) {
             await removeFavorite(userId, ocid);

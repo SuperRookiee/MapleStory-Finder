@@ -1,4 +1,5 @@
 import CharacterCard from "@/components/Character/CharacterCard";
+import { useRouter } from "next/navigation";
 
 interface CharacterSummary {
     ocid: string;
@@ -14,15 +15,20 @@ interface Props {
     toggleFavorite: (ocid: string) => void;
 }
 
-const CharacterCell = ({ character, favorites, toggleFavorite }: Props) => (
-    <div className="p-2 w-full">
-        <CharacterCard
-            character={character}
-            isFavorite={favorites.includes(character.ocid)}
-            onToggleFavorite={() => toggleFavorite(character.ocid)}
-        />
-    </div>
-);
+const CharacterCell = ({ character, favorites, toggleFavorite }: Props) => {
+    const router = useRouter();
+
+    return (
+        <div className="p-2 w-full">
+            <CharacterCard
+                character={character}
+                isFavorite={favorites.includes(character.ocid)}
+                onToggleFavorite={() => toggleFavorite(character.ocid)}
+                onSelect={() => router.push(`/character/${character.ocid}`)}
+            />
+        </div>
+    )
+};
 
 export default CharacterCell;
 
