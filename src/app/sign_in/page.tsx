@@ -40,7 +40,7 @@ export default function SignInPage() {
     <div className="flex min-h-screen">
       <div className="relative hidden w-1/2 md:block">
         <img
-          src="https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80"
+          src="https://lwi.nexon.com/maplestory/common/media/artwork/artwork_117.jpg"
           alt="Cover"
           className="absolute inset-0 h-full w-full object-cover"
         />

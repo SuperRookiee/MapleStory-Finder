@@ -7,15 +7,9 @@ import { useUserStore } from "@/store/userStore"
 import { toast } from "sonner"
 import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch"
 import CharacterCard from "@/components/characterCard"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface CharacterSummary {
+interface ICharacterSummary {
     ocid: string
     character_name: string
     world_name: string
@@ -24,11 +18,11 @@ interface CharacterSummary {
     image?: string
 }
 
-export default function Home() {
+const Home = () => {
     const router = useRouter()
     const setApiKey = useUserStore((s) => s.setApiKey)
-    const [characters, setCharacters] = useState<CharacterSummary[]>([])
-    const [displayCharacters, setDisplayCharacters] = useState<CharacterSummary[]>([])
+    const [characters, setCharacters] = useState<ICharacterSummary[]>([])
+    const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([])
     const [worldFilter, setWorldFilter] = useState("전체월드")
 
     useEffect(() => {
@@ -45,9 +39,9 @@ export default function Home() {
             if (key) setApiKey(key)
 
             try {
-                findCharacterList().then((data: { characters: CharacterSummary[] }) => {
+                findCharacterList().then((data: { characters: ICharacterSummary[] }) => {
                     const sorted = data.characters.sort(
-                        (a: CharacterSummary, b: CharacterSummary) =>
+                        (a: ICharacterSummary, b: ICharacterSummary) =>
                             b.character_level - a.character_level
                     )
                     setCharacters(sorted)
@@ -82,7 +76,7 @@ export default function Home() {
         <div className="p-4">
             <Select value={worldFilter} onValueChange={setWorldFilter}>
                 <SelectTrigger className="mb-4 w-[180px]">
-                    <SelectValue />
+                    <SelectValue/>
                 </SelectTrigger>
                 <SelectContent>
                     {worlds.map(world => (
@@ -92,9 +86,11 @@ export default function Home() {
             </Select>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {displayCharacters.map((c) => (
-                    <CharacterCard key={c.ocid} character={c} />
+                    <CharacterCard key={c.ocid} character={c}/>
                 ))}
             </div>
         </div>
     )
 }
+
+export default Home;
