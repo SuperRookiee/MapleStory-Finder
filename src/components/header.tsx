@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
@@ -12,9 +12,13 @@ import {
   SheetContent,
   SheetHeader as SheetContentHeader,
   SheetTitle,
+  SheetClose,
 } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 
 export default function Header() {
+  const pathname = usePathname();
+
   const [email, setEmail] = useState<string | null>(null);
   const router = useRouter();
   const setUser = useUserStore((s) => s.setUser);
@@ -31,13 +35,19 @@ export default function Header() {
     router.push("/sign_in");
   };
 
+  if (pathname === "/sign_in" || pathname === "/sign_up") {
+    return null;
+  }
+
   return (
     <header className="flex items-center justify-between border-b p-4">
       <div>{email ?? "Guest"}</div>
       <div className="flex items-center space-x-2">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline">Menu</Button>
+            <Button variant="outline" size="icon">
+              <Menu className="h-4 w-4" />
+            </Button>
           </SheetTrigger>
           <SheetContent side="right">
             <SheetContentHeader>
@@ -50,10 +60,18 @@ export default function Header() {
               <Button variant="ghost" className="w-full">
                 Menu Item 2
               </Button>
+              <SheetClose asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </SheetClose>
             </div>
           </SheetContent>
         </Sheet>
-        <Button onClick={handleLogout}>Logout</Button>
       </div>
     </header>
   );
