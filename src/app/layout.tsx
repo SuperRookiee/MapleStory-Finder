@@ -1,8 +1,25 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react";
+
+const mapleStory = localFont({
+    src: [
+        {
+            path: "../../public/font/NEXON_Maplestory/TTF/Maplestory Light.ttf",
+            weight: "400",
+            style: "normal",
+        },
+        {
+            path: "../../public/font/NEXON_Maplestory/TTF/Maplestory Bold.ttf",
+            weight: "700",
+            style: "normal",
+        },
+    ],
+    variable: "--font-maplestory",
+});
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -24,12 +41,14 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
-        <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
-                <Toaster />
-            </body>
-        </html>
+            <html lang="en">
+                <body
+                    className={`${geistSans.variable} ${geistMono.variable} ${mapleStory.variable} antialiased`}
+                >
+                    <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+                    <Toaster />
+                </body>
+            </html>
     );
 };
 
