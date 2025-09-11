@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import { useUserStore } from '@/store/userStore';
-import { LoadingButton } from '@/components/ui/loading-button';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
@@ -77,18 +77,18 @@ export default function SignInPage() {
               required
             />
           </div>
-          <LoadingButton type="submit" className="w-full" isLoading={loading}>
-            Sign In
-          </LoadingButton>
-          <LoadingButton
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Sign In...' : 'Sign In'}
+          </Button>
+          <Button
             type="button"
             variant="outline"
             className="w-full"
             onClick={handleGoogle}
-            isLoading={googleLoading}
+            disabled={googleLoading}
           >
-            Sign in with Google
-          </LoadingButton>
+            {googleLoading ? 'Sign in with Google...' : 'Sign in with Google'}
+          </Button>
           <p className="text-sm text-center">
             Don&apos;t have an account?{' '}
             <Link href="/sign_up" className="underline">
