@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { ViewTransitions } from "next/view-transitions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -87,17 +88,11 @@ const Home = () => {
     const handleDetail = () => {
         if (!selected) return;
         const to = `/character/${selected}`;
-        if ("startViewTransition" in document) {
-            // @ts-expect-error ViewTransition API
-            document.startViewTransition(() => {
-                router.push(to);
-            });
-        } else {
-            router.push(to);
-        }
+        router.push(to);
     };
 
     return (
+        <ViewTransitions enter="fade" exit="fade">
         <div className="flex h-screen">
             <div className="w-1/3 border-r overflow-y-auto p-4">
                 <div className="space-y-4">
@@ -141,6 +136,7 @@ const Home = () => {
                 )}
             </div>
         </div>
+        </ViewTransitions>
     );
 };
 

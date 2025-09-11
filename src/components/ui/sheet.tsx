@@ -7,13 +7,17 @@ const Sheet = SheetPrimitive.Root;
 const SheetTrigger = SheetPrimitive.Trigger;
 const SheetClose = SheetPrimitive.Close;
 
+interface SheetPortalProps extends SheetPrimitive.DialogPortalProps {
+  className?: string;
+}
+
 const SheetPortal = ({
   className,
   children,
   ...props
-}: SheetPrimitive.DialogPortalProps) => (
-  <SheetPrimitive.Portal className={cn(className)} {...props}>
-    <div className="fixed inset-0 z-50 flex">{children}</div>
+}: SheetPortalProps) => (
+  <SheetPrimitive.Portal {...props}>
+    <div className={cn("fixed inset-0 z-50 flex", className)}>{children}</div>
   </SheetPrimitive.Portal>
 );
 SheetPortal.displayName = SheetPrimitive.Portal.displayName;
