@@ -5,10 +5,10 @@ import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch";
-import CharacterCard from "@/components/characterCard";
+import CharacterCard from "@/components/CharacterCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
-import CharacterCardSkeleton from "@/components/characterCardSkeleton";
+import CharacterCardSkeleton from "@/components/CharacterCardSkeleton";
 
 interface ICharacterSummary {
     ocid: string;
