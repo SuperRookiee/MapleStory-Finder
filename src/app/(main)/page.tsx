@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import CharacterCard from "@/components/characterCard";
 import CharacterDetail from "@/components/characterDetail";
 import { findCharacterBasic } from "@/fetch/character.fetch";
 import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
+import CharacterCardSkeleton from "@/components/characterCardSkeleton";
 
 interface ICharacterSummary {
     ocid: string;
@@ -18,18 +18,19 @@ interface ICharacterSummary {
 }
 
 const Home = () => {
-    const router = useRouter();
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
     const [favorites, setFavorites] = useState<ICharacterSummary[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const load = async () => {
+            setLoading(true);
             const { data } = await supabase.auth.getSession();
             const session = data.session;
 
             if (!session) {
-                router.push("/sign_in");
+                setLoading(false);
                 return;
             }
 
@@ -49,10 +50,11 @@ const Home = () => {
                 })
             );
             setFavorites(chars);
+            setLoading(false);
         };
 
         load();
-    }, [router]);
+    }, []);
 
     const toggleFavorite = async (ocid: string) => {
         if (!user) return;
@@ -84,15 +86,17 @@ const Home = () => {
                     <p className="font-bold">{user?.email}</p>
                 </div>
                 <div className="space-y-4">
-                    {favorites.map((c) => (
-                        <CharacterCard
-                            key={c.ocid}
-                            character={c}
-                            isFavorite
-                            onToggleFavorite={() => toggleFavorite(c.ocid)}
-                            onSelect={() => setSelected(c.ocid)}
-                        />
-                    ))}
+                    {loading
+                        ? Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i} />)
+                        : favorites.map((c) => (
+                              <CharacterCard
+                                  key={c.ocid}
+                                  character={c}
+                                  isFavorite
+                                  onToggleFavorite={() => toggleFavorite(c.ocid)}
+                                  onSelect={() => setSelected(c.ocid)}
+                              />
+                          ))}
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto">
