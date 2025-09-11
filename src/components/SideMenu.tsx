@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetTrigger, SheetContent, SheetHeader as SheetContentHeader, SheetTitle, SheetClose} from "@/components/ui/sheet";
+import { Sheet, SheetTrigger, SheetContent, SheetHeader as SheetContentHeader, SheetTitle, SheetClose, SheetDescription } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
@@ -25,6 +25,7 @@ const SideMenu = () => {
             <SheetContent side="right">
                 <SheetContentHeader>
                     <SheetTitle>Finder</SheetTitle>
+                    <SheetDescription>menu</SheetDescription>
                 </SheetContentHeader>
                 <div className="mt-4 space-y-2">
                     <SheetClose asChild>

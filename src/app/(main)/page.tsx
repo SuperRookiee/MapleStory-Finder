@@ -92,49 +92,49 @@ const Home = () => {
 
     return (
         <ViewTransition enter="fade" exit="fade">
-        <div className="flex h-screen">
-            <div className="w-1/3 border-r overflow-y-auto p-4">
-                <div className="space-y-4">
-                    {loading
-                        ? Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i}/>)
-                        : favorites.map((c) => (
-                            <CharacterCard
-                                key={c.ocid}
-                                character={c}
-                                isFavorite
-                                onToggleFavorite={() => toggleFavorite(c.ocid)}
-                                onSelect={() => setSelected(c.ocid)}
-                            />
-                        ))}
+            <div className="flex h-screen">
+                <div className="w-1/3 border-r overflow-y-auto p-4">
+                    <div className="space-y-4">
+                        {loading
+                            ? Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i}/>)
+                            : favorites.map((c) => (
+                                <CharacterCard
+                                    key={c.ocid}
+                                    character={c}
+                                    isFavorite
+                                    onToggleFavorite={() => toggleFavorite(c.ocid)}
+                                    onSelect={() => setSelected(c.ocid)}
+                                />
+                            ))}
+                    </div>
+                </div>
+                <div className="flex-1 overflow-y-auto">
+                    {selectedCharacter ? (
+                        <div className="p-4 space-y-4">
+                            {selectedCharacter.image && (
+                                <div className="relative w-64 h-64 mx-auto">
+                                    <Image
+                                        src={selectedCharacter.image}
+                                        alt={selectedCharacter.character_name}
+                                        fill
+                                        className="object-contain"
+                                        style={{ viewTransitionName: `character-image-${selectedCharacter.ocid}` }}
+                                        sizes="256px"
+                                    />
+                                </div>
+                            )}
+                            <h2 className="text-2xl font-bold text-center">{selectedCharacter.character_name}</h2>
+                            <p className="text-center text-muted-foreground">{selectedCharacter.character_class}</p>
+                            <p className="text-center font-bold text-red-500">Lv. {selectedCharacter.character_level}</p>
+                            <div className="flex justify-center">
+                                <Button onClick={handleDetail}>Detail</Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="p-4 animate-pulse">Please choose your character</div>
+                    )}
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto">
-                {selectedCharacter ? (
-                    <div className="p-4 space-y-4">
-                        {selectedCharacter.image && (
-                            <div className="relative w-64 h-64 mx-auto">
-                                <Image
-                                    src={selectedCharacter.image}
-                                    alt={selectedCharacter.character_name}
-                                    fill
-                                    className="object-contain"
-                                    style={{ viewTransitionName: `character-image-${selectedCharacter.ocid}` }}
-                                    sizes="256px"
-                                />
-                            </div>
-                        )}
-                        <h2 className="text-2xl font-bold text-center">{selectedCharacter.character_name}</h2>
-                        <p className="text-center text-muted-foreground">{selectedCharacter.character_class}</p>
-                        <p className="text-center font-bold text-red-500">Lv. {selectedCharacter.character_level}</p>
-                        <div className="flex justify-center">
-                            <Button onClick={handleDetail}>Detail</Button>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="p-4 animate-pulse">캐릭터를 선택하세요</div>
-                )}
-            </div>
-        </div>
         </ViewTransition>
     );
 };

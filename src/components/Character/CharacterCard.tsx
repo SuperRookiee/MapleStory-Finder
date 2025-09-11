@@ -1,9 +1,11 @@
 'use client'
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { findCharacterBasic } from "@/fetch/character.fetch";
 
 interface CharacterSummary {
     ocid: string;
@@ -22,22 +24,58 @@ interface Props {
 }
 
 export default function CharacterCard({
-    character,
-    isFavorite,
-    onToggleFavorite,
-    onSelect,
-}: Props) {
+                                          character,
+                                          isFavorite,
+                                          onToggleFavorite,
+                                          onSelect,
+                                      }: Props) {
+    const [image, setImage] = useState<string | null>(character.image ?? null);
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!ref.current || image) return;
+
+        const observer = new IntersectionObserver(
+            async ([entry], obs) => {
+                if (entry.isIntersecting) {
+                    try {
+                        const data = await findCharacterBasic(character.ocid);
+                        setImage(data.character_image);
+                    } catch {
+                        // ignore
+                    } finally {
+                        obs.disconnect();
+                    }
+                }
+            },
+            { threshold: 0.25, rootMargin: "200px" }
+        );
+
+        observer.observe(ref.current);
+
+        return () => observer.disconnect();
+    }, [character.ocid, image]);
+
     const content = (
-        <Card className="p-4 flex flex-col relative" onClick={onSelect}>
-            <div className="absolute top-2 right-2" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleFavorite?.(); }}>
+        <Card className="p-4 flex flex-col relative" onClick={onSelect} ref={ref}>
+            <div
+                className="absolute top-2 right-2"
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onToggleFavorite?.();
+                }}
+            >
                 <Star
-                    className={`h-5 w-5 ${isFavorite ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                    className={`h-5 w-5 ${
+                        isFavorite ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                    }`}
                 />
             </div>
             <div className="relative w-full h-60 mb-4">
-                {character.image && (
+                {image && (
                     <Image
-                        src={character.image}
+                        src={image}
                         alt={character.character_name}
                         fill
                         className="object-contain"
