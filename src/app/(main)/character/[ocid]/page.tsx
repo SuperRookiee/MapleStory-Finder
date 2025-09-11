@@ -1,4 +1,4 @@
-import CharacterDetail from "@/components/Character/CharacterDetail";
+import CharacterDetail from "@/components/character/CharacterDetail";
 
 const CharacterPage = async ({ params }: { params: Promise<{ ocid: string }> }) => {
     const { ocid } = await params;

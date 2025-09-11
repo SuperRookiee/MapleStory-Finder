@@ -78,25 +78,31 @@ const CharacterCard = ({
             </div>
 
             {/* 캐릭터 이미지 */}
-            <div className="relative w-full h-60 mb-4">
+            <div className="relative w-full aspect-[4/3] mb-4">
                 {image && (
                     <Image
                         src={image}
                         alt={character.character_name}
-                        fill
                         className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 33vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                        fill
                     />
                 )}
             </div>
 
             {/* 캐릭터 정보 */}
-            <div className="mt-auto flex items-end justify-between">
-                <div>
-                    <p className="font-bold">{character.character_name}</p>
-                    <p className="text-sm text-muted-foreground">{character.character_class}</p>
+            <div className="mt-auto flex items-end justify-between min-h-[64px] sm:min-h-[72px] md:min-h-[80px]">
+                <div className="truncate max-w-[70%]">
+                    <p className="font-bold text-sm sm:text-base md:text-lg lg:text-xl">
+                        {character.character_name}
+                    </p>
+                    <p className="text-xs sm:text-sm md:text-base text-muted-foreground truncate">
+                        {character.character_class}
+                    </p>
                 </div>
-                <p className="text-red-500 text-2xl font-bold">{character.character_level}</p>
+                <p className="text-red-500 font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl shrink-0 ml-2">
+                    {character.character_level}
+                </p>
             </div>
         </Card>
     );

@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { findCharacterList } from "@/fetchs/character.fetch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
-import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
-import CharacterCell from "@/components/Character/CharacterCell";
+import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
+import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CharacterSummary {
@@ -58,8 +58,8 @@ const CharacterList = () => {
                 setDisplayCharacters(sorted);
                 setLoading(false);
 
-                const favs = await getFavorites(session.user.id);
-                setFavorites(favs);
+                const favorite = await getFavorites(session.user.id);
+                setFavorites(favorite);
             } catch (err) {
                 if (err instanceof Error) toast.error(err.message);
                 setLoading(false);

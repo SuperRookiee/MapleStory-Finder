@@ -1,4 +1,4 @@
-import CharacterCard from "@/components/Character/CharacterCard";
+import CharacterCard from "@/components/character/CharacterCard";
 import { useRouter } from "next/navigation";
 
 interface CharacterSummary {
