@@ -5,24 +5,29 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import { useUserStore } from '@/store/userStore';
-import { Button } from '@/components/ui/button';
+import { LoadingButton } from '@/components/ui/loading-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const router = useRouter();
   const setApiKey = useUserStore((s) => s.setApiKey);
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '', apiKey: '' });
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({
+    setLoading(true);
+    const { data, error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
+      options: { data: { nexon_api_key: form.apiKey } },
     });
     if (error) {
       toast.error(error.message);
+      setLoading(false);
       return;
     }
     const apiKey = data.user?.user_metadata?.nexon_api_key;
@@ -30,17 +35,20 @@ export default function SignInPage() {
       setApiKey(apiKey);
     }
     router.push('/');
+    setLoading(false);
   };
 
   const handleGoogle = async () => {
+    setGoogleLoading(true);
     await supabase.auth.signInWithOAuth({ provider: 'google' });
+    setGoogleLoading(false);
   };
 
   return (
     <div className="flex min-h-screen">
       <div className="relative hidden w-1/2 md:block">
         <img
-          src="https://lwi.nexon.com/maplestory/common/media/artwork/artwork_117.jpg"
+          src="https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80"
           alt="Cover"
           className="absolute inset-0 h-full w-full object-cover"
         />
@@ -48,7 +56,7 @@ export default function SignInPage() {
       <div className="flex flex-1 items-center justify-center p-4">
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
           <div className="space-y-2 text-center">
-            <h1 className="text-2xl font-bold">Sign In</h1>
+            <h1 className="text-2xl font-bold">Sign Up</h1>
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -70,16 +78,31 @@ export default function SignInPage() {
               required
             />
           </div>
-          <Button type="submit" className="w-full">
-            Sign In
-          </Button>
-          <Button type="button" variant="outline" className="w-full" onClick={handleGoogle}>
-            Sign in with Google
-          </Button>
+          <div className="space-y-2">
+            <Label htmlFor="apiKey">Nexon API Key</Label>
+            <Input
+              id="apiKey"
+              value={form.apiKey}
+              onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
+              required
+            />
+          </div>
+          <LoadingButton type="submit" className="w-full" isLoading={loading}>
+            Create account
+          </LoadingButton>
+          <LoadingButton
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogle}
+            isLoading={googleLoading}
+          >
+            Sign up with Google
+          </LoadingButton>
           <p className="text-sm text-center">
-            Don&apos;t have an account?{' '}
-            <Link href="/sign_up" className="underline">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/sign_in" className="underline">
+              Sign in
             </Link>
           </p>
         </form>

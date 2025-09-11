@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
@@ -9,6 +8,7 @@ import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch";
 import CharacterCard from "@/components/characterCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
+import CharacterCardSkeleton from "@/components/characterCardSkeleton";
 
 interface ICharacterSummary {
     ocid: string;
@@ -20,21 +20,22 @@ interface ICharacterSummary {
 }
 
 const CharacterList = () => {
-    const router = useRouter();
     const setApiKey = useUserStore((s) => s.setApiKey);
     const [characters, setCharacters] = useState<ICharacterSummary[]>([]);
     const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState("전체월드");
     const [favorites, setFavorites] = useState<string[]>([]);
     const [userId, setUserId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const load = async () => {
+            setLoading(true);
             const { data } = await supabase.auth.getSession();
             const session = data.session;
 
             if (!session) {
-                router.push("/sign_in");
+                setLoading(false);
                 return;
             }
 
@@ -57,10 +58,11 @@ const CharacterList = () => {
         };
 
         load();
-    }, [router, setApiKey]);
+    }, [setApiKey]);
 
     useEffect(() => {
         const filtered = characters.filter(c => worldFilter === "전체월드" || c.world_name === worldFilter);
+        setLoading(true);
         Promise.all(
             filtered.map(async c => {
                 try {
@@ -70,7 +72,10 @@ const CharacterList = () => {
                     return c;
                 }
             })
-        ).then(setDisplayCharacters);
+        ).then((res) => {
+            setDisplayCharacters(res);
+            setLoading(false);
+        });
     }, [characters, worldFilter]);
 
     const toggleFavorite = async (ocid: string) => {
@@ -99,14 +104,16 @@ const CharacterList = () => {
                 </SelectContent>
             </Select>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {displayCharacters.map((c) => (
-                    <CharacterCard
-                        key={c.ocid}
-                        character={c}
-                        isFavorite={favorites.includes(c.ocid)}
-                        onToggleFavorite={() => toggleFavorite(c.ocid)}
-                    />
-                ))}
+                {loading
+                    ? Array.from({ length: 6 }).map((_, i) => <CharacterCardSkeleton key={i} />)
+                    : displayCharacters.map((c) => (
+                          <CharacterCard
+                              key={c.ocid}
+                              character={c}
+                              isFavorite={favorites.includes(c.ocid)}
+                              onToggleFavorite={() => toggleFavorite(c.ocid)}
+                          />
+                      ))}
             </div>
         </div>
     )
