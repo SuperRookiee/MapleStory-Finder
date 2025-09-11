@@ -1,0 +1,104 @@
+'use client';
+
+import { useState, useEffect, FormEvent } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { useUserStore } from '@/store/userStore';
+
+export default function MyPage() {
+  const setApiKey = useUserStore((s) => s.setApiKey);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    apiKey: '',
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const user = data.user;
+      if (user) {
+        setForm((f) => ({
+          ...f,
+          name: user.user_metadata?.name ?? '',
+          email: user.email ?? '',
+          apiKey: user.user_metadata?.nexon_api_key ?? '',
+        }));
+      }
+    });
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const updates: {
+      email?: string;
+      password?: string;
+      data: { name: string; nexon_api_key: string };
+    } = {
+      data: { name: form.name, nexon_api_key: form.apiKey },
+    };
+    if (form.email) updates.email = form.email;
+    if (form.password) updates.password = form.password;
+    const { error } = await supabase.auth.updateUser(updates);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Profile updated');
+      setApiKey(form.apiKey);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="flex justify-center p-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input
+            id="name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            placeholder="Leave blank to keep current password"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="apiKey">API Key</Label>
+          <Input
+            id="apiKey"
+            value={form.apiKey}
+            onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
+            required
+          />
+        </div>
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? 'Saving...' : 'Save'}
+        </Button>
+      </form>
+    </div>
+  );
+}
