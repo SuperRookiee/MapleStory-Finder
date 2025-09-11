@@ -1,6 +1,11 @@
 import axios from "axios";
 import { useUserStore } from "@/store/userStore";
 
+const delay = (ms: number) =>
+    new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+let requestQueue: Promise<unknown> = Promise.resolve();
+
 export const findCharacterList = async () => {
     const apiKey = useUserStore.getState().user.apiKey;
     const response = await axios.get(`/api/character/list`, {
@@ -14,11 +19,19 @@ const callCharacterApi = async (
     params: Record<string, string>
 ) => {
     const apiKey = useUserStore.getState().user.apiKey;
-    const response = await axios.get(`/api/character/${endpoint}`, {
-        headers: { "x-nxopen-api-key": apiKey ?? "" },
-        params,
-    });
-    return response.data;
+
+    const task = async () => {
+        await delay(200);
+        const response = await axios.get(`/api/character/${endpoint}`, {
+            headers: { "x-nxopen-api-key": apiKey ?? "" },
+            params,
+        });
+        return response.data;
+    };
+
+    const result = requestQueue.then(task);
+    requestQueue = result.catch(() => undefined);
+    return result;
 };
 
 export const findCharacterBasic = (ocid: string) =>
