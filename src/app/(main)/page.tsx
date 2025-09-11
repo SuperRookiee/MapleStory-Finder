@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import CharacterCard from "@/components/CharacterCard";
-import CharacterCardSkeleton from "@/components/CharacterCardSkeleton";
+import CharacterCard from "@/components/Character/CharacterCard";
+import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { findCharacterBasic } from "@/fetch/character.fetch";
 import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
@@ -102,16 +102,16 @@ const Home = () => {
             <div className="w-1/3 border-r overflow-y-auto p-4">
                 <div className="space-y-4">
                     {loading
-                        ? Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i} />)
+                        ? Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i}/>)
                         : favorites.map((c) => (
-                              <CharacterCard
-                                  key={c.ocid}
-                                  character={c}
-                                  isFavorite
-                                  onToggleFavorite={() => toggleFavorite(c.ocid)}
-                                  onSelect={() => setSelected(c.ocid)}
-                              />
-                          ))}
+                            <CharacterCard
+                                key={c.ocid}
+                                character={c}
+                                isFavorite
+                                onToggleFavorite={() => toggleFavorite(c.ocid)}
+                                onSelect={() => setSelected(c.ocid)}
+                            />
+                        ))}
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto">

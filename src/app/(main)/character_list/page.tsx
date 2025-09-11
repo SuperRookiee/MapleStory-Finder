@@ -5,10 +5,10 @@ import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { findCharacterList, findCharacterBasic } from "@/fetch/character.fetch";
-import CharacterCard from "@/components/CharacterCard";
+import CharacterCard from "@/components/Character/CharacterCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
-import CharacterCardSkeleton from "@/components/CharacterCardSkeleton";
+import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
 
 interface ICharacterSummary {
     ocid: string;
@@ -105,15 +105,15 @@ const CharacterList = () => {
             </Select>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {loading
-                    ? Array.from({ length: 6 }).map((_, i) => <CharacterCardSkeleton key={i} />)
+                    ? Array.from({ length: 6 }).map((_, i) => <CharacterCardSkeleton key={i}/>)
                     : displayCharacters.map((c) => (
-                          <CharacterCard
-                              key={c.ocid}
-                              character={c}
-                              isFavorite={favorites.includes(c.ocid)}
-                              onToggleFavorite={() => toggleFavorite(c.ocid)}
-                          />
-                      ))}
+                        <CharacterCard
+                            key={c.ocid}
+                            character={c}
+                            isFavorite={favorites.includes(c.ocid)}
+                            onToggleFavorite={() => toggleFavorite(c.ocid)}
+                        />
+                    ))}
             </div>
         </div>
     )

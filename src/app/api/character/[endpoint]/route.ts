@@ -17,8 +17,7 @@ export async function GET(
         const { endpoint, ...query } = params;
 
         try {
-            const res = await axios.get(
-                `https://open.api.nexon.com/maplestory/v1/character/${endpoint}`,
+            const res = await axios.get(`https://open.api.nexon.com/maplestory/v1/character/${endpoint}`,
                 {
                     params: query,
                     headers: { "x-nxopen-api-key": apiKey },
