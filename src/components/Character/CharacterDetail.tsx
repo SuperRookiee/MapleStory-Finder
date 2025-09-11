@@ -25,6 +25,7 @@ import {
     findCharacterOtherStat,
     findCharacterRingExchange,
 } from '@/fetch/character.fetch';
+import { Spinner } from '@/components/ui/spinner';
 
 interface CharacterBasic {
     character_image?: string;
@@ -113,7 +114,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         load();
     }, [ocid]);
 
-    if (!data) return <div className="p-4">Loading...</div>;
+    if (!data)
+        return (
+            <div className="flex p-4 justify-center">
+                <Spinner />
+            </div>
+        );
 
     const basic = data.basic as CharacterBasic;
 
