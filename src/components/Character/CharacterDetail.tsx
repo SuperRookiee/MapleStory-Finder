@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useEffect, useState, unstable_ViewTransition as ViewTransition } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ViewTransitions } from 'next/view-transitions';
 import Image from 'next/image';
 import {
   findCharacterBasic,
@@ -118,29 +119,29 @@ export default function CharacterDetail({ ocid }: { ocid: string }) {
   const basic = data.basic as CharacterBasic;
 
     return (
-      <ViewTransition enter="fade" exit="fade">
-      <div className="p-4 space-y-6">
-      {basic?.character_image && (
-        <div className="relative w-64 h-64 mx-auto">
-          <Image
-            src={basic.character_image}
-            alt={basic.character_name}
-            fill
-            className="object-contain"
-            style={{ viewTransitionName: `character-image-${ocid}` }}
-            sizes="256px"
-          />
+      <ViewTransitions enter="fade" exit="fade">
+        <div className="p-4 space-y-6">
+        {basic?.character_image && (
+          <div className="relative w-64 h-64 mx-auto">
+            <Image
+              src={basic.character_image}
+              alt={basic.character_name}
+              fill
+              className="object-contain"
+              style={{ viewTransitionName: `character-image-${ocid}` }}
+              sizes="256px"
+            />
+          </div>
+        )}
+        {Object.entries(data).map(([key, value]) => (
+          <section key={key}>
+            <h2 className="text-xl font-bold mb-2">{key}</h2>
+            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
+              {JSON.stringify(value, null, 2)}
+            </pre>
+          </section>
+        ))}
         </div>
-      )}
-      {Object.entries(data).map(([key, value]) => (
-        <section key={key}>
-          <h2 className="text-xl font-bold mb-2">{key}</h2>
-          <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
-            {JSON.stringify(value, null, 2)}
-          </pre>
-        </section>
-      ))}
-      </div>
-      </ViewTransition>
+      </ViewTransitions>
     );
   }

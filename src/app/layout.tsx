@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import {
-    unstable_ViewTransition as ViewTransition,
-    type ReactNode,
-} from "react";
+import { type ReactNode } from "react";
+import { ViewTransitions } from "next/view-transitions";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -26,7 +24,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+                <ViewTransitions enter="fade" exit="fade">{children}</ViewTransitions>
                 <Toaster />
             </body>
         </html>
