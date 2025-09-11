@@ -54,9 +54,15 @@ export default function Header() {
               <SheetTitle>Finder</SheetTitle>
             </SheetContentHeader>
             <div className="mt-4 space-y-2">
-              <Button variant="ghost" className="w-full">
-                Character List
-              </Button>
+              <SheetClose asChild>
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={() => router.push("/character_list")}
+                >
+                  Character List
+                </Button>
+              </SheetClose>
               <Button variant="ghost" className="w-full">
                 Menu Item 2
               </Button>

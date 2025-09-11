@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import CharacterCard from "@/components/characterCard";
-import CharacterDetail from "@/components/characterDetail";
+import CharacterCard from "@/components/CharacterCard";
+import CharacterCardSkeleton from "@/components/CharacterCardSkeleton";
+import { Button } from "@/components/ui/button";
 import { findCharacterBasic } from "@/fetch/character.fetch";
 import { getFavorites, addFavorite, removeFavorite } from "@/fetch/favorite.fetch";
-import CharacterCardSkeleton from "@/components/characterCardSkeleton";
 
 interface ICharacterSummary {
     ocid: string;
@@ -79,6 +81,22 @@ const Home = () => {
         }
     };
 
+    const router = useRouter();
+    const selectedCharacter = favorites.find((f) => f.ocid === selected);
+
+    const handleDetail = () => {
+        if (!selected) return;
+        const to = `/character/${selected}`;
+        if ("startViewTransition" in document) {
+            // @ts-expect-error ViewTransition API
+            document.startViewTransition(() => {
+                router.push(to);
+            });
+        } else {
+            router.push(to);
+        }
+    };
+
     return (
         <div className="flex h-screen">
             <div className="w-1/3 border-r overflow-y-auto p-4">
@@ -97,8 +115,27 @@ const Home = () => {
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto">
-                {selected ? (
-                    <CharacterDetail ocid={selected} />
+                {selectedCharacter ? (
+                    <div className="p-4 space-y-4">
+                        {selectedCharacter.image && (
+                            <div className="relative w-64 h-64 mx-auto">
+                                <Image
+                                    src={selectedCharacter.image}
+                                    alt={selectedCharacter.character_name}
+                                    fill
+                                    className="object-contain"
+                                    style={{ viewTransitionName: `character-image-${selectedCharacter.ocid}` }}
+                                    sizes="256px"
+                                />
+                            </div>
+                        )}
+                        <h2 className="text-2xl font-bold text-center">{selectedCharacter.character_name}</h2>
+                        <p className="text-center text-muted-foreground">{selectedCharacter.character_class}</p>
+                        <p className="text-center font-bold text-red-500">Lv. {selectedCharacter.character_level}</p>
+                        <div className="flex justify-center">
+                            <Button onClick={handleDetail}>Detail</Button>
+                        </div>
+                    </div>
                 ) : (
                     <div className="p-4 animate-pulse">캐릭터를 선택하세요</div>
                 )}
