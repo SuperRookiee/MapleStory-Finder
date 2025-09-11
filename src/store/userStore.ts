@@ -1,17 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface User {
+interface IUser {
     apiKey: string | null;
 }
 
-interface UserState {
-    user: User;
-    setUser: (user: Partial<User>) => void;
+interface IUserState {
+    user: IUser;
+    setUser: (user: Partial<IUser>) => void;
     setApiKey: (key: string) => void;
 }
 
-export const useUserStore = create<UserState>()(persist((set) => ({
+export const useUserStore = create<IUserState>()(persist((set) => ({
         user: { apiKey: null },
         setUser: (user) =>
             set((state) => ({ user: { ...state.user, ...user } })),

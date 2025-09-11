@@ -1,21 +1,14 @@
 import CharacterCard from "@/components/character/CharacterCard";
 import { useRouter } from "next/navigation";
+import { ICharacterSummary } from "@/interface/ICharacterSummary";
 
-interface CharacterSummary {
-    ocid: string;
-    character_name: string;
-    world_name: string;
-    character_class: string;
-    character_level: number;
-}
-
-interface Props {
-    character: CharacterSummary;
+interface ICharacterCellProps {
+    character: ICharacterSummary;
     favorites: string[];
     toggleFavorite: (ocid: string) => void;
 }
 
-const CharacterCell = ({ character, favorites, toggleFavorite }: Props) => {
+const CharacterCell = ({ character, favorites, toggleFavorite }: ICharacterCellProps) => {
     const router = useRouter();
 
     return (

@@ -6,18 +6,10 @@ import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { Button } from "@/components/ui/button";
+import { ICharacterSummary } from "@/interface/ICharacterSummary";
 
-interface CharacterSummary {
-    ocid: string;
-    character_name: string;
-    world_name: string;
-    character_class: string;
-    character_level: number;
-    image?: string;
-}
-
-interface Props {
-    character: CharacterSummary;
+interface ICharacterCardProps {
+    character: ICharacterSummary;
     isFavorite?: boolean;
     onToggleFavorite?: () => void;
     onSelect?: () => void;
@@ -28,7 +20,7 @@ const CharacterCard = ({
     isFavorite,
     onToggleFavorite,
     onSelect,
-}: Props) => {
+}: ICharacterCardProps) => {
     const [image, setImage] = useState<string | null>(character.image ?? null);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -67,7 +59,6 @@ const CharacterCard = ({
                 <Button
                     variant='ghost'
                     onClick={(e) => {
-                        console.log("????")
                         e.preventDefault();
                         e.stopPropagation(); // 부모 onClick 방지
                         onToggleFavorite?.();

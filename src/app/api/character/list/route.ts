@@ -1,19 +1,12 @@
 import axios, { AxiosError } from "axios";
 import { Get } from "@/lib/fetch";
 import { Failed, Success } from "@/lib/message";
+import { ICharacterSummary } from "@/interface/ICharacterSummary";
 
-interface CharacterSummary {
-    ocid: string;
-    character_name: string;
-    world_name: string;
-    character_class: string;
-    character_level: number;
-}
-
-interface CharacterListResponse {
+interface ICharacterListApiResponse {
     account_list: {
         account_id: string;
-        character_list: CharacterSummary[];
+        character_list: ICharacterSummary[];
     }[];
 }
 
@@ -24,7 +17,7 @@ export const GET = async (req: Request) => {
         if (!apiKey) return Failed("Missing API Key", 500);
 
         try {
-            const res = await axios.get<CharacterListResponse>(
+            const res = await axios.get<ICharacterListApiResponse>(
                 "https://open.api.nexon.com/maplestory/v1/character/list",
                 {
                     headers: { "x-nxopen-api-key": apiKey },

@@ -1,55 +1,55 @@
 /* -------------------- Stage1 -------------------- */
-export interface CharacterStat {
+export interface ICharacterStat {
     date: string
     character_class: string
     final_stat: { stat_name: string; stat_value: string }[]
     remain_ap: number
 }
 
-export interface CharacterPopularity {
+export interface ICharacterPopularity {
     date: string
     popularity: number
 }
 
-export interface HyperStatInfo {
+export interface IHyperStatInfo {
     stat_type: string
     stat_point: number
     stat_level: number
     stat_increase: string
 }
 
-export interface CharacterHyperStat {
+export interface ICharacterHyperStat {
     date: string
     character_class: string
     use_preset_no: string
     use_available_hyper_stat: number
-    hyper_stat_preset_1: HyperStatInfo[]
+    hyper_stat_preset_1: IHyperStatInfo[]
     hyper_stat_preset_1_remain_point: number
-    hyper_stat_preset_2: HyperStatInfo[]
+    hyper_stat_preset_2: IHyperStatInfo[]
     hyper_stat_preset_2_remain_point: number
-    hyper_stat_preset_3: HyperStatInfo[]
+    hyper_stat_preset_3: IHyperStatInfo[]
     hyper_stat_preset_3_remain_point: number
 }
 
-export interface Stage1Data {
-    stat?: CharacterStat
-    popularity?: CharacterPopularity
-    hyper?: CharacterHyperStat
+export interface IStage1Data {
+    stat?: ICharacterStat
+    popularity?: ICharacterPopularity
+    hyper?: ICharacterHyperStat
 }
 
 /* -------------------- Stage2 -------------------- */
-export interface CharacterItemEquipment {
+export interface ICharacterItemEquipment {
     date: string
     character_gender: string
     character_class: string
     preset_no: number
-    item_equipment: ItemEquipment[]
-    item_equipment_preset_1: ItemEquipment[]
-    item_equipment_preset_2: ItemEquipment[]
-    item_equipment_preset_3: ItemEquipment[]
+    item_equipment: IItemEquipment[]
+    item_equipment_preset_1: IItemEquipment[]
+    item_equipment_preset_2: IItemEquipment[]
+    item_equipment_preset_3: IItemEquipment[]
 }
 
-export interface ItemEquipment {
+export interface IItemEquipment {
     item_equipment_part: string
     item_equipment_slot: string
     item_name: string
@@ -61,19 +61,19 @@ export interface ItemEquipment {
     // ... (추가 옵션들 필요 시 확장)
 }
 
-export interface CharacterCashItemEquipment {
+export interface ICharacterCashItemEquipment {
     date: string
     character_gender: string
     character_class: string
     character_look_mode: string
     preset_no: number
-    cash_item_equipment_base: CashItem[]
-    cash_item_equipment_preset_1: CashItem[]
-    cash_item_equipment_preset_2: CashItem[]
-    cash_item_equipment_preset_3: CashItem[]
+    cash_item_equipment_base: ICashItem[]
+    cash_item_equipment_preset_1: ICashItem[]
+    cash_item_equipment_preset_2: ICashItem[]
+    cash_item_equipment_preset_3: ICashItem[]
 }
 
-export interface CashItem {
+export interface ICashItem {
     cash_item_equipment_part: string
     cash_item_equipment_slot: string
     cash_item_name: string
@@ -82,7 +82,7 @@ export interface CashItem {
     // ... (option, expire 등 필요시 확장)
 }
 
-export interface CharacterSymbolEquipment {
+export interface ICharacterSymbolEquipment {
     date: string
     character_class: string
     symbol: {
@@ -101,7 +101,7 @@ export interface CharacterSymbolEquipment {
     }[]
 }
 
-export interface CharacterSetEffect {
+export interface ICharacterSetEffect {
     date: string
     set_effect: {
         set_name: string
@@ -111,7 +111,7 @@ export interface CharacterSetEffect {
     }[]
 }
 
-export interface CharacterSkill {
+export interface ICharacterSkill {
     date: string
     character_class: string
     character_skill: {
@@ -123,7 +123,7 @@ export interface CharacterSkill {
     }[]
 }
 
-export interface CharacterLinkSkill {
+export interface ICharacterLinkSkill {
     date: string
     character_class: string
     character_link_skill: {
@@ -135,17 +135,17 @@ export interface CharacterLinkSkill {
     }[]
 }
 
-export interface Stage2Data {
-    itemEquip?: CharacterItemEquipment
-    cashEquip?: CharacterCashItemEquipment
-    symbolEquip?: CharacterSymbolEquipment
-    setEffect?: CharacterSetEffect
-    skill?: CharacterSkill[]
-    linkSkill?: CharacterLinkSkill
+export interface IStage2Data {
+    itemEquip?: ICharacterItemEquipment
+    cashEquip?: ICharacterCashItemEquipment
+    symbolEquip?: ICharacterSymbolEquipment
+    setEffect?: ICharacterSetEffect
+    skill?: ICharacterSkill[]
+    linkSkill?: ICharacterLinkSkill
 }
 
 /* -------------------- Stage3 -------------------- */
-export interface CharacterVMatrix {
+export interface ICharacterVMatrix {
     date: string
     character_class: string
     character_v_core_equipment: {
@@ -161,7 +161,7 @@ export interface CharacterVMatrix {
     character_v_matrix_remain_slot_upgrade_point: number
 }
 
-export interface CharacterHexaMatrix {
+export interface ICharacterHexaMatrix {
     date: string
     character_hexa_core_equipment: {
         hexa_core_name: string
@@ -171,15 +171,15 @@ export interface CharacterHexaMatrix {
     }[]
 }
 
-export interface CharacterHexaMatrixStat {
+export interface ICharacterHexaMatrixStat {
     date: string
     character_class: string
-    character_hexa_stat_core: HexaStatCore[]
-    character_hexa_stat_core_2: HexaStatCore[]
-    character_hexa_stat_core_3: HexaStatCore[]
+    character_hexa_stat_core: IHexaStatCore[]
+    character_hexa_stat_core_2: IHexaStatCore[]
+    character_hexa_stat_core_3: IHexaStatCore[]
 }
 
-export interface HexaStatCore {
+export interface IHexaStatCore {
     slot_id: string
     main_stat_name: string
     sub_stat_name_1: string
@@ -190,7 +190,7 @@ export interface HexaStatCore {
     stat_grade: number
 }
 
-export interface CharacterDojang {
+export interface ICharacterDojang {
     date: string
     character_class: string
     world_name: string
@@ -199,14 +199,14 @@ export interface CharacterDojang {
     dojang_best_time: number
 }
 
-export interface RingExchangeSkillEquipment {
+export interface IRingExchangeSkillEquipment {
     date: string
     character_class: string
     special_ring_exchange_name: string
     special_ring_exchange_level: number
 }
 
-export interface CharacterOtherStat {
+export interface ICharacterOtherStat {
     date: string
     other_stat: {
         other_stat_type: string
@@ -214,17 +214,17 @@ export interface CharacterOtherStat {
     }[]
 }
 
-export interface Stage3Data {
-    hexaMatrix?: CharacterHexaMatrix
-    hexaStat?: CharacterHexaMatrixStat
-    vMatrix?: CharacterVMatrix
-    dojang?: CharacterDojang
-    ring?: RingExchangeSkillEquipment
-    otherStat?: CharacterOtherStat
+export interface IStage3Data {
+    hexaMatrix?: ICharacterHexaMatrix
+    hexaStat?: ICharacterHexaMatrixStat
+    vMatrix?: ICharacterVMatrix
+    dojang?: ICharacterDojang
+    ring?: IRingExchangeSkillEquipment
+    otherStat?: ICharacterOtherStat
 }
 
 /* -------------------- Stage4 -------------------- */
-export interface CharacterBeautyEquipment {
+export interface ICharacterBeautyEquipment {
     date: string
     character_gender: string
     character_class: string
@@ -249,7 +249,7 @@ export interface CharacterBeautyEquipment {
     }
 }
 
-export interface CharacterAndroidEquipment {
+export interface ICharacterAndroidEquipment {
     date: string
     android_name: string
     android_icon: string
@@ -259,7 +259,7 @@ export interface CharacterAndroidEquipment {
     android_skin?: { skin_name: string; color_style: string }
 }
 
-export interface CharacterPetEquipment {
+export interface ICharacterPetEquipment {
     date: string
     pet_1_name: string
     pet_1_icon: string
@@ -267,7 +267,7 @@ export interface CharacterPetEquipment {
     // ... (펫2, 펫3도 동일 구조)
 }
 
-export interface CharacterPropensity {
+export interface ICharacterPropensity {
     date: string
     charisma_level: number
     sensibility_level: number
@@ -277,7 +277,7 @@ export interface CharacterPropensity {
     charm_level: number
 }
 
-export interface CharacterAbility {
+export interface ICharacterAbility {
     date: string
     ability_preset_no: number
     ability_info: {
@@ -287,10 +287,10 @@ export interface CharacterAbility {
     }[]
 }
 
-export interface Stage4Data {
-    beauty?: CharacterBeautyEquipment
-    android?: CharacterAndroidEquipment
-    pet?: CharacterPetEquipment
-    propensity?: CharacterPropensity
-    ability?: CharacterAbility
+export interface IStage4Data {
+    beauty?: ICharacterBeautyEquipment
+    android?: ICharacterAndroidEquipment
+    pet?: ICharacterPetEquipment
+    propensity?: ICharacterPropensity
+    ability?: ICharacterAbility
 }

@@ -8,19 +8,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { StatCard } from "@/components/character/card/StatCard";
 import { PopularityCard } from "@/components/character/card/PopularityCard";
 import { HyperStatCard } from "@/components/character/card/HyperStatCard";
-import { Stage1Data, Stage2Data, Stage3Data, Stage4Data } from "@/interface/character";
-
-interface CharacterBasic {
-    character_image?: string;
-    character_name: string;
-}
+import { IStage1Data, IStage2Data, IStage3Data, IStage4Data } from "@/interface/character";
+import { ICharacterResponse } from "@/interface/ICharacterResponse";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
-    const [basic, setBasic] = useState<CharacterBasic | null>(null);
-    const [stage1, setStage1] = useState<Stage1Data>({})
-    const [stage2, setStage2] = useState<Stage2Data>({})
-    const [stage3, setStage3] = useState<Stage3Data>({})
-    const [stage4, setStage4] = useState<Stage4Data>({})
+    const [basic, setBasic] = useState<Pick<ICharacterResponse, 'character_image' | 'character_name'> | null>(null);
+    const [stage1, setStage1] = useState<IStage1Data>({})
+    const [stage2, setStage2] = useState<IStage2Data>({})
+    const [stage3, setStage3] = useState<IStage3Data>({})
+    const [stage4, setStage4] = useState<IStage4Data>({})
 
     useEffect(() => {
         if (!ocid) return;
