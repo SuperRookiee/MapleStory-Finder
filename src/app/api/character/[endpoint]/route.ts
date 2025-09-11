@@ -3,10 +3,10 @@ import { NextRequest } from "next/server";
 import { GetWithParams } from "@/lib/fetch";
 import { Failed, Success } from "@/lib/message";
 
-export async function GET(
+export const GET = async (
     req: NextRequest,
     context: { params: Promise<{ endpoint: string }> }
-) {
+) => {
     const apiKey = req.headers.get("x-nxopen-api-key");
 
     const handler = GetWithParams<
@@ -37,4 +37,5 @@ export async function GET(
     });
 
     return handler(req, context);
-}
+};
+

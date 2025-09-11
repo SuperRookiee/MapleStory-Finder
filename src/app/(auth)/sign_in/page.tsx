@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
-export default function SignInPage() {
+const SignInPage = () => {
     const router = useRouter();
     const setApiKey = useUserStore((s) => s.setApiKey);
     const [form, setForm] = useState({ email: '', password: '' });
@@ -99,4 +99,7 @@ export default function SignInPage() {
             </div>
         </div>
     );
-}
+};
+
+export default SignInPage;
+

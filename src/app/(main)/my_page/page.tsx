@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useUserStore } from '@/store/userStore';
 
-export default function MyPage() {
+const MyPage = () => {
   const setApiKey = useUserStore((s) => s.setApiKey);
   const [form, setForm] = useState({
     name: '',
@@ -101,4 +101,7 @@ export default function MyPage() {
       </form>
     </div>
   );
-}
+};
+
+export default MyPage;
+

@@ -18,7 +18,6 @@ import {
     removeFavorite,
 } from "@/fetch/favorite.fetch";
 import CharacterCardSkeleton from "@/components/Character/CharacterCardSkeleton";
-import { Grid } from "react-window";
 import CharacterCell from "@/components/Character/CharacterCell";
 
 interface CharacterSummary {
@@ -123,15 +122,16 @@ const CharacterList = () => {
                     ))}
                 </div>
             ) : (
-                <Grid
-                    cellComponent={CharacterCell}
-                    cellProps={{ characters: displayCharacters, favorites, toggleFavorite }}
-                    columnCount={3}
-                    columnWidth={300}
-                    rowCount={Math.ceil(displayCharacters.length / 3)}
-                    rowHeight={360}
-                    overscanCount={2}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {displayCharacters.map((character) => (
+                        <CharacterCell
+                            key={character.ocid}
+                            character={character}
+                            favorites={favorites}
+                            toggleFavorite={toggleFavorite}
+                        />
+                    ))}
+                </div>
             )}
         </div>
     );

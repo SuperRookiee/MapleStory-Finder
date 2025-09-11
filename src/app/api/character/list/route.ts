@@ -17,7 +17,7 @@ interface CharacterListResponse {
     }[];
 }
 
-export async function GET(req: Request) {
+export const GET = async (req: Request) => {
     const apiKey = req.headers.get("x-nxopen-api-key");
 
     const handler = Get(async () => {
@@ -48,5 +48,5 @@ export async function GET(req: Request) {
     });
 
     return handler(req);
-}
+};
 

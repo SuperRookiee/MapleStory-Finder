@@ -23,12 +23,12 @@ interface Props {
     onSelect?: () => void;
 }
 
-export default function CharacterCard({
-                                          character,
-                                          isFavorite,
-                                          onToggleFavorite,
-                                          onSelect,
-                                      }: Props) {
+const CharacterCard = ({
+    character,
+    isFavorite,
+    onToggleFavorite,
+    onSelect,
+}: Props) => {
     const [image, setImage] = useState<string | null>(character.image ?? null);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -57,7 +57,7 @@ export default function CharacterCard({
     }, [character.ocid, image]);
 
     const content = (
-        <Card className="p-4 flex flex-col relative" onClick={onSelect} ref={ref}>
+        <Card className="p-4 flex flex-col relative w-full" onClick={onSelect} ref={ref}>
             <div
                 className="absolute top-2 right-2"
                 onClick={(e) => {
@@ -102,4 +102,6 @@ export default function CharacterCard({
             {content}
         </Link>
     );
-}
+};
+
+export default CharacterCard;

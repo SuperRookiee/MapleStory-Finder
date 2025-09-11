@@ -1,5 +1,8 @@
 import CharacterDetail from "@/components/Character/CharacterDetail";
 
-export default function CharacterPage({ params }: { params: { ocid: string } }) {
+const CharacterPage = ({ params }: { params: { ocid: string } }) => {
     return <CharacterDetail ocid={params.ocid}/>;
-}
+};
+
+export default CharacterPage;
+
