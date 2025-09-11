@@ -4,37 +4,28 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useUserStore } from "@/store/userStore";
 import { toast } from "sonner";
-import { findCharacterList } from "@/fetchs/character.fetch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ICharacterSummary } from "@/interface/ICharacterSummary";
-
-interface ICharacterListResponse {
-    message: string;
-    status: number;
-    characters: ICharacterSummary[];
-}
+import { useCharacterListStore } from "@/store/characterListStore";
 
 const CharacterList = () => {
     const setApiKey = useUserStore((s) => s.setApiKey);
-    const [characters, setCharacters] = useState<ICharacterSummary[]>([]);
+    const { characters, loading, fetchCharacters } = useCharacterListStore();
     const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState("전체월드");
     const [favorites, setFavorites] = useState<string[]>([]);
     const [userId, setUserId] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const load = async () => {
-            setLoading(true);
             const { data } = await supabase.auth.getSession();
             const session = data.session;
 
             if (!session) {
-                setLoading(false);
                 return;
             }
 
@@ -43,24 +34,16 @@ const CharacterList = () => {
             if (key) setApiKey(key);
 
             try {
-                const res: ICharacterListResponse = await findCharacterList();
-                const list = res.characters ?? [];
-                const sorted = list.sort((a, b) => b.character_level - a.character_level);
-
-                setCharacters(sorted);
-                setDisplayCharacters(sorted);
-                setLoading(false);
-
+                await fetchCharacters();
                 const favorite = await getFavorites(session.user.id);
                 setFavorites(favorite);
             } catch (err) {
                 if (err instanceof Error) toast.error(err.message);
-                setLoading(false);
             }
         };
 
         load();
-    }, [setApiKey]);
+    }, [fetchCharacters, setApiKey]);
 
     // 서버 선택 필터링
     useEffect(() => {
