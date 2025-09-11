@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import SideMenu from "@/components/SideMenu";
 
-export default function Header() {
+const Header = () => {
     const pathname = usePathname();
     const [email, setEmail] = useState<string | null>(null);
 
@@ -28,5 +28,7 @@ export default function Header() {
             </div>
         </header>
     );
-}
+};
+
+export default Header;
 
