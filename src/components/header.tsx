@@ -40,22 +40,22 @@ export default function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between border-b p-4">
+    <header className="flex items-center justify-between border-b px-4 py-2">
       <div>{email ?? "Guest"}</div>
       <div className="flex items-center space-x-2">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="ghost" size="sm">
               <Menu className="h-4 w-4" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right">
             <SheetContentHeader>
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle>Finder</SheetTitle>
             </SheetContentHeader>
             <div className="mt-4 space-y-2">
               <Button variant="ghost" className="w-full">
-                Menu Item 1
+                Character List
               </Button>
               <Button variant="ghost" className="w-full">
                 Menu Item 2

@@ -82,9 +82,6 @@ const Home = () => {
     return (
         <div className="flex h-screen">
             <div className="w-1/3 border-r overflow-y-auto p-4">
-                <div className="mb-4">
-                    <p className="font-bold">{user?.email}</p>
-                </div>
                 <div className="space-y-4">
                     {loading
                         ? Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i} />)
@@ -103,7 +100,7 @@ const Home = () => {
                 {selected ? (
                     <CharacterDetail ocid={selected} />
                 ) : (
-                    <div className="p-4">캐릭터를 선택하세요</div>
+                    <div className="p-4 animate-pulse">캐릭터를 선택하세요</div>
                 )}
             </div>
         </div>
