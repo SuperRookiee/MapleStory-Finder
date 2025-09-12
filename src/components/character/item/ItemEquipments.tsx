@@ -64,8 +64,9 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
                             <Image
                                 src={equip.item_icon}
                                 alt={equip.item_name}
-                                width={10}
-                                height={10}
+                                width={35}
+                                height={35}
+                                priority
                             />
                         </div>
                     );

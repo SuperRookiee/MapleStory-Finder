@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { Spinner } from '@/components/ui/spinner';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { StatCard } from "@/components/character/card/StatCard";
-import { PopularityCard } from "@/components/character/card/PopularityCard";
-import { HyperStatCard } from "@/components/character/card/HyperStatCard";
+import { Stat } from "@/components/character/detail/Stat";
+import { Popularity } from "@/components/character/detail/Popularity";
+import { HyperStat } from "@/components/character/detail/HyperStat";
 import { characterDetailStore } from "@/store/characterDetailStore";
 import { toast } from "sonner";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
@@ -175,9 +175,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         )}
 
                         {/* 주요 스탯 */}
-                        {stat && <StatCard stat={stat} />}
-                        {popularity && <PopularityCard popularity={popularity.popularity} />}
-                        {hyper && <HyperStatCard hyper={hyper} />}
+                        {stat && <Stat stat={stat} />}
+                        {popularity && <Popularity popularity={popularity.popularity} />}
+                        {hyper && <HyperStat hyper={hyper} />}
 
                         {/* 장비 */}
                         {itemEquip && <ItemEquipments items={itemEquip.item_equipment} />}

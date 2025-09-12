@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function PopularityCard({ popularity }: { popularity: number }) {
+export function Popularity({ popularity }: { popularity: number }) {
     return (
         <Card className="w-full">
             <CardHeader>
