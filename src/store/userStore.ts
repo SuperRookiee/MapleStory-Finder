@@ -16,6 +16,6 @@ export const userStore = create<UserSlice>()(persist((set) => ({
             set((state) => ({ user: { ...state.user, apiKey: key } })),
     }),
     {
-        name: "user-storage", // localStorage key
+        name: "userStore",
     }
 ));

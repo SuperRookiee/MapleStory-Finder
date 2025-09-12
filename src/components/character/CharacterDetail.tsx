@@ -9,6 +9,7 @@ import { StatCard } from "@/components/character/card/StatCard";
 import { PopularityCard } from "@/components/character/card/PopularityCard";
 import { HyperStatCard } from "@/components/character/card/HyperStatCard";
 import { characterDetailStore } from "@/store/characterDetailStore";
+import { toast } from "sonner";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
@@ -88,8 +89,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setPet(pet)
                 setPropensity(propensity)
                 setAbility(ability)
-            } catch (err) {
-                console.error('캐릭터 정보 로딩 실패:', err);
+            } catch (e) {
+                console.error(e)
+                toast.error('캐릭터 정보 로딩 실패');
             }
         };
 
@@ -155,7 +157,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         skill,
                         linkSkill,
                     }).map(([key, value]) => (
-                        <section key={key}>
+                        <section key={key} className='w-full'>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
                             <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
                                 {JSON.stringify(value, null, 2)}
