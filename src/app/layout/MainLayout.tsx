@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { supabase } from '@/libs/supabaseClient';
 import Header from '@/components/Header';
 

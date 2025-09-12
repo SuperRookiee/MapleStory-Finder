@@ -1,16 +1,16 @@
 'use client'
 
-import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
-import { Spinner } from '@/components/ui/spinner';
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Stat } from "@/components/character/detail/Stat";
-import { Popularity } from "@/components/character/detail/Popularity";
-import { HyperStat } from "@/components/character/detail/HyperStat";
-import { characterDetailStore } from "@/stores/characterDetailStore";
+import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import { toast } from "sonner";
+import { HyperStat } from "@/components/character/detail/HyperStat";
+import { Popularity } from "@/components/character/detail/Popularity";
+import { Stat } from "@/components/character/detail/Stat";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Spinner } from '@/components/ui/spinner';
+import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
+import { characterDetailStore } from "@/stores/characterDetailStore";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {

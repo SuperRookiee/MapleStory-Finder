@@ -1,14 +1,14 @@
 'use client'
 
-import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
 import { supabase } from "@/libs/supabaseClient";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
-import { findCharacterBasic } from "@/fetchs/character.fetch";
-import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
-import FavoriteList from "@/components/home/FavoriteList";
 import CharacterInfo from "@/components/home/CharacterInfo";
+import FavoriteList from "@/components/home/FavoriteList";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { findCharacterBasic } from "@/fetchs/character.fetch";
+import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 const Home = () => {
     const router = useRouter();

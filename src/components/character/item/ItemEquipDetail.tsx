@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { IItemEquipment } from "@/interface/character/ICharacter";
-import { getGradeColor } from "@/constants/option_grade_color.constant";
 import RenderOptionRow from "@/components/character/item/renderOptionRow";
+import { getGradeColor } from "@/constants/option_grade_color.constant";
+import { IItemEquipment } from "@/interface/character/ICharacter";
 
 interface ItemEquipDetailProps {
     item: IItemEquipment;
@@ -22,7 +22,6 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
         ["방어력", "armor", item.item_total_option?.armor],
     ];
 
-    const total = item.item_total_option || {};
     const base = item.item_base_option || {};
     const add = item.item_add_option || {};
     const etc = item.item_etc_option || {};

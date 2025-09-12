@@ -1,8 +1,8 @@
 import axios from "axios";
-import { userStore } from "@/stores/userStore";
-import { CharacterResponse } from "@/interface/CharacterResponse";
-import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { CharacterResponse } from "@/interface/CharacterResponse";
+import { userStore } from "@/stores/userStore";
 
 const delay = (ms: number) =>
     new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -31,7 +31,7 @@ const callCharacterApi = async <T>(
         const response = await axios.get<CharacterResponse<T>>(`/api/character/${endpoint}`, {
             headers: { "x-nxopen-api-key": apiKey ?? "" },
             params: Object.fromEntries(
-                Object.entries(params).filter(([_, v]) => v !== undefined)
+                Object.entries(params).filter(([, v]) => v !== undefined)
             ),
         });
         return response.data;

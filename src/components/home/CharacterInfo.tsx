@@ -1,15 +1,15 @@
 'use client'
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
+import { useEffect, useState } from "react";
+import { cn } from "@/libs/utils";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
-import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
-import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/libs/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Spinner } from "@/components/ui/spinner";
+import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
+import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 
 interface ICharacterInfoProps {
     ocid: string | null;

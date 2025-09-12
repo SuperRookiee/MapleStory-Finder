@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { Star } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 interface ICharacterCardProps {

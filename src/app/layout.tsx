@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react";
+import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react";
 
 const mapleStory = localFont({
     src: [

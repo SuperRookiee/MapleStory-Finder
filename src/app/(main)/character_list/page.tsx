@@ -1,16 +1,16 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/libs/supabaseClient";
-import { userStore } from "@/stores/userStore";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
+import { supabase } from "@/libs/supabaseClient";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { characterListStore } from "@/stores/characterListStore";
+import { userStore } from "@/stores/userStore";
 
 const CharacterList = () => {
     const setApiKey = userStore((s) => s.setApiKey);

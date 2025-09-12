@@ -1,8 +1,8 @@
-import { IItemEquipment } from "@/interface/character/ICharacter";
-import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import Image from "next/image";
+import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
+import { IItemEquipment } from "@/interface/character/ICharacter";
 
 interface IEquipmentGrid {
     items: IItemEquipment[];

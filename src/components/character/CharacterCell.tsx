@@ -1,5 +1,5 @@
-import CharacterCard from "@/components/character/CharacterCard";
 import { useRouter } from "next/navigation";
+import CharacterCard from "@/components/character/CharacterCard";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 interface ICharacterCellProps {

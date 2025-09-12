@@ -1,6 +1,6 @@
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { ICharacterStat } from "@/interface/character/ICharacter"
 
 export const Stat = ({ stat }: { stat: ICharacterStat }) => {
