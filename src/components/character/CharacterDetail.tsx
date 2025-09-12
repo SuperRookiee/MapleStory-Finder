@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { StatCard } from "@/components/character/card/StatCard";
 import { PopularityCard } from "@/components/character/card/PopularityCard";
 import { HyperStatCard } from "@/components/character/card/HyperStatCard";
+import { ItemEquipCard } from "@/components/character/card/ItemEquipCard";
 import { characterDetailStore } from "@/store/characterDetailStore";
 import { toast } from "sonner";
 
@@ -148,9 +149,23 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {popularity && <PopularityCard popularity={popularity.popularity}/>}
                     {hyper && <HyperStatCard hyper={hyper}/>}
 
-                    {/* 장비 / 스킬 - 카드 UI 미구현으로 JSON 프리뷰 */}
+                    {/* 장비 */}
+                    {itemEquip?.item_equipment && (
+                        <section className="w-full">
+                            <h2 className="text-xl font-bold mb-2">itemEquip</h2>
+                            <div className="space-y-2">
+                                {itemEquip.item_equipment.map((equip) => (
+                                    <ItemEquipCard
+                                        key={`${equip.item_equipment_part}-${equip.item_equipment_slot}`}
+                                        item={equip}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* 스킬 등 - JSON 프리뷰 */}
                     {Object.entries({
-                        itemEquip,
                         cashEquip,
                         symbolEquip,
                         setEffect,

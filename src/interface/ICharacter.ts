@@ -48,11 +48,25 @@ export interface IItemEquipment {
     item_equipment_slot: string
     item_name: string
     item_icon: string
+    potential_option_grade?: string | null
+    starforce?: string
+    item_total_option?: {
+        str?: string
+        dex?: string
+        int?: string
+        luk?: string
+        attack_power?: string
+        magic_power?: string
+        boss_damage?: string
+        ignore_monster_armor?: string
+    }
+    potential_option_1?: string | null
+    potential_option_2?: string | null
+    potential_option_3?: string | null
     item_description: string
     item_shape_name: string
     item_shape_icon: string
     item_gender: string
-    // ... (추가 옵션들 필요 시 확장)
 }
 
 export interface ICharacterCashItemEquipment {
