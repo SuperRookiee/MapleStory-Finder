@@ -9,13 +9,15 @@ import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/charact
 import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ICharacterInfoProps {
     ocid: string | null;
     goToDetailPage: () => void;
+    className?: string;
 }
 
-const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
+const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps) => {
     const [basic, setBasic] = useState<ICharacterBasic | null>(null);
     const [items, setItems] = useState<IItemEquipment[]>([]);
     const [loading, setLoading] = useState(false);
@@ -39,7 +41,7 @@ const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
     }, [ocid]);
 
     return (
-        <ScrollArea className="hidden md:flex flex-1">
+        <ScrollArea className={cn("hidden md:flex flex-1", className)}>
             {!ocid ? (
                 <div className="flex justify-center items-center w-full h-page animate-pulse">
                     Please choose your character

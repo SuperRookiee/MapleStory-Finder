@@ -1,11 +1,9 @@
 'use client'
 
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
@@ -19,7 +17,6 @@ const Home = () => {
     const [selected, setSelected] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
-    const selectedCharacter = favorites.find((f) => f.ocid === selected);
 
     useEffect(() => {
         const load = async () => {
@@ -99,40 +96,16 @@ const Home = () => {
                 />
 
                 {/* 캐릭터 정보 */}
-                <CharacterInfo ocid={selected} goToDetailPage={goToDetailPage}/>
+                <CharacterInfo ocid={selected} goToDetailPage={goToDetailPage} />
 
                 {/* 모바일 다이얼로그 */}
                 <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent className="max-w-sm sm:max-w-md">
-                        {selectedCharacter && (
-                            <>
-                                <DialogHeader>
-                                    <DialogTitle>{selectedCharacter.character_name}</DialogTitle>
-                                </DialogHeader>
-                                <div className="space-y-4">
-                                    {selectedCharacter.image && (
-                                        <div className="relative w-40 h-40 mx-auto">
-                                            <Image
-                                                src={selectedCharacter.image}
-                                                alt={selectedCharacter.character_name}
-                                                fill
-                                                className="object-contain"
-                                                sizes="160px"
-                                            />
-                                        </div>
-                                    )}
-                                    <p className="text-center text-muted-foreground">
-                                        {selectedCharacter.character_class}
-                                    </p>
-                                    <p className="text-center font-bold text-red-500">
-                                        Lv. {selectedCharacter.character_level}
-                                    </p>
-                                    <div className="flex justify-center">
-                                        <Button onClick={goToDetailPage}>Detail</Button>
-                                    </div>
-                                </div>
-                            </>
-                        )}
+                    <DialogContent className="max-w-sm sm:max-w-md p-0">
+                        <CharacterInfo
+                            ocid={selected}
+                            goToDetailPage={goToDetailPage}
+                            className="flex md:hidden max-h-[80vh]"
+                        />
                     </DialogContent>
                 </Dialog>
             </div>
