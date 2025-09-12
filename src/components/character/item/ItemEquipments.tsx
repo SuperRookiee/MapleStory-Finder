@@ -2,10 +2,12 @@ import Image from "next/image";
 import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { IItemEquipment } from "@/interface/character/ICharacter";
 
 interface IEquipmentGrid {
-    items: IItemEquipment[];
+    items?: IItemEquipment[];
+    loading?: boolean;
 }
 
 // 장비 슬롯 위치 (col, row)
@@ -41,7 +43,7 @@ const slotPosition: Record<string, { col: number; row: number }> = {
     "훈장": { col: 5, row: 3 },
 };
 
-const ItemEquipments = ({ items }: IEquipmentGrid) => {
+const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
     return (
         <Card>
             <CardHeader>
@@ -49,34 +51,45 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
             </CardHeader>
             <CardContent className="flex justify-center">
                 <div className="grid grid-cols-5 grid-rows-6 gap-2 p-4 bg-muted rounded-lg w-[420px]">
-                    {items.map((equip) => {
-                        const pos = slotPosition[equip.item_equipment_slot];
-                        if (!pos) return null;
+                    {Object.entries(slotPosition).map(([slot, pos]) => {
+                        const equip = items.find((item) => item.item_equipment_slot === slot);
+
+                        if (equip && !loading) {
+                            return (
+                                <Popover key={slot}>
+                                    <PopoverTrigger asChild>
+                                        <div
+                                            className="w-14 h-14 p-2 border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
+                                            style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
+                                        >
+                                            <Image
+                                                src={equip.item_icon}
+                                                alt={equip.item_name}
+                                                width={40}
+                                                height={40}
+                                                priority
+                                            />
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        side="right"
+                                        align="start"
+                                        className="p-0 bg-transparent border-none shadow-none"
+                                    >
+                                        <ItemEquipDetail item={equip} />
+                                    </PopoverContent>
+                                </Popover>
+                            );
+                        }
 
                         return (
-                            <Popover key={`${equip.item_equipment_part}-${equip.item_equipment_slot}`}>
-                                <PopoverTrigger asChild>
-                                    <div
-                                        className="w-14 h-14 p-2 border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
-                                        style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
-                                    >
-                                        <Image
-                                            src={equip.item_icon}
-                                            alt={equip.item_name}
-                                            width={40}
-                                            height={40}
-                                            priority
-                                        />
-                                    </div>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    side="right"
-                                    align="start"
-                                    className="p-0 bg-transparent border-none shadow-none"
-                                >
-                                    <ItemEquipDetail item={equip} />
-                                </PopoverContent>
-                            </Popover>
+                            <div
+                                key={slot}
+                                className="w-14 h-14 p-2 border rounded-md flex items-center justify-center bg-card"
+                                style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
+                            >
+                                <Skeleton className="w-10 h-10" />
+                            </div>
                         );
                     })}
                 </div>

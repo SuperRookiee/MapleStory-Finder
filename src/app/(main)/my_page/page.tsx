@@ -7,7 +7,18 @@ import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import { userStore } from '@/stores/userStore';
+
+const FormSkeleton = () => (
+  <div className="flex justify-center p-4">
+    <div className="w-full max-w-sm space-y-4">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Skeleton key={i} className="h-10 w-full" />
+      ))}
+    </div>
+  </div>
+);
 
 const PageContent = () => {
   const setApiKey = userStore((s) => s.setApiKey);
@@ -19,6 +30,7 @@ const PageContent = () => {
     apiKey: '',
   });
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
     if (searchParams.get('missingApiKey')) {
@@ -37,6 +49,7 @@ const PageContent = () => {
           apiKey: user.user_metadata?.nexon_api_key ?? '',
         }));
       }
+      setInitialLoading(false);
     });
   }, []);
 
@@ -61,6 +74,8 @@ const PageContent = () => {
     }
     setLoading(false);
   };
+
+  if (initialLoading) return <FormSkeleton />;
 
   return (
     <div className="flex justify-center p-4">
@@ -112,7 +127,7 @@ const PageContent = () => {
 };
 
 const MyPage = () => (
-  <Suspense fallback={<div />}>
+  <Suspense fallback={<FormSkeleton />}> 
     <PageContent />
   </Suspense>
 );
