@@ -1,37 +1,58 @@
 // characterDetailStore.ts
 import { create } from 'zustand'
-import { IStage1Data, IStage2Data, IStage3Data, IStage4Data } from "@/interface/ICharacter"
-import { ICharacterResponse } from "@/interface/ICharacterResponse"
+import {
+    ICharacterStat,
+    ICharacterPopularity,
+    ICharacterHyperStat,
+    ICharacterItemEquipment,
+    ICharacterCashItemEquipment,
+    ICharacterSymbolEquipment,
+    ICharacterSetEffect,
+    ICharacterSkill,
+    ICharacterLinkSkill,
+    ICharacterHexaMatrix,
+    ICharacterHexaMatrixStat,
+    ICharacterVMatrix,
+    ICharacterDojang,
+    IRingExchangeSkillEquipment,
+    ICharacterOtherStat,
+    ICharacterBeautyEquipment,
+    ICharacterAndroidEquipment,
+    ICharacterPetEquipment,
+    ICharacterPropensity,
+    ICharacterAbility,
+} from "@/interface/ICharacter";
+import { ICharacterResponse } from "@/interface/ICharacterResponse";
 
 type CharacterDetailSlice = {
     // 기본 정보
     basic: Pick<ICharacterResponse, 'character_image' | 'character_name'> | null
-    stat: IStage1Data['stat'] | null
-    popularity: IStage1Data['popularity'] | null
-    hyper: IStage1Data['hyper'] | null
+    stat: ICharacterStat | null
+    popularity: ICharacterPopularity | null
+    hyper: ICharacterHyperStat | null
 
     // 장비 / 스킬
-    itemEquip: IStage2Data['itemEquip'] | null
-    cashEquip: IStage2Data['cashEquip'] | null
-    symbolEquip: IStage2Data['symbolEquip'] | null
-    setEffect: IStage2Data['setEffect'] | null
-    skill: IStage2Data['skill'] | null
-    linkSkill: IStage2Data['linkSkill'] | null
+    itemEquip: ICharacterItemEquipment | null
+    cashEquip: ICharacterCashItemEquipment | null
+    symbolEquip: ICharacterSymbolEquipment | null
+    setEffect: ICharacterSetEffect | null
+    skill: ICharacterSkill[] | null
+    linkSkill: ICharacterLinkSkill | null
 
     // 심화
-    hexaMatrix: IStage3Data['hexaMatrix'] | null
-    hexaStat: IStage3Data['hexaStat'] | null
-    vMatrix: IStage3Data['vMatrix'] | null
-    dojang: IStage3Data['dojang'] | null
-    ring: IStage3Data['ring'] | null
-    otherStat: IStage3Data['otherStat'] | null
+    hexaMatrix: ICharacterHexaMatrix | null
+    hexaStat: ICharacterHexaMatrixStat | null
+    vMatrix: ICharacterVMatrix | null
+    dojang: ICharacterDojang | null
+    ring: IRingExchangeSkillEquipment | null
+    otherStat: ICharacterOtherStat | null
 
     // 꾸미기 / 기타
-    beauty: IStage4Data['beauty'] | null
-    android: IStage4Data['android'] | null
-    pet: IStage4Data['pet'] | null
-    propensity: IStage4Data['propensity'] | null
-    ability: IStage4Data['ability'] | null
+    beauty: ICharacterBeautyEquipment | null
+    android: ICharacterAndroidEquipment | null
+    pet: ICharacterPetEquipment | null
+    propensity: ICharacterPropensity | null
+    ability: ICharacterAbility | null
 
     // setter
     setBasic: (basic: CharacterDetailSlice['basic']) => void

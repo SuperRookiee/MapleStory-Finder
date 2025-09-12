@@ -141,13 +141,20 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         </div>
                     )}
 
-                    {/* 1단계 : 주요 스탯 */}
-                    {stage1.stat && <StatCard stat={stage1.stat}/>}
-                    {stage1.popularity && <PopularityCard popularity={stage1.popularity.popularity}/>}
-                    {stage1.hyper && <HyperStatCard hyper={stage1.hyper}/>}
+                    {/* 주요 스탯 */}
+                    {stat && <StatCard stat={stat}/>}
+                    {popularity && <PopularityCard popularity={popularity.popularity}/>}
+                    {hyper && <HyperStatCard hyper={hyper}/>}
 
-                    {/* 2단계 ~ 4단계는 아직 카드 UI 안만들었으므로 JSON 프리뷰 */}
-                    {Object.entries(stage2).map(([key, value]) => (
+                    {/* 장비 / 스킬 - 카드 UI 미구현으로 JSON 프리뷰 */}
+                    {Object.entries({
+                        itemEquip,
+                        cashEquip,
+                        symbolEquip,
+                        setEffect,
+                        skill,
+                        linkSkill,
+                    }).map(([key, value]) => (
                         <section key={key}>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
                             <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
@@ -156,7 +163,15 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         </section>
                     ))}
 
-                    {Object.entries(stage3).map(([key, value]) => (
+                    {/* 심화 - JSON 프리뷰 */}
+                    {Object.entries({
+                        hexaMatrix,
+                        hexaStat,
+                        vMatrix,
+                        dojang,
+                        ring,
+                        otherStat,
+                    }).map(([key, value]) => (
                         <section key={key}>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
                             <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
@@ -165,7 +180,14 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         </section>
                     ))}
 
-                    {Object.entries(stage4).map(([key, value]) => (
+                    {/* 꾸미기 / 기타 - JSON 프리뷰 */}
+                    {Object.entries({
+                        beauty,
+                        android,
+                        pet,
+                        propensity,
+                        ability,
+                    }).map(([key, value]) => (
                         <section key={key}>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
                             <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
