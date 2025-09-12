@@ -16,7 +16,6 @@ const SignUpPage = () => {
     const setApiKey = userStore((s) => s.setApiKey);
     const [form, setForm] = useState({ email: '', password: '', apiKey: '' });
     const [loading, setLoading] = useState(false);
-    const [googleLoading, setGoogleLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
