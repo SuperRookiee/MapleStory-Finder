@@ -7,6 +7,7 @@ import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton"
 import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { characterListStore } from "@/stores/characterListStore";
@@ -69,18 +70,22 @@ const CharacterList = () => {
     return (
         <div className="flex h-[calc(100vh-var(--header-height))] flex-col">
             {/* 서버 선택 */}
-            <Select value={worldFilter} onValueChange={setWorldFilter}>
-                <SelectTrigger className="mb-4 w-[180px]">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    {worlds.map((world) => (
-                        <SelectItem key={world} value={world}>
-                            {world}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+            {loading ? (
+                <Skeleton className="mb-4 h-10 w-[180px]" />
+            ) : (
+                <Select value={worldFilter} onValueChange={setWorldFilter}>
+                    <SelectTrigger className="mb-4 w-[180px]">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {worlds.map((world) => (
+                            <SelectItem key={world} value={world}>
+                                {world}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            )}
 
             {loading ? (
                 <div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
