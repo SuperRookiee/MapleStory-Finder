@@ -34,7 +34,7 @@ const CharacterCard = ({
                         onToggleFavorite?.();
                     }}
                 >
-                    <Star className={`h-5 w-5 ${isFavorite ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}/>
+                    <Star className={`h-5 w-5 ${isFavorite ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"}`}/>
                 </Button>
             </div>
 
