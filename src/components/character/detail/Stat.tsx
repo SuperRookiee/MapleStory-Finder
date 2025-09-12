@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { ICharacterStat } from "@/interface/character/ICharacter"
 
-export function Stat({ stat }: { stat: ICharacterStat }) {
+export const Stat = ({ stat }: { stat: ICharacterStat }) => {
     const highlights = ["전투력", "보스 몬스터 데미지", "크리티컬 확률", "크리티컬 데미지"]
 
     return (
@@ -38,3 +38,4 @@ export function Stat({ stat }: { stat: ICharacterStat }) {
         </Card>
     )
 }
+

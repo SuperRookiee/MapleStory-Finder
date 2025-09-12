@@ -1,5 +1,30 @@
 import axios from "axios";
 import { userStore } from "@/store/userStore";
+import { CharacterResponse } from "@/interface/CharacterResponse";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import {
+    ICharacterAbility,
+    ICharacterAndroidEquipment,
+    ICharacterBeautyEquipment,
+    ICharacterBasic,
+    ICharacterCashItemEquipment,
+    ICharacterDojang,
+    ICharacterHexaMatrix,
+    ICharacterHexaMatrixStat,
+    ICharacterHyperStat,
+    ICharacterItemEquipment,
+    ICharacterLinkSkill,
+    ICharacterOtherStat,
+    ICharacterPetEquipment,
+    ICharacterPopularity,
+    ICharacterPropensity,
+    ICharacterSetEffect,
+    ICharacterSkill,
+    ICharacterStat,
+    ICharacterSymbolEquipment,
+    ICharacterVMatrix,
+    IRingExchangeSkillEquipment,
+} from "@/interface/character/ICharacter";
 
 const delay = (ms: number) =>
     new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -8,23 +33,28 @@ let requestQueue: Promise<unknown> = Promise.resolve();
 
 export const findCharacterList = async () => {
     const apiKey = userStore.getState().user.apiKey;
-    const response = await axios.get(`/api/character/list`, {
-        headers: { "x-nxopen-api-key": apiKey ?? "" },
-    });
+    const response = await axios.get<CharacterResponse<{ characters: ICharacterSummary[] }>>(
+        `/api/character/list`,
+        {
+            headers: { "x-nxopen-api-key": apiKey ?? "" },
+        }
+    );
     return response.data;
 };
 
-const callCharacterApi = async (
+const callCharacterApi = async <T>(
     endpoint: string,
     params: Record<string, string | number | undefined> = {}
-) => {
+): Promise<CharacterResponse<T>> => {
     const apiKey = userStore.getState().user.apiKey;
 
     const task = async () => {
         await delay(200);
-        const response = await axios.get(`/api/character/${endpoint}`, {
+        const response = await axios.get<CharacterResponse<T>>(`/api/character/${endpoint}`, {
             headers: { "x-nxopen-api-key": apiKey ?? "" },
-            params: Object.fromEntries(Object.entries(params).filter(([_, v]) => v !== undefined)),
+            params: Object.fromEntries(
+                Object.entries(params).filter(([_, v]) => v !== undefined)
+            ),
         });
         return response.data;
     };
@@ -36,69 +66,69 @@ const callCharacterApi = async (
 
 /* ---------------- 기본 API ---------------- */
 export const findCharacterBasic = (ocid: string, date?: string) =>
-    callCharacterApi("basic", { ocid, date });
+    callCharacterApi<ICharacterBasic>("basic", { ocid, date });
 
 export const findCharacterPopularity = (ocid: string, date?: string) =>
-    callCharacterApi("popularity", { ocid, date });
+    callCharacterApi<ICharacterPopularity>("popularity", { ocid, date });
 
 export const findCharacterStat = (ocid: string, date?: string) =>
-    callCharacterApi("stat", { ocid, date });
+    callCharacterApi<ICharacterStat>("stat", { ocid, date });
 
 export const findCharacterHyperStat = (ocid: string, date?: string) =>
-    callCharacterApi("hyper-stat", { ocid, date });
+    callCharacterApi<ICharacterHyperStat>("hyper-stat", { ocid, date });
 
 export const findCharacterPropensity = (ocid: string, date?: string) =>
-    callCharacterApi("propensity", { ocid, date });
+    callCharacterApi<ICharacterPropensity>("propensity", { ocid, date });
 
 export const findCharacterAbility = (ocid: string, date?: string) =>
-    callCharacterApi("ability", { ocid, date });
+    callCharacterApi<ICharacterAbility>("ability", { ocid, date });
 
 export const findCharacterItemEquipment = (ocid: string, date?: string) =>
-    callCharacterApi("item-equipment", { ocid, date });
+    callCharacterApi<ICharacterItemEquipment>("item-equipment", { ocid, date });
 
 export const findCharacterCashItemEquipment = (ocid: string, date?: string) =>
-    callCharacterApi("cashitem-equipment", { ocid, date });
+    callCharacterApi<ICharacterCashItemEquipment>("cashitem-equipment", { ocid, date });
 
 export const findCharacterSymbolEquipment = (ocid: string, date?: string) =>
-    callCharacterApi("symbol-equipment", { ocid, date });
+    callCharacterApi<ICharacterSymbolEquipment>("symbol-equipment", { ocid, date });
 
 export const findCharacterSetEffect = (ocid: string, date?: string) =>
-    callCharacterApi("set-effect", { ocid, date });
+    callCharacterApi<ICharacterSetEffect>("set-effect", { ocid, date });
 
 export const findCharacterBeautyEquipment = (ocid: string, date?: string) =>
-    callCharacterApi("beauty-equipment", { ocid, date });
+    callCharacterApi<ICharacterBeautyEquipment>("beauty-equipment", { ocid, date });
 
 export const findCharacterAndroidEquipment = (ocid: string, date?: string) =>
-    callCharacterApi("android-equipment", { ocid, date });
+    callCharacterApi<ICharacterAndroidEquipment>("android-equipment", { ocid, date });
 
 export const findCharacterPetEquipment = (ocid: string, date?: string) =>
-    callCharacterApi("pet-equipment", { ocid, date });
+    callCharacterApi<ICharacterPetEquipment>("pet-equipment", { ocid, date });
 
 /* ---------------- 스킬 API ---------------- */
 // character_skill_grade 필수, date는 옵션
 export const findCharacterSkill = (ocid: string, grade: string, date?: string) =>
-    callCharacterApi("skill", { ocid, character_skill_grade: grade, date, });
+    callCharacterApi<ICharacterSkill>("skill", { ocid, character_skill_grade: grade, date });
 
 export const findCharacterLinkSkill = (ocid: string, date?: string) =>
-    callCharacterApi("link-skill", { ocid, date });
+    callCharacterApi<ICharacterLinkSkill>("link-skill", { ocid, date });
 
 export const findCharacterVMatrix = (ocid: string, date?: string) =>
-    callCharacterApi("vmatrix", { ocid, date });
+    callCharacterApi<ICharacterVMatrix>("vmatrix", { ocid, date });
 
 export const findCharacterHexaMatrix = (ocid: string, date?: string) =>
-    callCharacterApi("hexamatrix", { ocid, date });
+    callCharacterApi<ICharacterHexaMatrix>("hexamatrix", { ocid, date });
 
 export const findCharacterHexaMatrixStat = (ocid: string, date?: string) =>
-    callCharacterApi("hexamatrix-stat", { ocid, date });
+    callCharacterApi<ICharacterHexaMatrixStat>("hexamatrix-stat", { ocid, date });
 
 export const findCharacterDojang = (ocid: string, date?: string) =>
-    callCharacterApi("dojang", { ocid, date });
+    callCharacterApi<ICharacterDojang>("dojang", { ocid, date });
 
 export const findCharacterOtherStat = (ocid: string, date?: string) =>
-    callCharacterApi("other-stat", { ocid, date });
+    callCharacterApi<ICharacterOtherStat>("other-stat", { ocid, date });
 
 export const findCharacterRingExchange = (ocid: string, date?: string) =>
-    callCharacterApi("ring-exchange-skill-equipment", { ocid, date });
+    callCharacterApi<IRingExchangeSkillEquipment>("ring-exchange-skill-equipment", { ocid, date });
 
 export const findCharacterId = (character_name: string) =>
-    callCharacterApi("id", { character_name });
+    callCharacterApi<{ ocid: string }>("id", { character_name });

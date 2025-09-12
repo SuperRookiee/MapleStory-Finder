@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { findCharacterBasic, findCharacterList } from "@/fetchs/character.fetch";
-import { ICharacterListResponse } from "@/interface/character/ICharacterListResponse";
+import { CharacterResponse } from "@/interface/CharacterResponse";
 
 type CharacterListSlice = {
     characters: ICharacterSummary[];
@@ -16,8 +16,8 @@ export const characterListStore = create<CharacterListSlice>()(persist((set) => 
         fetchCharacters: async () => {
             set({ loading: true });
             try {
-                const res: ICharacterListResponse = await findCharacterList();
-                const basicList = (res.characters ?? []).map((c) => ({
+                const res: CharacterResponse<{ characters: ICharacterSummary[] }> = await findCharacterList();
+                const basicList = (res.data.characters ?? []).map((c) => ({
                     ocid: c.ocid,
                     character_name: c.character_name,
                     world_name: c.world_name,
@@ -32,7 +32,7 @@ export const characterListStore = create<CharacterListSlice>()(persist((set) => 
                         const data = await findCharacterBasic(char.ocid);
                         set((state) => ({
                             characters: state.characters.map((c) =>
-                                c.ocid === char.ocid ? { ...c, image: data.character_image } : c
+                                c.ocid === char.ocid ? { ...c, image: data.data.character_image } : c
                             ),
                         }));
                     }

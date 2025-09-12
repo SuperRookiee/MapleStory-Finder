@@ -23,7 +23,7 @@ export const GET = async (
                     headers: { "x-nxopen-api-key": apiKey },
                 }
             );
-            return Success("캐릭터 정보 조회 성공", 200, res.data);
+            return Success("캐릭터 정보 조회 성공", 200, { data: res.data });
         } catch (err: unknown) {
             if (err instanceof AxiosError) {
                 const message =
