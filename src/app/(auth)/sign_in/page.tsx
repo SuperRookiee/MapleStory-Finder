@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,19 @@ const SignInPage = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [googleLoading, setGoogleLoading] = useState(false);
+
+    useEffect(() => {
+        const loadSession = async () => {
+            const { data } = await supabase.auth.getSession();
+            const session = data.session;
+            if (session) {
+                const key = session.user.user_metadata?.nexon_api_key;
+                if (key) setApiKey(key);
+                router.replace('/');
+            }
+        };
+        loadSession();
+    }, [router, setApiKey]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

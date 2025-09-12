@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { CharacterResponse } from "@/interface/CharacterResponse";
@@ -11,13 +11,22 @@ let requestQueue: Promise<unknown> = Promise.resolve();
 
 export const findCharacterList = async () => {
     const apiKey = userStore.getState().user.apiKey;
-    const response = await axios.get<CharacterResponse<{ characters: ICharacterSummary[] }>>(
-        `/api/character/list`,
-        {
-            headers: { "x-nxopen-api-key": apiKey ?? "" },
+    try {
+        const response = await axios.get<CharacterResponse<{ characters: ICharacterSummary[] }>>(
+            `/api/character/list`,
+            {
+                headers: { "x-nxopen-api-key": apiKey ?? "" },
+            }
+        );
+        return response.data;
+    } catch (err) {
+        if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
+            if (typeof window !== "undefined") {
+                window.location.href = "/my_page?missingApiKey=1";
+            }
         }
-    );
-    return response.data;
+        throw err;
+    }
 };
 
 const callCharacterApi = async <T>(
@@ -28,13 +37,22 @@ const callCharacterApi = async <T>(
 
     const task = async () => {
         await delay(200);
-        const response = await axios.get<CharacterResponse<T>>(`/api/character/${endpoint}`, {
-            headers: { "x-nxopen-api-key": apiKey ?? "" },
-            params: Object.fromEntries(
-                Object.entries(params).filter(([, v]) => v !== undefined)
-            ),
-        });
-        return response.data;
+        try {
+            const response = await axios.get<CharacterResponse<T>>(`/api/character/${endpoint}`, {
+                headers: { "x-nxopen-api-key": apiKey ?? "" },
+                params: Object.fromEntries(
+                    Object.entries(params).filter(([, v]) => v !== undefined)
+                ),
+            });
+            return response.data;
+        } catch (err) {
+            if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
+                if (typeof window !== "undefined") {
+                    window.location.href = "/my_page?missingApiKey=1";
+                }
+            }
+            throw err;
+        }
     };
 
     const result = requestQueue.then(task);
