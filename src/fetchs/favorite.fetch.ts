@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/libs/supabaseClient";
 
 export const getFavorites = async (userId: string) => {
   const { data } = await supabase

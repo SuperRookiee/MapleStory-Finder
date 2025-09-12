@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader as SheetContentHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/libs/supabaseClient";
 import { useRouter } from "next/navigation";
-import { userStore } from "@/store/userStore";
+import { userStore } from "@/stores/userStore";
 
 const SideMenu = () => {
     const router = useRouter();

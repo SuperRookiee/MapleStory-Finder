@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Stat } from "@/components/character/detail/Stat";
 import { Popularity } from "@/components/character/detail/Popularity";
 import { HyperStat } from "@/components/character/detail/HyperStat";
-import { characterDetailStore } from "@/store/characterDetailStore";
+import { characterDetailStore } from "@/stores/characterDetailStore";
 import { toast } from "sonner";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 

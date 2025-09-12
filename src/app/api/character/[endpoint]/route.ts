@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { NextRequest } from "next/server";
-import { GetWithParams } from "@/lib/fetch";
-import { Failed, Success } from "@/lib/message";
+import { GetWithParams } from "@/libs/fetch";
+import { Failed, Success } from "@/libs/message";
 
 export const GET = async (
     req: NextRequest,

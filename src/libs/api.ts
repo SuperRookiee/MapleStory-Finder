@@ -1,5 +1,5 @@
 import axios from "axios";
-import { userStore } from "@/store/userStore";
+import { userStore } from "@/stores/userStore";
 
 export const api = axios.create({
   baseURL: "https://open.api.nexon.com/maplestory/v1",

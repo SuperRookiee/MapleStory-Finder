@@ -2,8 +2,8 @@
 
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { supabase } from "@/libs/supabaseClient";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
@@ -101,6 +101,7 @@ const Home = () => {
                 {/* 모바일 다이얼로그 */}
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogContent className="max-w-sm sm:max-w-md p-0">
+                        <DialogTitle>Info</DialogTitle>
                         <CharacterInfo
                             ocid={selected}
                             goToDetailPage={goToDetailPage}

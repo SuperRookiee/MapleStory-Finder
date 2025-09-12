@@ -1,12 +1,12 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/libs/supabaseClient';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { userStore } from '@/store/userStore';
+import { userStore } from '@/stores/userStore';
 
 const MyPage = () => {
   const setApiKey = userStore((s) => s.setApiKey);

@@ -1,30 +1,8 @@
 import axios from "axios";
-import { userStore } from "@/store/userStore";
+import { userStore } from "@/stores/userStore";
 import { CharacterResponse } from "@/interface/CharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
-import {
-    ICharacterAbility,
-    ICharacterAndroidEquipment,
-    ICharacterBeautyEquipment,
-    ICharacterBasic,
-    ICharacterCashItemEquipment,
-    ICharacterDojang,
-    ICharacterHexaMatrix,
-    ICharacterHexaMatrixStat,
-    ICharacterHyperStat,
-    ICharacterItemEquipment,
-    ICharacterLinkSkill,
-    ICharacterOtherStat,
-    ICharacterPetEquipment,
-    ICharacterPopularity,
-    ICharacterPropensity,
-    ICharacterSetEffect,
-    ICharacterSkill,
-    ICharacterStat,
-    ICharacterSymbolEquipment,
-    ICharacterVMatrix,
-    IRingExchangeSkillEquipment,
-} from "@/interface/character/ICharacter";
+import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 
 const delay = (ms: number) =>
     new Promise<void>((resolve) => setTimeout(resolve, ms));

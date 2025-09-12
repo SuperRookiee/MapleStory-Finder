@@ -62,29 +62,121 @@ export interface ICharacterItemEquipment {
 }
 
 export interface IItemEquipment {
-    item_equipment_part: string
-    item_equipment_slot: string
-    item_name: string
-    item_icon: string
-    potential_option_grade?: string | null
-    starforce?: string
+    equipment_level_increase: string;
+    item_equipment_part: string;
+    item_equipment_slot: string;
+    item_name: string;
+    item_icon: string;
+
+    // 스타포스 / 등급
+    starforce?: string;
+    potential_option_grade?: string | null;
+    additional_potential_option_grade?: string | null;
+
+    // 기본 잠재
+    potential_option_1?: string | null;
+    potential_option_2?: string | null;
+    potential_option_3?: string | null;
+
+    // 에디셔널 잠재
+    additional_potential_option_1?: string | null;
+    additional_potential_option_2?: string | null;
+    additional_potential_option_3?: string | null;
+
+    // 익셉셔널 잠재
+    item_exceptional_option?: {
+        str?: string;
+        dex?: string;
+        int?: string;
+        luk?: string;
+        attack_power?: string;
+        magic_power?: string;
+    };
+
+    // 총합 옵션
     item_total_option?: {
-        str?: string
-        dex?: string
-        int?: string
-        luk?: string
-        attack_power?: string
-        magic_power?: string
-        boss_damage?: string
-        ignore_monster_armor?: string
-    }
-    potential_option_1?: string | null
-    potential_option_2?: string | null
-    potential_option_3?: string | null
-    item_description: string
-    item_shape_name: string
-    item_shape_icon: string
-    item_gender: string
+        str?: string;
+        dex?: string;
+        int?: string;
+        luk?: string;
+        all_stat?: string;
+        max_hp?: string;
+        max_mp?: string
+        attack_power?: string;
+        magic_power?: string;
+        boss_damage?: string;
+        ignore_monster_armor?: string;
+        armor?: string;
+        damage?: string;
+    };
+
+    // 기본 옵션
+    item_base_option?: {
+        str?: string;
+        dex?: string;
+        int?: string;
+        luk?: string;
+        max_hp?: string;
+        max_mp?: string;
+        attack_power?: string;
+        magic_power?: string;
+        armor?: string;
+        speed?: string;
+        jump?: string;
+    };
+
+    // 추가 옵션 (잠재/에디셔널이 아닌 장비 추가 능력치)
+    item_add_option?: {
+        str?: string;
+        dex?: string;
+        int?: string;
+        luk?: string;
+        max_hp?: string;
+        max_mp?: string;
+        attack_power?: string;
+        magic_power?: string;
+        armor?: string;
+        speed?: string;
+        jump?: string;
+        all_stat?: string;
+        damage?: string;
+    };
+
+    // 기타 옵션 (주문서 강화 등)
+    item_etc_option?: {
+        str?: string;
+        dex?: string;
+        int?: string;
+        luk?: string;
+        max_hp?: string;
+        max_mp?: string;
+        attack_power?: string;
+        magic_power?: string;
+        armor?: string;
+        speed?: string;
+        jump?: string;
+    };
+
+    // 스타포스 옵션
+    item_starforce_option?: {
+        str?: string;
+        dex?: string;
+        int?: string;
+        luk?: string;
+        max_hp?: string;
+        max_mp?: string;
+        attack_power?: string;
+        magic_power?: string;
+        armor?: string;
+        speed?: string;
+        jump?: string;
+    };
+
+    // 기타 기본 정보
+    item_description: string | null;
+    item_shape_name: string;
+    item_shape_icon: string;
+    item_gender: string | null;
 }
 
 export interface ICharacterCashItemEquipment {
@@ -160,6 +252,7 @@ export interface ICharacterLinkSkill {
         skill_icon: string
     }[]
 }
+
 /* -------------------- 심화 -------------------- */
 export interface ICharacterVMatrix {
     date: string
@@ -229,6 +322,7 @@ export interface ICharacterOtherStat {
         stat_info: { stat_name: string; stat_value: string }[]
     }[]
 }
+
 /* -------------------- 꾸미기 / 기타 -------------------- */
 export interface ICharacterBeautyEquipment {
     date: string

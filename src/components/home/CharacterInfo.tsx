@@ -9,7 +9,7 @@ import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/charact
 import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 
 interface ICharacterInfoProps {
     ocid: string | null;

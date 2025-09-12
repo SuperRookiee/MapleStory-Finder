@@ -1,4 +1,4 @@
-import { ErrorType, SuccessType, WithoutConflict } from "@/type/MessageType";
+import { ErrorType, SuccessType, WithoutConflict } from "@/types/MessageType";
 
 // #. 성공 메세지
 export const Success = <T extends object = object>(message: string, status?: number, options?: WithoutConflict<T>): SuccessType & T => {
