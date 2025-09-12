@@ -174,7 +174,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     }).map(([key, value]) => (
                         <section key={key} className='w-full'>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
+                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
                                 {JSON.stringify(value, null, 2)}
                             </pre>
                         </section>
@@ -191,7 +191,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     }).map(([key, value]) => (
                         <section key={key}>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
+                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
                                 {JSON.stringify(value, null, 2)}
                             </pre>
                         </section>
@@ -207,7 +207,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     }).map(([key, value]) => (
                         <section key={key}>
                             <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
+                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
                                 {JSON.stringify(value, null, 2)}
                             </pre>
                         </section>
