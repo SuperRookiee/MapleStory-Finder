@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { StatCard } from "@/components/character/card/StatCard";
 import { PopularityCard } from "@/components/character/card/PopularityCard";
 import { HyperStatCard } from "@/components/character/card/HyperStatCard";
+import { JsonCard } from "@/components/character/card/JsonCard";
 import { characterDetailStore } from "@/store/characterDetailStore";
 import { toast } from "sonner";
 
@@ -148,7 +149,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {popularity && <PopularityCard popularity={popularity.popularity}/>}
                     {hyper && <HyperStatCard hyper={hyper}/>}
 
-                    {/* 장비 / 스킬 - 카드 UI 미구현으로 JSON 프리뷰 */}
+                    {/* 장비 / 스킬 */}
                     {Object.entries({
                         itemEquip,
                         cashEquip,
@@ -157,15 +158,10 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         skill,
                         linkSkill,
                     }).map(([key, value]) => (
-                        <section key={key} className='w-full'>
-                            <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
-                                {JSON.stringify(value, null, 2)}
-                            </pre>
-                        </section>
+                        <JsonCard key={key} title={key} data={value} />
                     ))}
 
-                    {/* 심화 - JSON 프리뷰 */}
+                    {/* 심화 */}
                     {Object.entries({
                         hexaMatrix,
                         hexaStat,
@@ -174,15 +170,10 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         ring,
                         otherStat,
                     }).map(([key, value]) => (
-                        <section key={key}>
-                            <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
-                                {JSON.stringify(value, null, 2)}
-                            </pre>
-                        </section>
+                        <JsonCard key={key} title={key} data={value} />
                     ))}
 
-                    {/* 꾸미기 / 기타 - JSON 프리뷰 */}
+                    {/* 꾸미기 / 기타 */}
                     {Object.entries({
                         beauty,
                         android,
@@ -190,12 +181,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         propensity,
                         ability,
                     }).map(([key, value]) => (
-                        <section key={key}>
-                            <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto">
-                                {JSON.stringify(value, null, 2)}
-                            </pre>
-                        </section>
+                        <JsonCard key={key} title={key} data={value} />
                     ))}
                 </div>
             </ScrollArea>
