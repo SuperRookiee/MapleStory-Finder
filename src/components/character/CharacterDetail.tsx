@@ -147,46 +147,50 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6 p-4">
-                    {loading ? (
-                        <>
-                            <div className="relative w-80 h-80 mx-auto">
-                                <Skeleton className="w-full h-full" />
-                            </div>
-                            <Skeleton className="h-6 w-40 mx-auto" />
-                            <ItemEquipments loading items={[]} />
-                        </>
+                    <div
+                        className="relative w-80 h-80 mx-auto transition-all duration-300"
+                        style={{
+                            transform: `scale(${imageScale})`,
+                            opacity: imageScale,
+                        }}
+                    >
+                        {loading || !basic ? (
+                            <Skeleton className="w-full h-full" />
+                        ) : (
+                            basic.character_image && (
+                                <Image
+                                    src={basic.character_image}
+                                    alt={basic.character_name}
+                                    className="object-contain"
+                                    fill
+                                    priority
+                                />
+                            )
+                        )}
+                    </div>
+                    {loading || !basic ? (
+                        <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
+                        <p className="text-center font-bold mt-2">{basic.character_name}</p>
+                    )}
+
+                    {/* 주요 스탯 */}
+                    <Stat stat={stat} loading={loading || !stat} />
+                    <Popularity
+                        popularity={popularity?.popularity}
+                        loading={loading || !popularity}
+                    />
+                    <HyperStat hyper={hyper} loading={loading || !hyper} />
+
+                    {/* 장비 */}
+                    <ItemEquipments
+                        items={itemEquip?.item_equipment || []}
+                        loading={loading || !itemEquip}
+                    />
+
+                    {/* 상세 정보는 로딩 완료 후 표시 */}
+                    {!loading && (
                         <>
-                            {/* 캐릭터 기본 정보 */}
-                            {basic && (
-                                <div
-                                    className="relative w-80 h-80 mx-auto transition-all duration-300"
-                                    style={{
-                                        transform: `scale(${imageScale})`,
-                                        opacity: imageScale,
-                                    }}
-                                >
-                                    {basic.character_image && (
-                                        <Image
-                                            src={basic.character_image}
-                                            alt={basic.character_name}
-                                            className="object-contain"
-                                            fill
-                                            priority
-                                        />
-                                    )}
-                                    <p className="text-center font-bold mt-2">{basic.character_name}</p>
-                                </div>
-                            )}
-
-                            {/* 주요 스탯 */}
-                            {stat && <Stat stat={stat} />}
-                            {popularity && <Popularity popularity={popularity.popularity} />}
-                            {hyper && <HyperStat hyper={hyper} />}
-
-                            {/* 장비 */}
-                            {itemEquip && <ItemEquipments items={itemEquip.item_equipment} />}
-
                             {/* 스킬 등 - JSON 프리뷰 */}
                             {Object.entries({
                                 cashEquip,
