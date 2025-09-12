@@ -92,7 +92,6 @@ const MyPage = () => {
             id="apiKey"
             value={form.apiKey}
             onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
-            required
           />
         </div>
         <Button type="submit" className="w-full" disabled={loading}>

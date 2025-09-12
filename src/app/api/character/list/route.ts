@@ -11,7 +11,8 @@ interface ICharacterListApiResponse {
 }
 
 export const GET = async (req: Request) => {
-    const apiKey = req.headers.get("x-nxopen-api-key");
+    const apiKey =
+        req.headers.get("x-nxopen-api-key") || process.env.VITE_NEXON_API_KEY;
 
     const handler = Get(async () => {
         if (!apiKey) return Failed("Missing API Key", 500);

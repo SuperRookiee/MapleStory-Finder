@@ -6,7 +6,8 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const apiKey = userStore.getState().user.apiKey;
+  const apiKey =
+    userStore.getState().user.apiKey || process.env.VITE_NEXON_API_KEY;
   if (apiKey) {
     config.headers = config.headers ?? {};
     config.headers["x-nxopen-api-key"] = apiKey;
