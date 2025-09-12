@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function Popularity({ popularity }: { popularity: number }) {
+export const Popularity = ({ popularity }: { popularity: number }) => {
     return (
         <Card className="w-full">
             <CardHeader>
@@ -12,3 +12,4 @@ export function Popularity({ popularity }: { popularity: number }) {
         </Card>
     )
 }
+

@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ICharacterHyperStat } from "@/interface/character/ICharacter";
 
-export function HyperStat({ hyper }: { hyper: ICharacterHyperStat }) {
+export const HyperStat = ({ hyper }: { hyper: ICharacterHyperStat }) => {
     const presets = [
         { key: "1", label: "프리셋 1", stats: hyper.hyper_stat_preset_1 },
         { key: "2", label: "프리셋 2", stats: hyper.hyper_stat_preset_2 },
@@ -43,3 +43,4 @@ export function HyperStat({ hyper }: { hyper: ICharacterHyperStat }) {
         </Card>
     )
 }
+

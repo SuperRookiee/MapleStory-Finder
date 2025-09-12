@@ -40,14 +40,14 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     findCharacterPopularity(ocid),
                     findCharacterHyperStat(ocid),
                 ]);
-                setBasic(basicRes)
-                setStat(stat)
-                setPopularity(popularity)
-                setHyper(hyper)
+                setBasic(basicRes.data)
+                setStat(stat.data)
+                setPopularity(popularity.data)
+                setHyper(hyper.data)
 
                 // 장비/스킬
                 const grades = ["0", "1", "2", "3", "4", "5", "6", "hyperpassive", "hyperactive"]
-                const [itemEquip, cashEquip, symbolEquip, setEffect, skill, linkSkill] =
+                const [itemEquipRes, cashEquipRes, symbolEquipRes, setEffectRes, skillRes, linkSkillRes] =
                     await Promise.all([
                         findCharacterItemEquipment(ocid),
                         findCharacterCashItemEquipment(ocid),
@@ -56,15 +56,15 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         Promise.all(grades.map((g) => findCharacterSkill(ocid, g))),
                         findCharacterLinkSkill(ocid),
                     ]);
-                setItemEquip(itemEquip)
-                setCashEquip(cashEquip)
-                setSymbolEquip(symbolEquip)
-                setSetEffect(setEffect)
-                setSkill(skill)
-                setLinkSkill(linkSkill)
+                setItemEquip(itemEquipRes.data)
+                setCashEquip(cashEquipRes.data)
+                setSymbolEquip(symbolEquipRes.data)
+                setSetEffect(setEffectRes.data)
+                setSkill(skillRes.map((s) => s.data))
+                setLinkSkill(linkSkillRes.data)
 
                 // 심화
-                const [hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat] =
+                const [hexaMatrixRes, hexaStatRes, vMatrixRes, dojangRes, ringRes, otherStatRes] =
                     await Promise.all([
                         findCharacterHexaMatrix(ocid),
                         findCharacterHexaMatrixStat(ocid),
@@ -73,26 +73,26 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         findCharacterRingExchange(ocid),
                         findCharacterOtherStat(ocid),
                     ]);
-                setHexaMatrix(hexaMatrix)
-                setHexaStat(hexaStat)
-                setVMatrix(vMatrix)
-                setDojang(dojang)
-                setRing(ring)
-                setOtherStat(otherStat)
+                setHexaMatrix(hexaMatrixRes.data)
+                setHexaStat(hexaStatRes.data)
+                setVMatrix(vMatrixRes.data)
+                setDojang(dojangRes.data)
+                setRing(ringRes.data)
+                setOtherStat(otherStatRes.data)
 
                 // 꾸미기/기타
-                const [beauty, android, pet, propensity, ability] = await Promise.all([
+                const [beautyRes, androidRes, petRes, propensityRes, abilityRes] = await Promise.all([
                     findCharacterBeautyEquipment(ocid),
                     findCharacterAndroidEquipment(ocid),
                     findCharacterPetEquipment(ocid),
                     findCharacterPropensity(ocid),
                     findCharacterAbility(ocid),
                 ]);
-                setBeauty(beauty)
-                setAndroid(android)
-                setPet(pet)
-                setPropensity(propensity)
-                setAbility(ability)
+                setBeauty(beautyRes.data)
+                setAndroid(androidRes.data)
+                setPet(petRes.data)
+                setPropensity(propensityRes.data)
+                setAbility(abilityRes.data)
             } catch (e) {
                 console.error(e)
                 toast.error('캐릭터 정보 로딩 실패');

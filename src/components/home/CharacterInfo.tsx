@@ -6,8 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
-import { IItemEquipment } from "@/interface/character/ICharacter";
-import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
+import { IItemEquipment, ICharacterBasic } from "@/interface/character/ICharacter";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
 
@@ -17,7 +16,7 @@ interface ICharacterInfoProps {
 }
 
 const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
-    const [basic, setBasic] = useState<ICharacterResponse | null>(null);
+    const [basic, setBasic] = useState<ICharacterBasic | null>(null);
     const [items, setItems] = useState<IItemEquipment[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -30,8 +29,8 @@ const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
                     findCharacterBasic(ocid),
                     findCharacterItemEquipment(ocid),
                 ]);
-                setBasic(basicRes as ICharacterResponse);
-                setItems(itemRes.item_equipment);
+                setBasic(basicRes.data);
+                setItems(itemRes.data.item_equipment);
             } finally {
                 setLoading(false);
             }

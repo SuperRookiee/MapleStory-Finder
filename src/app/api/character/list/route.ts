@@ -28,7 +28,9 @@ export const GET = async (req: Request) => {
                 (account) => account.character_list
             );
 
-            return Success("캐릭터 목록 조회 성공", 200, { characters });
+            return Success("캐릭터 목록 조회 성공", 200, {
+                data: { characters },
+            });
         } catch (err: unknown) {
             if (err instanceof AxiosError) {
                 const message = err.response?.data?.error?.message ?? err.message;

@@ -1,11 +1,10 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
-import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, ICharacterBasic, } from "@/interface/character/ICharacter";
 
 type CharacterDetailSlice = {
     // 기본 정보
-    basic: Pick<ICharacterResponse, 'character_image' | 'character_name'> | null
+    basic: Pick<ICharacterBasic, 'character_image' | 'character_name'> | null
     stat: ICharacterStat | null
     popularity: ICharacterPopularity | null
     hyper: ICharacterHyperStat | null

@@ -37,11 +37,11 @@ const Home = () => {
                     const data = await findCharacterBasic(ocid);
                     return {
                         ocid,
-                        character_name: data.character_name,
-                        world_name: data.world_name,
-                        character_class: data.character_class,
-                        character_level: data.character_level,
-                        image: data.character_image,
+                        character_name: data.data.character_name,
+                        world_name: data.data.world_name,
+                        character_class: data.data.character_class,
+                        character_level: data.data.character_level,
+                        image: data.data.character_image,
                     } as ICharacterSummary;
                 })
             );
@@ -65,11 +65,11 @@ const Home = () => {
                 ...favorites,
                 {
                     ocid,
-                    character_name: data.character_name,
-                    world_name: data.world_name,
-                    character_class: data.character_class,
-                    character_level: data.character_level,
-                    image: data.character_image,
+                    character_name: data.data.character_name,
+                    world_name: data.data.world_name,
+                    character_class: data.data.character_class,
+                    character_level: data.data.character_level,
+                    image: data.data.character_image,
                 },
             ]);
         }
