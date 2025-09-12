@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import Image from "next/image";
 
 const SignUpPage = () => {
     const router = useRouter();
@@ -38,19 +39,15 @@ const SignUpPage = () => {
         setLoading(false);
     };
 
-    const handleGoogle = async () => {
-        setGoogleLoading(true);
-        await supabase.auth.signInWithOAuth({ provider: 'google' });
-        setGoogleLoading(false);
-    };
-
     return (
         <div className="flex min-h-screen">
             <div className="relative hidden w-1/2 md:block">
-                <img
-                    src="https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80"
+                <Image
+                    src="https://ssl.nexon.com/s2/game/maplestory/renewal/common/media/artwork/artwork_14.jpg"
                     alt="Cover"
                     className="absolute inset-0 h-full w-full object-cover"
+                    fill
+                    priority
                 />
             </div>
             <div className="flex flex-1 items-center justify-center p-4">
@@ -89,15 +86,6 @@ const SignUpPage = () => {
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
                         {loading ? 'Create account...' : 'Create account'}
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full"
-                        onClick={handleGoogle}
-                        disabled={googleLoading}
-                    >
-                        {googleLoading ? 'Sign up with Google...' : 'Sign up with Google'}
                     </Button>
                     <p className="text-sm text-center">
                         Already have an account?{' '}

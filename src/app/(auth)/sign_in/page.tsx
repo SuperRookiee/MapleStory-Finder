@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import Image from "next/image";
 
 const SignInPage = () => {
     const router = useRouter();
@@ -46,10 +47,12 @@ const SignInPage = () => {
     return (
         <div className="flex min-h-screen">
             <div className="relative hidden w-1/2 md:block">
-                <img
+                <Image
                     src="https://lwi.nexon.com/maplestory/common/media/artwork/artwork_117.jpg"
                     alt="Cover"
                     className="absolute inset-0 h-full w-full object-cover"
+                    fill
+                    priority
                 />
             </div>
             <div className="flex flex-1 items-center justify-center p-4">

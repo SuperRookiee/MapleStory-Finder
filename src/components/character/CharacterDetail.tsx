@@ -1,6 +1,6 @@
 'use client'
 
-import React, { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
+import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { Spinner } from '@/components/ui/spinner';
@@ -8,9 +8,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { StatCard } from "@/components/character/card/StatCard";
 import { PopularityCard } from "@/components/character/card/PopularityCard";
 import { HyperStatCard } from "@/components/character/card/HyperStatCard";
-import { ItemEquipCard } from "@/components/character/card/ItemEquipCard";
 import { characterDetailStore } from "@/store/characterDetailStore";
 import { toast } from "sonner";
+import ItemEquipments from "@/components/character/item/ItemEquipments";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
@@ -22,7 +22,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         setItemEquip, setCashEquip, setSymbolEquip, setSetEffect, setSkill, setLinkSkill,
         setHexaMatrix, setHexaStat, setVMatrix, setDojang, setRing, setOtherStat,
         setBeauty, setAndroid, setPet, setPropensity, setAbility
-    } = characterDetailStore()
+    } = characterDetailStore();
     const [imageScale, setImageScale] = useState(1);
 
     useEffect(() => {
@@ -126,16 +126,15 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 opacity: imageScale,
                             }}
                         >
-                            {basic.character_image && (
+                            {basic.character_image &&
                                 <Image
                                     src={basic.character_image}
                                     alt={basic.character_name}
-                                    fill
                                     className="object-contain"
-                                    style={{ viewTransitionName: `character-image-${ocid}` }}
-                                    sizes="320px"
+                                    fill
+                                    priority
                                 />
-                            )}
+                            }
                             <p className="text-center font-bold mt-2">{basic.character_name}</p>
                         </div>
                     ) : (
@@ -150,19 +149,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {hyper && <HyperStatCard hyper={hyper}/>}
 
                     {/* 장비 */}
-                    {itemEquip?.item_equipment && (
-                        <section className="w-full">
-                            <h2 className="text-xl font-bold mb-2">itemEquip</h2>
-                            <div className="space-y-2">
-                                {itemEquip.item_equipment.map((equip) => (
-                                    <ItemEquipCard
-                                        key={`${equip.item_equipment_part}-${equip.item_equipment_slot}`}
-                                        item={equip}
-                                    />
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                    {itemEquip && <ItemEquipments items={itemEquip.item_equipment}/>}
 
                     {/* 스킬 등 - JSON 프리뷰 */}
                     {Object.entries({
