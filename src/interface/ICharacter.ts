@@ -1,4 +1,4 @@
-/* -------------------- Stage1 -------------------- */
+/* -------------------- 기본 정보 -------------------- */
 export interface ICharacterStat {
     date: string
     character_class: string
@@ -31,13 +31,7 @@ export interface ICharacterHyperStat {
     hyper_stat_preset_3_remain_point: number
 }
 
-export interface IStage1Data {
-    stat?: ICharacterStat
-    popularity?: ICharacterPopularity
-    hyper?: ICharacterHyperStat
-}
-
-/* -------------------- Stage2 -------------------- */
+/* -------------------- 장비 / 스킬 -------------------- */
 export interface ICharacterItemEquipment {
     date: string
     character_gender: string
@@ -134,17 +128,7 @@ export interface ICharacterLinkSkill {
         skill_icon: string
     }[]
 }
-
-export interface IStage2Data {
-    itemEquip?: ICharacterItemEquipment
-    cashEquip?: ICharacterCashItemEquipment
-    symbolEquip?: ICharacterSymbolEquipment
-    setEffect?: ICharacterSetEffect
-    skill?: ICharacterSkill[]
-    linkSkill?: ICharacterLinkSkill
-}
-
-/* -------------------- Stage3 -------------------- */
+/* -------------------- 심화 -------------------- */
 export interface ICharacterVMatrix {
     date: string
     character_class: string
@@ -213,17 +197,7 @@ export interface ICharacterOtherStat {
         stat_info: { stat_name: string; stat_value: string }[]
     }[]
 }
-
-export interface IStage3Data {
-    hexaMatrix?: ICharacterHexaMatrix
-    hexaStat?: ICharacterHexaMatrixStat
-    vMatrix?: ICharacterVMatrix
-    dojang?: ICharacterDojang
-    ring?: IRingExchangeSkillEquipment
-    otherStat?: ICharacterOtherStat
-}
-
-/* -------------------- Stage4 -------------------- */
+/* -------------------- 꾸미기 / 기타 -------------------- */
 export interface ICharacterBeautyEquipment {
     date: string
     character_gender: string
@@ -285,12 +259,4 @@ export interface ICharacterAbility {
         ability_grade: string
         ability_value: string
     }[]
-}
-
-export interface IStage4Data {
-    beauty?: ICharacterBeautyEquipment
-    android?: ICharacterAndroidEquipment
-    pet?: ICharacterPetEquipment
-    propensity?: ICharacterPropensity
-    ability?: ICharacterAbility
 }
