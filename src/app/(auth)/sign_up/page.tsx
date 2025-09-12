@@ -39,6 +39,12 @@ const SignUpPage = () => {
         setLoading(false);
     };
 
+    const handleGoogle = async () => {
+        setGoogleLoading(true);
+        await supabase.auth.signInWithOAuth({ provider: 'google' });
+        setGoogleLoading(false);
+    };
+
     return (
         <div className="flex min-h-screen">
             <div className="relative hidden w-1/2 md:block">
@@ -86,6 +92,15 @@ const SignUpPage = () => {
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
                         {loading ? 'Create account...' : 'Create account'}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={handleGoogle}
+                        disabled={googleLoading}
+                    >
+                        {googleLoading ? 'Sign up with Google...' : 'Sign up with Google'}
                     </Button>
                     <p className="text-sm text-center">
                         Already have an account?{' '}
