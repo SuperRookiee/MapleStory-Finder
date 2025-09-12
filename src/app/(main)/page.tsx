@@ -4,14 +4,13 @@ import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import CharacterCard from "@/components/character/CharacterCard";
-import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import FavoriteList from "@/components/home/FavoriteList";
+import CharacterInfo from "@/components/home/CharacterInfo";
 
 const Home = () => {
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
@@ -94,62 +93,13 @@ const Home = () => {
     return (
         <ViewTransition enter="fade" exit="fade">
             <div className="flex h-full">
-                {/* 좌측 영역: 항상 표시 */}
-                <ScrollArea className="w-full md:w-1/3 border-r p-4">
-                    <div className="space-y-4">
-                        {loading
-                            ? Array.from({ length: 3 }).map((_, i) => (
-                                <CharacterCardSkeleton key={i}/>
-                            ))
-                            : favorites.map((c) => (
-                                <CharacterCard
-                                    key={c.ocid}
-                                    character={c}
-                                    isFavorite
-                                    onToggleFavorite={() => toggleFavorite(c.ocid)}
-                                    onSelect={() => handleSelect(c.ocid)}
-                                />
-                            ))}
-                    </div>
-                </ScrollArea>
-
-                {/* 우측 영역: md 이상에서만 표시 */}
-                <ScrollArea className="hidden md:flex flex-1">
-                    {selectedCharacter ? (
-                        <div className="p-4 space-y-4 max-w-2xl mx-auto">
-                            {selectedCharacter.image && (
-                                <div className="relative w-64 h-64 mx-auto">
-                                    <Image
-                                        src={selectedCharacter.image}
-                                        alt={selectedCharacter.character_name}
-                                        fill
-                                        className="object-contain"
-                                        style={{
-                                            viewTransitionName: `character-image-${selectedCharacter.ocid}`,
-                                        }}
-                                        sizes="256px"
-                                    />
-                                </div>
-                            )}
-                            <h2 className="text-2xl font-bold text-center">
-                                {selectedCharacter.character_name}
-                            </h2>
-                            <p className="text-center text-muted-foreground">
-                                {selectedCharacter.character_class}
-                            </p>
-                            <p className="text-center font-bold text-red-500">
-                                Lv. {selectedCharacter.character_level}
-                            </p>
-                            <div className="flex justify-center">
-                                <Button onClick={handleDetail}>Detail</Button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="flex justify-center items-center w-full h-page animate-pulse ">
-                            Please choose your character
-                        </div>
-                    )}
-                </ScrollArea>
+                <FavoriteList
+                    favorites={favorites}
+                    loading={loading}
+                    onSelect={handleSelect}
+                    onToggleFavorite={toggleFavorite}
+                />
+                <CharacterInfo ocid={selected} />
 
                 {/* 모바일 다이얼로그 */}
                 <Dialog open={open} onOpenChange={setOpen}>
