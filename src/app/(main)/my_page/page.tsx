@@ -1,6 +1,7 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
@@ -8,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { userStore } from '@/stores/userStore';
 
-const MyPage = () => {
+const PageContent = () => {
   const setApiKey = userStore((s) => s.setApiKey);
+  const searchParams = useSearchParams();
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -17,6 +19,12 @@ const MyPage = () => {
     apiKey: '',
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get('missingApiKey')) {
+      toast.info('apikey 등록이 필요합니다.');
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -92,6 +100,7 @@ const MyPage = () => {
             id="apiKey"
             value={form.apiKey}
             onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
+            required
           />
         </div>
         <Button type="submit" className="w-full" disabled={loading}>
@@ -101,6 +110,12 @@ const MyPage = () => {
     </div>
   );
 };
+
+const MyPage = () => (
+  <Suspense fallback={<div />}>
+    <PageContent />
+  </Suspense>
+);
 
 export default MyPage;
 
