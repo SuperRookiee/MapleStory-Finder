@@ -34,6 +34,7 @@ const SignUpPage = () => {
         if (apiKey) {
             setApiKey(apiKey);
         }
+        toast.success(`${form.email}로 인증 메일이 발송되었습니다. 확인해 주세요.`);
         router.push('/');
         setLoading(false);
     };
