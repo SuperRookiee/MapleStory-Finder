@@ -134,11 +134,22 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             '#character-detail-scroll [data-slot="scroll-area-viewport"]'
         ) as HTMLElement | null;
         if (!viewport) return;
+
+        let ticking = false;
         const handleScroll = () => {
-            const top = viewport.scrollTop;
-            const progress = Math.min(top / 200, 1);
-            setImageScale(1 - progress);
+            if (ticking) return;
+
+            window.requestAnimationFrame(() => {
+                const top = viewport.scrollTop;
+                const progress = Math.min(top / 300, 1);
+                const scale = 1 - progress * 0.2;
+                setImageScale(scale);
+                ticking = false;
+            });
+
+            ticking = true;
         };
+
         viewport.addEventListener('scroll', handleScroll);
         return () => viewport.removeEventListener('scroll', handleScroll);
     }, [loading]);
@@ -148,7 +159,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6 p-4">
                     <div
-                        className="relative w-80 h-80 mx-auto transition-all duration-300"
+                        className="relative w-80 h-80 mx-auto"
                         style={{
                             transform: `scale(${imageScale})`,
                             opacity: imageScale,
