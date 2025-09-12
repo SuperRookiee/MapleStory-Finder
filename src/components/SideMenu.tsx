@@ -19,7 +19,7 @@ const SideMenu = () => {
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="sm" className="hover:bg-transparent">
-                    <Menu className='text-white'/>
+                    <Menu className="text-foreground" />
                 </Button>
             </SheetTrigger>
             <SheetContent side="right">

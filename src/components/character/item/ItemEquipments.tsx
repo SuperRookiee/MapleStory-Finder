@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { IItemEquipment } from "@/interface/character/ICharacter";
 
 interface IEquipmentGrid {
@@ -41,7 +41,6 @@ const slotPosition: Record<string, { col: number; row: number }> = {
     "훈장": { col: 5, row: 3 },
 };
 
-
 const ItemEquipments = ({ items }: IEquipmentGrid) => {
     return (
         <Card>
@@ -49,7 +48,7 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
                 <CardTitle>장비</CardTitle>
             </CardHeader>
             <CardContent className="flex justify-center">
-                <div className="grid grid-cols-5 grid-rows-6 gap-2 p-4 bg-gray-100 rounded-lg w-[420px]">
+                <div className="grid grid-cols-5 grid-rows-6 gap-2 p-4 bg-muted rounded-lg w-[420px]">
                     {items.map((equip) => {
                         const pos = slotPosition[equip.item_equipment_slot];
                         if (!pos) return null;
@@ -58,7 +57,7 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
                             <Popover key={`${equip.item_equipment_part}-${equip.item_equipment_slot}`}>
                                 <PopoverTrigger asChild>
                                     <div
-                                        className="w-14 h-14 p-2 border rounded-md flex items-center justify-center bg-white cursor-pointer hover:shadow-md"
+                                        className="w-14 h-14 p-2 border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
                                         style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
                                     >
                                         <Image
@@ -87,3 +86,4 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
 };
 
 export default ItemEquipments;
+

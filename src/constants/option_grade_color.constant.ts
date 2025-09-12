@@ -10,6 +10,6 @@ export const getGradeColor = (grade: string): string => {
         case "레어":
             return "text-blue-300";
         default:
-            return "text-gray-300";
+            return "text-muted-foreground";
     }
 }

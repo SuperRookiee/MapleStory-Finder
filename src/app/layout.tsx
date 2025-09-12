@@ -41,15 +41,21 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
-            <html lang="en">
-                <body
-                    className={`${geistSans.variable} ${geistMono.variable} ${mapleStory.variable} antialiased`}
-                >
-                    <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
-                    <Toaster />
-                </body>
-            </html>
+        <html lang="en" suppressHydrationWarning>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} ${mapleStory.variable} antialiased`}
+            >
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `(() => { try { const t = localStorage.getItem('theme'); if (t === 'dark') { document.documentElement.classList.add('dark'); } } catch (e) {} })();`,
+                    }}
+                />
+                <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+                <Toaster />
+            </body>
+        </html>
     );
 };
 
 export default RootLayout;
+
