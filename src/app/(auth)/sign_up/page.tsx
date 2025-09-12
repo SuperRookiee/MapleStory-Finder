@@ -23,7 +23,7 @@ const SignUpPage = () => {
         const { data, error } = await supabase.auth.signUp({
             email: form.email,
             password: form.password,
-            options: { data: form.apiKey ? { nexon_api_key: form.apiKey } : {} },
+            options: { data: { nexon_api_key: form.apiKey } },
         });
         if (error) {
             toast.error(error.message);
@@ -80,6 +80,7 @@ const SignUpPage = () => {
                             id="apiKey"
                             value={form.apiKey}
                             onChange={(e) => setForm({ ...form, apiKey: e.target.value })}
+                            required
                         />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
