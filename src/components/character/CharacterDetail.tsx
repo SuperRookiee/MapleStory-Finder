@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import { toast } from "sonner";
+import CharacterDetailSkeleton from "@/components/character/CharacterDetailSkeleton";
 import { HyperStat } from "@/components/character/detail/HyperStat";
 import { Popularity } from "@/components/character/detail/Popularity";
 import { Stat } from "@/components/character/detail/Stat";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Spinner } from '@/components/ui/spinner';
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
@@ -146,9 +146,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     return (
         <ViewTransition enter="fade" exit="fade">
             {loading ? (
-                <div className="flex justify-center items-center h-page">
-                    <Spinner />
-                </div>
+                <CharacterDetailSkeleton />
             ) : (
                 <ScrollArea id="character-detail-scroll" className="h-page">
                     <div className="space-y-6">

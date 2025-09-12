@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/libs/utils";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import WorldIcon from "@/components/common/WorldIcon";
+import CharacterInfoSkeleton from "@/components/home/CharacterInfoSkeleton";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
 import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 
@@ -47,9 +47,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                     Please choose your character
                 </div>
             ) : loading || !basic ? (
-                <div className="flex justify-center items-center w-full h-page">
-                    <Spinner/>
-                </div>
+                <CharacterInfoSkeleton />
             ) : (
                 <div className="p-4 max-w-6xl mx-auto">
                     {/* 좌우 배치 */}
