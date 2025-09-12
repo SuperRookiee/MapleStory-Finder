@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { useUserStore } from '@/store/userStore';
+import { userStore } from '@/store/userStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 const SignUpPage = () => {
     const router = useRouter();
-    const setApiKey = useUserStore((s) => s.setApiKey);
+    const setApiKey = userStore((s) => s.setApiKey);
     const [form, setForm] = useState({ email: '', password: '', apiKey: '' });
     const [loading, setLoading] = useState(false);
     const [googleLoading, setGoogleLoading] = useState(false);

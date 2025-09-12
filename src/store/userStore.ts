@@ -1,17 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { IUser } from "@/interface/IUser";
 
-interface IUser {
-    apiKey: string | null;
-}
-
-interface IUserState {
+type UserSlice = {
     user: IUser;
     setUser: (user: Partial<IUser>) => void;
     setApiKey: (key: string) => void;
 }
 
-export const useUserStore = create<IUserState>()(persist((set) => ({
+export const userStore = create<UserSlice>()(persist((set) => ({
         user: { apiKey: null },
         setUser: (user) =>
             set((state) => ({ user: { ...state.user, ...user } })),

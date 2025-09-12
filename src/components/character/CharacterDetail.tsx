@@ -8,15 +8,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { StatCard } from "@/components/character/card/StatCard";
 import { PopularityCard } from "@/components/character/card/PopularityCard";
 import { HyperStatCard } from "@/components/character/card/HyperStatCard";
-import { IStage1Data, IStage2Data, IStage3Data, IStage4Data } from "@/interface/character";
-import { ICharacterResponse } from "@/interface/ICharacterResponse";
+import { characterDetailStore } from "@/store/characterDetailStore";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
-    const [basic, setBasic] = useState<Pick<ICharacterResponse, 'character_image' | 'character_name'> | null>(null);
-    const [stage1, setStage1] = useState<IStage1Data>({})
-    const [stage2, setStage2] = useState<IStage2Data>({})
-    const [stage3, setStage3] = useState<IStage3Data>({})
-    const [stage4, setStage4] = useState<IStage4Data>({})
+    const {
+        basic, stat, popularity, hyper,
+        itemEquip, cashEquip, symbolEquip, setEffect, skill, linkSkill,
+        hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat,
+        beauty, android, pet, propensity, ability,
+        setBasic, setStat, setPopularity, setHyper,
+        setItemEquip, setCashEquip, setSymbolEquip, setSetEffect, setSkill, setLinkSkill,
+        setHexaMatrix, setHexaStat, setVMatrix, setDojang, setRing, setOtherStat,
+        setBeauty, setAndroid, setPet, setPropensity, setAbility
+    } = characterDetailStore()
     const [imageScale, setImageScale] = useState(1);
 
     useEffect(() => {
@@ -31,8 +35,10 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     findCharacterPopularity(ocid),
                     findCharacterHyperStat(ocid),
                 ]);
-                setBasic(basicRes);
-                setStage1({ stat, popularity, hyper });
+                setBasic(basicRes)
+                setStat(stat)
+                setPopularity(popularity)
+                setHyper(hyper)
 
                 // 장비/스킬
                 const grades = ["0", "1", "2", "3", "4", "5", "6", "hyperpassive", "hyperactive"]
@@ -45,7 +51,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         Promise.all(grades.map((g) => findCharacterSkill(ocid, g))),
                         findCharacterLinkSkill(ocid),
                     ]);
-                setStage2({ itemEquip, cashEquip, symbolEquip, setEffect, skill, linkSkill });
+                setItemEquip(itemEquip)
+                setCashEquip(cashEquip)
+                setSymbolEquip(symbolEquip)
+                setSetEffect(setEffect)
+                setSkill(skill)
+                setLinkSkill(linkSkill)
 
                 // 심화
                 const [hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat] =
@@ -57,7 +68,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         findCharacterRingExchange(ocid),
                         findCharacterOtherStat(ocid),
                     ]);
-                setStage3({ hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat });
+                setHexaMatrix(hexaMatrix)
+                setHexaStat(hexaStat)
+                setVMatrix(vMatrix)
+                setDojang(dojang)
+                setRing(ring)
+                setOtherStat(otherStat)
 
                 // 꾸미기/기타
                 const [beauty, android, pet, propensity, ability] = await Promise.all([
@@ -67,7 +83,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     findCharacterPropensity(ocid),
                     findCharacterAbility(ocid),
                 ]);
-                setStage4({ beauty, android, pet, propensity, ability });
+                setBeauty(beauty)
+                setAndroid(android)
+                setPet(pet)
+                setPropensity(propensity)
+                setAbility(ability)
             } catch (err) {
                 console.error('캐릭터 정보 로딩 실패:', err);
             }

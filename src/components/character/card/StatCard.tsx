@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { ICharacterStat } from "@/interface/character"
+import { ICharacterStat } from "@/interface/ICharacter"
 
 export function StatCard({ stat }: { stat: ICharacterStat }) {
     const highlights = ["전투력", "보스 몬스터 데미지", "크리티컬 확률", "크리티컬 데미지"]

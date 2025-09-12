@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useUserStore } from '@/store/userStore';
+import { userStore } from '@/store/userStore';
 
 const MyPage = () => {
-  const setApiKey = useUserStore((s) => s.setApiKey);
+  const setApiKey = userStore((s) => s.setApiKey);
   const [form, setForm] = useState({
     name: '',
     email: '',

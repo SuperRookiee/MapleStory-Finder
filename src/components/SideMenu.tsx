@@ -3,11 +3,11 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader as Sheet
 import { Menu } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/userStore";
+import { userStore } from "@/store/userStore";
 
 const SideMenu = () => {
     const router = useRouter();
-    const setUser = useUserStore((s) => s.setUser);
+    const setUser = userStore((s) => s.setUser);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();

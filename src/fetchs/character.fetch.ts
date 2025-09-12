@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useUserStore } from "@/store/userStore";
+import { userStore } from "@/store/userStore";
 
 const delay = (ms: number) =>
     new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -7,7 +7,7 @@ const delay = (ms: number) =>
 let requestQueue: Promise<unknown> = Promise.resolve();
 
 export const findCharacterList = async () => {
-    const apiKey = useUserStore.getState().user.apiKey;
+    const apiKey = userStore.getState().user.apiKey;
     const response = await axios.get(`/api/character/list`, {
         headers: { "x-nxopen-api-key": apiKey ?? "" },
     });
@@ -18,7 +18,7 @@ const callCharacterApi = async (
     endpoint: string,
     params: Record<string, string | number | undefined> = {}
 ) => {
-    const apiKey = useUserStore.getState().user.apiKey;
+    const apiKey = userStore.getState().user.apiKey;
 
     const task = async () => {
         await delay(200);

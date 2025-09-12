@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useUserStore } from "@/store/userStore";
+import { userStore } from "@/store/userStore";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
@@ -10,11 +10,11 @@ import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton"
 import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ICharacterSummary } from "@/interface/ICharacterSummary";
-import { useCharacterListStore } from "@/store/characterListStore";
+import { characterListStore } from "@/store/characterListStore";
 
 const CharacterList = () => {
-    const setApiKey = useUserStore((s) => s.setApiKey);
-    const { characters, loading, fetchCharacters } = useCharacterListStore();
+    const setApiKey = userStore((s) => s.setApiKey);
+    const { characters, loading, fetchCharacters } = characterListStore();
     const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState("전체월드");
     const [favorites, setFavorites] = useState<string[]>([]);

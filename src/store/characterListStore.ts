@@ -1,20 +1,15 @@
 import { create } from "zustand";
 import { ICharacterSummary } from "@/interface/ICharacterSummary";
-import { findCharacterList, findCharacterBasic } from "@/fetchs/character.fetch";
+import { findCharacterBasic, findCharacterList } from "@/fetchs/character.fetch";
+import { ICharacterListResponse } from "@/interface/ICharacterListResponse";
 
-interface ICharacterListResponse {
-    message: string;
-    status: number;
-    characters: ICharacterSummary[];
-}
-
-interface CharacterListState {
+type CharacterListSlice = {
     characters: ICharacterSummary[];
     loading: boolean;
     fetchCharacters: () => Promise<void>;
 }
 
-export const useCharacterListStore = create<CharacterListState>((set) => ({
+export const characterListStore = create<CharacterListSlice>((set) => ({
     characters: [],
     loading: false,
     fetchCharacters: async () => {
@@ -33,20 +28,16 @@ export const useCharacterListStore = create<CharacterListState>((set) => ({
 
             const loadImages = async () => {
                 for (const char of sorted) {
-                    try {
-                        const data = await findCharacterBasic(char.ocid);
-                        set((state) => ({
-                            characters: state.characters.map((c) =>
-                                c.ocid === char.ocid ? { ...c, image: data.character_image } : c
-                            ),
-                        }));
-                    } catch {
-                        // ignore individual image load errors
-                    }
+                    const data = await findCharacterBasic(char.ocid);
+                    set((state) => ({
+                        characters: state.characters.map((c) =>
+                            c.ocid === char.ocid ? { ...c, image: data.character_image } : c
+                        ),
+                    }));
                 }
             };
 
-            loadImages();
+            await loadImages();
         } catch (err) {
             set({ loading: false });
             throw err;
