@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { Get } from "@/lib/fetch";
 import { Failed, Success } from "@/lib/message";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 interface ICharacterListApiResponse {
     account_list: {

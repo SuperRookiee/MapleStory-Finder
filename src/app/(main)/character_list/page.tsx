@@ -9,7 +9,7 @@ import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fet
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import CharacterCell from "@/components/character/CharacterCell";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { characterListStore } from "@/store/characterListStore";
 
 const CharacterList = () => {
@@ -89,7 +89,7 @@ const CharacterList = () => {
                     ))}
                 </div>
             ) : (
-                <ScrollArea className="w-full flex-1 rounded-md border p-4">
+                <ScrollArea className="w-full h-page flex-1 rounded-md border p-4">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                         {displayCharacters.map((character) => (
                             <CharacterCell

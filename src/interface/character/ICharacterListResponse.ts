@@ -1,4 +1,4 @@
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 export interface ICharacterListResponse {
     message: string;

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 interface ICharacterCardProps {
     character: ICharacterSummary;

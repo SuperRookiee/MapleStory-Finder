@@ -1,6 +1,6 @@
 import CharacterCard from "@/components/character/CharacterCard";
 import { useRouter } from "next/navigation";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 interface ICharacterCellProps {
     character: ICharacterSummary;

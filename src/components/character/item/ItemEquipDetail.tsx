@@ -1,14 +1,13 @@
 import Image from "next/image";
-import { IItemEquipment } from "@/interface/ICharacter";
+import { IItemEquipment } from "@/interface/character/ICharacter";
 
 interface ItemEquipDetailProps {
     item: IItemEquipment;
-    onClose: () => void;
 }
 
-const ItemEquipDetail = ({ item, onClose }: ItemEquipDetailProps) => {
+const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
     return (
-        <div className="ml-6 p-4 w-80 bg-black text-white rounded-lg shadow-lg">
+        <div className="w-80 bg-black text-white rounded-lg shadow-lg p-4">
             {/* 아이콘 + 이름 */}
             <div className="flex items-center gap-3 mb-2">
                 <div className="relative w-12 h-12 flex-shrink-0">
@@ -18,8 +17,6 @@ const ItemEquipDetail = ({ item, onClose }: ItemEquipDetailProps) => {
                         fill
                         className="object-contain"
                         sizes="48px"
-                        width={0}
-                        height={0}
                     />
                 </div>
                 <div>
@@ -49,13 +46,6 @@ const ItemEquipDetail = ({ item, onClose }: ItemEquipDetailProps) => {
                 {item.potential_option_2 && <p>{item.potential_option_2}</p>}
                 {item.potential_option_3 && <p>{item.potential_option_3}</p>}
             </div>
-
-            <button
-                className="mt-3 px-3 py-1 bg-gray-700 rounded hover:bg-gray-600"
-                onClick={onClose}
-            >
-                닫기
-            </button>
         </div>
     );
 };

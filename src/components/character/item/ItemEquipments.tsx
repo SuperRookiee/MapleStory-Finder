@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { IItemEquipment } from "@/interface/ICharacter";
+import { IItemEquipment } from "@/interface/character/ICharacter";
 import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
 
 interface IEquipmentGrid {
     items: IItemEquipment[];
@@ -41,43 +42,42 @@ const slotPosition: Record<string, { col: number; row: number }> = {
 
 
 const ItemEquipments = ({ items }: IEquipmentGrid) => {
-    const [selectedItem, setSelectedItem] = useState<IItemEquipment | null>(null);
-
     return (
-        <div className="flex">
-            {/* 장비 배치 */}
-            <div className="grid grid-cols-6 grid-rows-6 gap-2 p-4 bg-gray-100 rounded-lg relative">
-                {items.map((equip) => {
-                    const pos = slotPosition[equip.item_equipment_slot];
-                    if (!pos) return null;
+        <Card>
+            <CardHeader>
+                <CardTitle>장비</CardTitle>
+            </CardHeader>
+            <CardContent className="flex">
+                <div className="grid grid-cols-5 grid-rows-6 w-full h-full gap-3 p-6 bg-gray-100 rounded-lg">
+                    {items.map((equip) => {
+                        const pos = slotPosition[equip.item_equipment_slot];
+                        if (!pos) return null;
 
-                    return (
-                        <div
-                            key={`${equip.item_equipment_part}-${equip.item_equipment_slot}`}
-                            className="w-12 h-12 border rounded flex items-center justify-center bg-white cursor-pointer hover:shadow-md"
-                            style={{
-                                gridColumnStart: pos.col,
-                                gridRowStart: pos.row,
-                            }}
-                            onClick={() => setSelectedItem(equip)}
-                        >
-                            <Image
-                                src={equip.item_icon}
-                                alt={equip.item_name}
-                                width={35}
-                                height={35}
-                                priority
-                            />
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* 상세정보 */}
-            {selectedItem && (
-                <ItemEquipDetail item={selectedItem} onClose={() => setSelectedItem(null)}/>
-            )}
-        </div>
+                        return (
+                            <Popover key={`${equip.item_equipment_part}-${equip.item_equipment_slot}`}>
+                                <PopoverTrigger asChild>
+                                    <div
+                                        className="w-14 h-14 p-2 border rounded-md flex items-center justify-center bg-white cursor-pointer hover:shadow-md"
+                                        style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
+                                    >
+                                        <Image
+                                            src={equip.item_icon}
+                                            alt={equip.item_name}
+                                            width={40}
+                                            height={40}
+                                            priority
+                                        />
+                                    </div>
+                                </PopoverTrigger>
+                                <PopoverContent side="right" align="start" className="p-0 bg-transparent border-none shadow-none">
+                                    <ItemEquipDetail item={equip}/>
+                                </PopoverContent>
+                            </Popover>
+                        );
+                    })}
+                </div>
+            </CardContent>
+        </Card>
     );
 };
 

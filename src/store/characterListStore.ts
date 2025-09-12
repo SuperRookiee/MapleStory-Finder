@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { findCharacterBasic, findCharacterList } from "@/fetchs/character.fetch";
-import { ICharacterListResponse } from "@/interface/ICharacterListResponse";
+import { ICharacterListResponse } from "@/interface/character/ICharacterListResponse";
 
 type CharacterListSlice = {
     characters: ICharacterSummary[];

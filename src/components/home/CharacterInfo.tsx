@@ -6,21 +6,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
-import { IItemEquipment } from "@/interface/ICharacter";
-
-interface IBasicInfo {
-    character_name: string;
-    character_level: number;
-    character_class: string;
-    character_image?: string;
-}
+import { IItemEquipment } from "@/interface/character/ICharacter";
+import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
+import WorldIcon from "@/components/common/WorldIcon";
+import { Button } from "@/components/ui/button";
 
 interface ICharacterInfoProps {
     ocid: string | null;
+    goToDetailPage: () => void;
 }
 
-const CharacterInfo = ({ ocid }: ICharacterInfoProps) => {
-    const [basic, setBasic] = useState<IBasicInfo | null>(null);
+const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
+    const [basic, setBasic] = useState<ICharacterResponse | null>(null);
     const [items, setItems] = useState<IItemEquipment[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -33,7 +30,7 @@ const CharacterInfo = ({ ocid }: ICharacterInfoProps) => {
                     findCharacterBasic(ocid),
                     findCharacterItemEquipment(ocid),
                 ]);
-                setBasic(basicRes as IBasicInfo);
+                setBasic(basicRes as ICharacterResponse);
                 setItems(itemRes.item_equipment);
             } finally {
                 setLoading(false);
@@ -50,25 +47,52 @@ const CharacterInfo = ({ ocid }: ICharacterInfoProps) => {
                 </div>
             ) : loading || !basic ? (
                 <div className="flex justify-center items-center w-full h-page">
-                    <Spinner />
+                    <Spinner/>
                 </div>
             ) : (
-                <div className="p-4 space-y-4 max-w-2xl mx-auto">
-                    {basic.character_image && (
-                        <div className="relative w-64 h-64 mx-auto">
-                            <Image
-                                src={basic.character_image}
-                                alt={basic.character_name}
-                                fill
-                                className="object-contain"
-                                sizes="256px"
-                            />
-                        </div>
-                    )}
-                    <h2 className="text-2xl font-bold text-center">{basic.character_name}</h2>
-                    <p className="text-center text-muted-foreground">{basic.character_class}</p>
-                    <p className="text-center font-bold text-red-500">Lv. {basic.character_level}</p>
-                    {items.length > 0 && <ItemEquipments items={items} />}
+                <div className="p-4 max-w-6xl mx-auto">
+                    {/* 좌우 배치 */}
+                    <div className="flex lg:flex-row gap-10">
+                        {/* 좌측: 캐릭터 정보 */}
+                        <section className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+                            <div className="self-start flex items-center gap-2 text-xl">
+                                <WorldIcon name={basic.world_name} />
+                                {basic.world_name}
+                            </div>
+
+                            {basic.character_image && (
+                                <div className="relative w-64 h-64 mt-4">
+                                    <Image
+                                        src={basic.character_image}
+                                        alt={basic.character_name}
+                                        fill
+                                        className="object-contain"
+                                        sizes="256px"
+                                    />
+                                </div>
+                            )}
+
+                            <h2 className="text-2xl font-bold mt-4 text-center lg:text-left">
+                                {basic.character_name}
+                            </h2>
+                            <p className="text-center lg:text-left text-muted-foreground">
+                                {basic.character_class}
+                            </p>
+                            <p className="text-center lg:text-left font-bold text-red-500">
+                                Lv. {basic.character_level}
+                            </p>
+                            <div className="flex justify-center">
+                                <Button onClick={goToDetailPage}>Detail</Button>
+                            </div>
+                        </section>
+
+                        {/* 우측: 장비 */}
+                        {items.length > 0 && (
+                            <div className="w-full lg:w-2/3">
+                                <ItemEquipments items={items}/>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </ScrollArea>

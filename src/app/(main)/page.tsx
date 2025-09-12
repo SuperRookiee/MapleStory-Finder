@@ -8,18 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import FavoriteList from "@/components/home/FavoriteList";
 import CharacterInfo from "@/components/home/CharacterInfo";
 
 const Home = () => {
+    const router = useRouter();
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
     const [favorites, setFavorites] = useState<ICharacterSummary[]>([]);
     const [selected, setSelected] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
-
-    const router = useRouter();
     const selectedCharacter = favorites.find((f) => f.ocid === selected);
 
     useEffect(() => {
@@ -84,22 +83,23 @@ const Home = () => {
         }
     };
 
-    const handleDetail = () => {
-        if (!selected) return;
-        console.log(selected)
+    const goToDetailPage = () => {
         router.push(`/character/${selected}`);
     };
 
     return (
         <ViewTransition enter="fade" exit="fade">
             <div className="flex h-full">
+                {/* 캐릭터 목록 */}
                 <FavoriteList
                     favorites={favorites}
                     loading={loading}
                     onSelect={handleSelect}
                     onToggleFavorite={toggleFavorite}
                 />
-                <CharacterInfo ocid={selected} />
+
+                {/* 캐릭터 정보 */}
+                <CharacterInfo ocid={selected} goToDetailPage={goToDetailPage}/>
 
                 {/* 모바일 다이얼로그 */}
                 <Dialog open={open} onOpenChange={setOpen}>
@@ -128,7 +128,7 @@ const Home = () => {
                                         Lv. {selectedCharacter.character_level}
                                     </p>
                                     <div className="flex justify-center">
-                                        <Button onClick={handleDetail}>Detail</Button>
+                                        <Button onClick={goToDetailPage}>Detail</Button>
                                     </div>
                                 </div>
                             </>

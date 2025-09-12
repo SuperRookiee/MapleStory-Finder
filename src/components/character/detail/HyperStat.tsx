@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ICharacterHyperStat } from "@/interface/ICharacter";
+import { ICharacterHyperStat } from "@/interface/character/ICharacter";
 
 export function HyperStat({ hyper }: { hyper: ICharacterHyperStat }) {
     const presets = [

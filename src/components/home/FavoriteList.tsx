@@ -3,7 +3,7 @@
 import CharacterCard from "@/components/character/CharacterCard";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ICharacterSummary } from "@/interface/ICharacterSummary";
+import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 interface IFavoriteListProps {
     favorites: ICharacterSummary[];
