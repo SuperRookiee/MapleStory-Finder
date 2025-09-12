@@ -17,6 +17,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const [stage2, setStage2] = useState<IStage2Data>({})
     const [stage3, setStage3] = useState<IStage3Data>({})
     const [stage4, setStage4] = useState<IStage4Data>({})
+    const [imageScale, setImageScale] = useState(1);
 
     useEffect(() => {
         if (!ocid) return;
@@ -75,13 +76,33 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         load();
     }, [ocid]);
 
+    useEffect(() => {
+        const viewport = document.querySelector(
+            '#character-detail-scroll [data-slot="scroll-area-viewport"]'
+        ) as HTMLElement | null;
+        if (!viewport) return;
+        const handleScroll = () => {
+            const top = viewport.scrollTop;
+            const progress = Math.min(top / 200, 1);
+            setImageScale(1 - progress);
+        };
+        viewport.addEventListener('scroll', handleScroll);
+        return () => viewport.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <ViewTransition enter="fade" exit="fade">
-            <ScrollArea className="h-page">
+            <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6">
                     {/* 캐릭터 기본 정보 */}
                     {basic ? (
-                        <div className="relative w-64 h-64 mx-auto">
+                        <div
+                            className="relative w-80 h-80 mx-auto transition-all duration-300"
+                            style={{
+                                transform: `scale(${imageScale})`,
+                                opacity: imageScale,
+                            }}
+                        >
                             {basic.character_image && (
                                 <Image
                                     src={basic.character_image}
@@ -89,7 +110,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                     fill
                                     className="object-contain"
                                     style={{ viewTransitionName: `character-image-${ocid}` }}
-                                    sizes="256px"
+                                    sizes="320px"
                                 />
                             )}
                             <p className="text-center font-bold mt-2">{basic.character_name}</p>
