@@ -34,13 +34,23 @@ const SignInPage = () => {
         if (apiKey) {
             setApiKey(apiKey);
         }
+        toast.success('로그인 성공');
         router.push('/');
         setLoading(false);
     };
 
     const handleGoogle = async () => {
         setGoogleLoading(true);
-        await supabase.auth.signInWithOAuth({ provider: 'google' });
+        const options =
+            window.location.hostname === 'localhost'
+                ? undefined
+                : { redirectTo: window.location.origin };
+
+        await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options,
+        });
+        toast.success('로그인 성공');
         setGoogleLoading(false);
     };
 
