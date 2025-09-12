@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/libs/utils";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import WorldIcon from "@/components/common/WorldIcon";
-import CharacterInfoSkeleton from "@/components/home/CharacterInfoSkeleton";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
 import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 
@@ -46,53 +46,79 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                 <div className="flex justify-center items-center w-full h-page animate-pulse">
                     Please choose your character
                 </div>
-            ) : loading || !basic ? (
-                <CharacterInfoSkeleton />
             ) : (
                 <div className="p-4 max-w-6xl mx-auto">
-                    {/* 좌우 배치 */}
                     <div className="flex flex-col lg:flex-row gap-10">
-                        {/* 좌측: 캐릭터 정보 */}
                         <section className="flex-1 flex flex-col items-center">
                             <div className="self-start flex items-center gap-2 text-xl">
-                                <WorldIcon name={basic.world_name} />
-                                {basic.world_name}
+                                {loading || !basic ? (
+                                    <>
+                                        <Skeleton className="w-6 h-6 rounded-full" />
+                                        <Skeleton className="h-6 w-24" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <WorldIcon name={basic.world_name} />
+                                        {basic.world_name}
+                                    </>
+                                )}
                             </div>
 
-                            {basic.character_image && (
-                                <div className="relative w-64 h-64 mt-4">
-                                    <Image
-                                        src={basic.character_image}
-                                        alt={basic.character_name}
-                                        fill
-                                        className="object-contain"
-                                        sizes="256px"
-                                    />
-                                </div>
+                            {loading || !basic ? (
+                                <Skeleton className="w-64 h-64 mt-4" />
+                            ) : (
+                                basic.character_image && (
+                                    <div className="relative w-64 h-64 mt-4">
+                                        <Image
+                                            src={basic.character_image}
+                                            alt={basic.character_name}
+                                            fill
+                                            className="object-contain"
+                                            sizes="256px"
+                                        />
+                                    </div>
+                                )
                             )}
 
-                            <h2 className="text-2xl font-bold mt-4 text-center lg:text-left">
-                                {basic.character_name}
-                            </h2>
-                            <p className="text-center lg:text-left text-muted-foreground">
-                                {basic.character_class}
-                            </p>
-                            <p className="text-center lg:text-left font-bold text-red-500">
-                                Lv. {basic.character_level}
-                            </p>
+                            {loading || !basic ? (
+                                <Skeleton className="h-8 w-40 mt-4" />
+                            ) : (
+                                <h2 className="text-2xl font-bold mt-4 text-center lg:text-left">
+                                    {basic.character_name}
+                                </h2>
+                            )}
+
+                            {loading || !basic ? (
+                                <Skeleton className="h-6 w-32" />
+                            ) : (
+                                <p className="text-center lg:text-left text-muted-foreground">
+                                    {basic.character_class}
+                                </p>
+                            )}
+
+                            {loading || !basic ? (
+                                <Skeleton className="h-6 w-24" />
+                            ) : (
+                                <p className="text-center lg:text-left font-bold text-red-500">
+                                    Lv. {basic.character_level}
+                                </p>
+                            )}
+
                             <div className="flex justify-center">
-                                <Button onClick={goToDetailPage}>Detail</Button>
+                                {loading || !basic ? (
+                                    <Skeleton className="h-10 w-20" />
+                                ) : (
+                                    <Button onClick={goToDetailPage}>Detail</Button>
+                                )}
                             </div>
                         </section>
 
                         {/* 우측: 장비 */}
-                        {items.length > 0 && (
-                            <div className="flex-1 flex justify-center">
-                                <div className="w-[420px] mx-auto">
-                                    <ItemEquipments items={items} />
-                                </div>
+                        <div className="flex-1 flex justify-center">
+                            <div className="w-[420px] mx-auto">
+                                <ItemEquipments items={items} loading={loading || !basic} />
                             </div>
-                        )}
+                        </div>
                     </div>
                 </div>
             )}
