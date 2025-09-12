@@ -55,57 +55,92 @@ type CharacterDetailSlice = {
     setPet: (pet: CharacterDetailSlice['pet']) => void
     setPropensity: (propensity: CharacterDetailSlice['propensity']) => void
     setAbility: (ability: CharacterDetailSlice['ability']) => void
+
+    // util
+    reset: () => void
 }
 
-export const characterDetailStore = create<CharacterDetailSlice>()(persist((set) => ({
-        basic: null,
-        stat: null,
-        popularity: null,
-        hyper: null,
+const initialState: Omit<
+    CharacterDetailSlice,
+    | 'setBasic'
+    | 'setStat'
+    | 'setPopularity'
+    | 'setHyper'
+    | 'setItemEquip'
+    | 'setCashEquip'
+    | 'setSymbolEquip'
+    | 'setSetEffect'
+    | 'setSkill'
+    | 'setLinkSkill'
+    | 'setHexaMatrix'
+    | 'setHexaStat'
+    | 'setVMatrix'
+    | 'setDojang'
+    | 'setRing'
+    | 'setOtherStat'
+    | 'setBeauty'
+    | 'setAndroid'
+    | 'setPet'
+    | 'setPropensity'
+    | 'setAbility'
+    | 'reset'
+> = {
+    basic: null,
+    stat: null,
+    popularity: null,
+    hyper: null,
 
-        itemEquip: null,
-        cashEquip: null,
-        symbolEquip: null,
-        setEffect: null,
-        skill: null,
-        linkSkill: null,
+    itemEquip: null,
+    cashEquip: null,
+    symbolEquip: null,
+    setEffect: null,
+    skill: null,
+    linkSkill: null,
 
-        hexaMatrix: null,
-        hexaStat: null,
-        vMatrix: null,
-        dojang: null,
-        ring: null,
-        otherStat: null,
+    hexaMatrix: null,
+    hexaStat: null,
+    vMatrix: null,
+    dojang: null,
+    ring: null,
+    otherStat: null,
 
-        beauty: null,
-        android: null,
-        pet: null,
-        propensity: null,
-        ability: null,
+    beauty: null,
+    android: null,
+    pet: null,
+    propensity: null,
+    ability: null,
+};
 
-        setBasic: (basic) => set({ basic }),
-        setStat: (stat) => set({ stat }),
-        setPopularity: (popularity) => set({ popularity }),
-        setHyper: (hyper) => set({ hyper }),
-        setItemEquip: (itemEquip) => set({ itemEquip }),
-        setCashEquip: (cashEquip) => set({ cashEquip }),
-        setSymbolEquip: (symbolEquip) => set({ symbolEquip }),
-        setSetEffect: (setEffect) => set({ setEffect }),
-        setSkill: (skill) => set({ skill }),
-        setLinkSkill: (linkSkill) => set({ linkSkill }),
-        setHexaMatrix: (hexaMatrix) => set({ hexaMatrix }),
-        setHexaStat: (hexaStat) => set({ hexaStat }),
-        setVMatrix: (vMatrix) => set({ vMatrix }),
-        setDojang: (dojang) => set({ dojang }),
-        setRing: (ring) => set({ ring }),
-        setOtherStat: (otherStat) => set({ otherStat }),
-        setBeauty: (beauty) => set({ beauty }),
-        setAndroid: (android) => set({ android }),
-        setPet: (pet) => set({ pet }),
-        setPropensity: (propensity) => set({ propensity }),
-        setAbility: (ability) => set({ ability }),
-    }),
-    {
-        name: "characterDetailStore",
-    }
-));
+export const characterDetailStore = create<CharacterDetailSlice>()(
+    persist(
+        (set) => ({
+            ...initialState,
+
+            setBasic: (basic) => set({ basic }),
+            setStat: (stat) => set({ stat }),
+            setPopularity: (popularity) => set({ popularity }),
+            setHyper: (hyper) => set({ hyper }),
+            setItemEquip: (itemEquip) => set({ itemEquip }),
+            setCashEquip: (cashEquip) => set({ cashEquip }),
+            setSymbolEquip: (symbolEquip) => set({ symbolEquip }),
+            setSetEffect: (setEffect) => set({ setEffect }),
+            setSkill: (skill) => set({ skill }),
+            setLinkSkill: (linkSkill) => set({ linkSkill }),
+            setHexaMatrix: (hexaMatrix) => set({ hexaMatrix }),
+            setHexaStat: (hexaStat) => set({ hexaStat }),
+            setVMatrix: (vMatrix) => set({ vMatrix }),
+            setDojang: (dojang) => set({ dojang }),
+            setRing: (ring) => set({ ring }),
+            setOtherStat: (otherStat) => set({ otherStat }),
+            setBeauty: (beauty) => set({ beauty }),
+            setAndroid: (android) => set({ android }),
+            setPet: (pet) => set({ pet }),
+            setPropensity: (propensity) => set({ propensity }),
+            setAbility: (ability) => set({ ability }),
+            reset: () => set(initialState),
+        }),
+        {
+            name: "characterDetailStore",
+        }
+    )
+);

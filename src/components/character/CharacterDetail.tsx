@@ -21,14 +21,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         setBasic, setStat, setPopularity, setHyper,
         setItemEquip, setCashEquip, setSymbolEquip, setSetEffect, setSkill, setLinkSkill,
         setHexaMatrix, setHexaStat, setVMatrix, setDojang, setRing, setOtherStat,
-        setBeauty, setAndroid, setPet, setPropensity, setAbility
+        setBeauty, setAndroid, setPet, setPropensity, setAbility,
+        reset,
     } = characterDetailStore();
     const [imageScale, setImageScale] = useState(1);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!ocid) return;
 
         const load = async () => {
+            setLoading(true);
             try {
                 // 필수 정보
                 const [basicRes, stat, popularity, hyper] = await Promise.all([
@@ -93,11 +96,38 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             } catch (e) {
                 console.error(e)
                 toast.error('캐릭터 정보 로딩 실패');
+            } finally {
+                setLoading(false);
             }
         };
 
+        reset();
         load();
-    }, [ocid]);
+    }, [
+        ocid,
+        reset,
+        setBasic,
+        setStat,
+        setPopularity,
+        setHyper,
+        setItemEquip,
+        setCashEquip,
+        setSymbolEquip,
+        setSetEffect,
+        setSkill,
+        setLinkSkill,
+        setHexaMatrix,
+        setHexaStat,
+        setVMatrix,
+        setDojang,
+        setRing,
+        setOtherStat,
+        setBeauty,
+        setAndroid,
+        setPet,
+        setPropensity,
+        setAbility,
+    ]);
 
     useEffect(() => {
         const viewport = document.querySelector(
@@ -111,96 +141,98 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         };
         viewport.addEventListener('scroll', handleScroll);
         return () => viewport.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [loading]);
 
     return (
         <ViewTransition enter="fade" exit="fade">
-            <ScrollArea id="character-detail-scroll" className="h-page">
-                <div className="space-y-6">
-                    {/* 캐릭터 기본 정보 */}
-                    {basic ? (
-                        <div
-                            className="relative w-80 h-80 mx-auto transition-all duration-300"
-                            style={{
-                                transform: `scale(${imageScale})`,
-                                opacity: imageScale,
-                            }}
-                        >
-                            {basic.character_image &&
-                                <Image
-                                    src={basic.character_image}
-                                    alt={basic.character_name}
-                                    className="object-contain"
-                                    fill
-                                    priority
-                                />
-                            }
-                            <p className="text-center font-bold mt-2">{basic.character_name}</p>
-                        </div>
-                    ) : (
-                        <div className="flex justify-center items-center h-page">
-                            <Spinner/>
-                        </div>
-                    )}
-
-                    {/* 주요 스탯 */}
-                    {stat && <StatCard stat={stat}/>}
-                    {popularity && <PopularityCard popularity={popularity.popularity}/>}
-                    {hyper && <HyperStatCard hyper={hyper}/>}
-
-                    {/* 장비 */}
-                    {itemEquip && <ItemEquipments items={itemEquip.item_equipment}/>}
-
-                    {/* 스킬 등 - JSON 프리뷰 */}
-                    {Object.entries({
-                        cashEquip,
-                        symbolEquip,
-                        setEffect,
-                        skill,
-                        linkSkill,
-                    }).map(([key, value]) => (
-                        <section key={key} className='w-full'>
-                            <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                {JSON.stringify(value, null, 2)}
-                            </pre>
-                        </section>
-                    ))}
-
-                    {/* 심화 - JSON 프리뷰 */}
-                    {Object.entries({
-                        hexaMatrix,
-                        hexaStat,
-                        vMatrix,
-                        dojang,
-                        ring,
-                        otherStat,
-                    }).map(([key, value]) => (
-                        <section key={key}>
-                            <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                {JSON.stringify(value, null, 2)}
-                            </pre>
-                        </section>
-                    ))}
-
-                    {/* 꾸미기 / 기타 - JSON 프리뷰 */}
-                    {Object.entries({
-                        beauty,
-                        android,
-                        pet,
-                        propensity,
-                        ability,
-                    }).map(([key, value]) => (
-                        <section key={key}>
-                            <h2 className="text-xl font-bold mb-2">{key}</h2>
-                            <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                {JSON.stringify(value, null, 2)}
-                            </pre>
-                        </section>
-                    ))}
+            {loading ? (
+                <div className="flex justify-center items-center h-page">
+                    <Spinner />
                 </div>
-            </ScrollArea>
+            ) : (
+                <ScrollArea id="character-detail-scroll" className="h-page">
+                    <div className="space-y-6">
+                        {/* 캐릭터 기본 정보 */}
+                        {basic && (
+                            <div
+                                className="relative w-80 h-80 mx-auto transition-all duration-300"
+                                style={{
+                                    transform: `scale(${imageScale})`,
+                                    opacity: imageScale,
+                                }}
+                            >
+                                {basic.character_image && (
+                                    <Image
+                                        src={basic.character_image}
+                                        alt={basic.character_name}
+                                        className="object-contain"
+                                        fill
+                                        priority
+                                    />
+                                )}
+                                <p className="text-center font-bold mt-2">{basic.character_name}</p>
+                            </div>
+                        )}
+
+                        {/* 주요 스탯 */}
+                        {stat && <StatCard stat={stat} />}
+                        {popularity && <PopularityCard popularity={popularity.popularity} />}
+                        {hyper && <HyperStatCard hyper={hyper} />}
+
+                        {/* 장비 */}
+                        {itemEquip && <ItemEquipments items={itemEquip.item_equipment} />}
+
+                        {/* 스킬 등 - JSON 프리뷰 */}
+                        {Object.entries({
+                            cashEquip,
+                            symbolEquip,
+                            setEffect,
+                            skill,
+                            linkSkill,
+                        }).map(([key, value]) => (
+                            <section key={key} className="w-full">
+                                <h2 className="text-xl font-bold mb-2">{key}</h2>
+                                <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
+                                    {JSON.stringify(value, null, 2)}
+                                </pre>
+                            </section>
+                        ))}
+
+                        {/* 심화 - JSON 프리뷰 */}
+                        {Object.entries({
+                            hexaMatrix,
+                            hexaStat,
+                            vMatrix,
+                            dojang,
+                            ring,
+                            otherStat,
+                        }).map(([key, value]) => (
+                            <section key={key}>
+                                <h2 className="text-xl font-bold mb-2">{key}</h2>
+                                <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
+                                    {JSON.stringify(value, null, 2)}
+                                </pre>
+                            </section>
+                        ))}
+
+                        {/* 꾸미기 / 기타 - JSON 프리뷰 */}
+                        {Object.entries({
+                            beauty,
+                            android,
+                            pet,
+                            propensity,
+                            ability,
+                        }).map(([key, value]) => (
+                            <section key={key}>
+                                <h2 className="text-xl font-bold mb-2">{key}</h2>
+                                <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
+                                    {JSON.stringify(value, null, 2)}
+                                </pre>
+                            </section>
+                        ))}
+                    </div>
+                </ScrollArea>
+            )}
         </ViewTransition>
     );
 };
