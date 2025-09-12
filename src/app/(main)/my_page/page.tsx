@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { userStore } from '@/stores/userStore';
 
-const MyPage = () => {
+const PageContent = () => {
   const setApiKey = userStore((s) => s.setApiKey);
   const searchParams = useSearchParams();
   const [form, setForm] = useState({
@@ -110,6 +110,12 @@ const MyPage = () => {
     </div>
   );
 };
+
+const MyPage = () => (
+  <Suspense fallback={<div />}>
+    <PageContent />
+  </Suspense>
+);
 
 export default MyPage;
 
