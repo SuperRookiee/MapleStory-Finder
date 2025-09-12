@@ -1,13 +1,44 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ICharacterHyperStat } from "@/interface/character/ICharacter";
 
-export const HyperStat = ({ hyper }: { hyper: ICharacterHyperStat }) => {
+interface HyperStatProps {
+    hyper?: ICharacterHyperStat | null;
+    loading?: boolean;
+}
+
+export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
+    if (loading || !hyper) {
+        return (
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>하이퍼 스탯</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid w-full grid-cols-3 gap-2">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <Skeleton key={i} className="h-8 w-full" />
+                        ))}
+                    </div>
+                    <ul className="mt-4 space-y-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <li key={i} className="flex justify-between text-sm">
+                                <Skeleton className="h-4 w-24" />
+                                <Skeleton className="h-4 w-16" />
+                            </li>
+                        ))}
+                    </ul>
+                </CardContent>
+            </Card>
+        );
+    }
+
     const presets = [
         { key: "1", label: "프리셋 1", stats: hyper.hyper_stat_preset_1 },
         { key: "2", label: "프리셋 2", stats: hyper.hyper_stat_preset_2 },
         { key: "3", label: "프리셋 3", stats: hyper.hyper_stat_preset_3 },
-    ]
+    ];
 
     return (
         <Card className="w-full">
@@ -41,6 +72,6 @@ export const HyperStat = ({ hyper }: { hyper: ICharacterHyperStat }) => {
                 </Tabs>
             </CardContent>
         </Card>
-    )
-}
+    );
+};
 
