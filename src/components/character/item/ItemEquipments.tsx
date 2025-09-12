@@ -36,6 +36,7 @@ const slotPosition: Record<string, { col: number; row: number }> = {
     "반지4": { col: 1, row: 1 },
 
     "포켓 아이템": { col: 1, row: 5 },
+    "기계 심장": { col: 5, row: 6 },
     "뱃지": { col: 5, row: 2 },
     "훈장": { col: 5, row: 3 },
 };
@@ -47,8 +48,8 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
             <CardHeader>
                 <CardTitle>장비</CardTitle>
             </CardHeader>
-            <CardContent className="flex">
-                <div className="grid grid-cols-5 grid-rows-6 w-full h-full gap-3 p-6 bg-gray-100 rounded-lg">
+            <CardContent className="flex justify-center">
+                <div className="grid grid-cols-5 grid-rows-6 gap-2 p-4 bg-gray-100 rounded-lg w-[420px]">
                     {items.map((equip) => {
                         const pos = slotPosition[equip.item_equipment_slot];
                         if (!pos) return null;
@@ -69,8 +70,12 @@ const ItemEquipments = ({ items }: IEquipmentGrid) => {
                                         />
                                     </div>
                                 </PopoverTrigger>
-                                <PopoverContent side="right" align="start" className="p-0 bg-transparent border-none shadow-none">
-                                    <ItemEquipDetail item={equip}/>
+                                <PopoverContent
+                                    side="right"
+                                    align="start"
+                                    className="p-0 bg-transparent border-none shadow-none"
+                                >
+                                    <ItemEquipDetail item={equip} />
                                 </PopoverContent>
                             </Popover>
                         );

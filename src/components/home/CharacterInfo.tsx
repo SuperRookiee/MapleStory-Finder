@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Spinner } from "@/components/ui/spinner";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
-import { IItemEquipment, ICharacterBasic } from "@/interface/character/ICharacter";
+import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
 
@@ -51,9 +51,9 @@ const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
             ) : (
                 <div className="p-4 max-w-6xl mx-auto">
                     {/* 좌우 배치 */}
-                    <div className="flex lg:flex-row gap-10">
+                    <div className="flex flex-col lg:flex-row gap-10">
                         {/* 좌측: 캐릭터 정보 */}
-                        <section className="w-full lg:w-1/3 flex flex-col items-center lg:items-start">
+                        <section className="flex-1 flex flex-col items-center">
                             <div className="self-start flex items-center gap-2 text-xl">
                                 <WorldIcon name={basic.world_name} />
                                 {basic.world_name}
@@ -87,8 +87,10 @@ const CharacterInfo = ({ ocid, goToDetailPage }: ICharacterInfoProps) => {
 
                         {/* 우측: 장비 */}
                         {items.length > 0 && (
-                            <div className="w-full lg:w-2/3">
-                                <ItemEquipments items={items}/>
+                            <div className="flex-1 flex justify-center">
+                                <div className="w-[420px] mx-auto">
+                                    <ItemEquipments items={items} />
+                                </div>
                             </div>
                         )}
                     </div>
