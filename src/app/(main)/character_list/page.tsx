@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { characterListStore } from "@/stores/characterListStore";
+import { favoriteStore } from "@/stores/favoriteStore";
 import { userStore } from "@/stores/userStore";
 
 const CharacterList = () => {
@@ -18,7 +19,7 @@ const CharacterList = () => {
     const { characters, loading, fetchCharacters } = characterListStore();
     const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState("전체월드");
-    const [favorites, setFavorites] = useState<string[]>([]);
+    const { favorites, setFavorites, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -36,15 +37,18 @@ const CharacterList = () => {
 
             try {
                 await fetchCharacters();
-                const favorite = await getFavorites(session.user.id);
-                setFavorites(favorite);
+                const currentFavorites = favoriteStore.getState().favorites;
+                if (currentFavorites.length === 0) {
+                    const favorite = await getFavorites(session.user.id);
+                    setFavorites(favorite);
+                }
             } catch (err) {
                 if (err instanceof Error) toast.error(err.message);
             }
         };
 
         load();
-    }, [fetchCharacters, setApiKey]);
+    }, [fetchCharacters, setApiKey, setFavorites]);
 
     // 서버 선택 필터링
     useEffect(() => {
@@ -58,10 +62,10 @@ const CharacterList = () => {
         if (!userId) return;
         if (favorites.includes(ocid)) {
             await removeFavorite(userId, ocid);
-            setFavorites(favorites.filter((f) => f !== ocid));
+            removeFavoriteOcid(ocid);
         } else {
             await addFavorite(userId, ocid);
-            setFavorites([...favorites, ocid]);
+            addFavoriteOcid(ocid);
         }
     };
 
