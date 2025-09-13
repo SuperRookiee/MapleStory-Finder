@@ -27,14 +27,21 @@ const CharacterCard = ({
             {/* 즐겨찾기 버튼 */}
             <div className="absolute top-2 right-2 z-10">
                 <Button
-                    variant='ghost'
+                    variant="ghost"
+                    aria-pressed={isFavorite}
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation(); // 부모 onClick 방지
                         onToggleFavorite?.();
                     }}
                 >
-                    <Star className={`h-5 w-5 ${isFavorite ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground"}`}/>
+                    <Star
+                        className={`h-5 w-5 ${
+                            isFavorite ? "text-yellow-400" : "text-muted-foreground"
+                        }`}
+                        fill={isFavorite ? "currentColor" : "none"}
+                        strokeWidth={isFavorite ? 0 : 2}
+                    />
                 </Button>
             </div>
 
