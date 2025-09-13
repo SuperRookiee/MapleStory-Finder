@@ -364,7 +364,12 @@ export interface ICharacterPetEquipment {
     pet_1_name: string
     pet_1_icon: string
     pet_1_description: string
-    // ... (펫2, 펫3도 동일 구조)
+    pet_2_name: string
+    pet_2_icon: string
+    pet_2_description: string
+    pet_3_name: string
+    pet_3_icon: string
+    pet_3_description: string
 }
 
 export interface ICharacterPropensity {
