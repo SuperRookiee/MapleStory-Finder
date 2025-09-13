@@ -49,7 +49,7 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
             <CardHeader>
                 <CardTitle>장비</CardTitle>
             </CardHeader>
-            <CardContent className="flex justify-center">
+            <CardContent className="flex w-full justify-center">
                 <div className="grid grid-cols-5 grid-rows-6 gap-2 p-4 bg-muted rounded-lg w-fit">
                     {Object.entries(slotPosition).map(([slot, pos]) => {
                         const equip = items.find((item) => item.item_equipment_slot === slot);
