@@ -3,8 +3,12 @@
 import Image from 'next/image';
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import { toast } from "sonner";
+import { CashEquip } from "@/components/character/detail/CashEquip";
+import { HexaStat } from "@/components/character/detail/HexaStat";
 import { HyperStat } from "@/components/character/detail/HyperStat";
+import { JsonSection } from "@/components/character/detail/JsonSection";
 import { Popularity } from "@/components/character/detail/Popularity";
+import { Skill } from "@/components/character/detail/Skill";
 import { Stat } from "@/components/character/detail/Stat";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -209,40 +213,30 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {/* 상세 정보는 로딩 완료 후 표시 */}
                     {!loading && (
                         <>
-                            {/* 스킬 등 - JSON 프리뷰 */}
+                            {/* 스킬 등 */}
+                            <CashEquip equip={cashEquip} loading={!cashEquip} />
+                            <Skill skill={skill} loading={!skill} />
                             {Object.entries({
-                                cashEquip,
                                 symbolEquip,
                                 setEffect,
-                                skill,
                                 linkSkill,
                             }).map(([key, value]) => (
-                                <section key={key} className="w-full">
-                                    <h2 className="text-xl font-bold mb-2">{key}</h2>
-                                    <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                        {JSON.stringify(value, null, 2)}
-                                    </pre>
-                                </section>
+                                <JsonSection key={key} title={key} data={value} loading={!value} />
                             ))}
 
-                            {/* 심화 - JSON 프리뷰 */}
+                            {/* 심화 */}
+                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
                             {Object.entries({
                                 hexaMatrix,
-                                hexaStat,
                                 vMatrix,
                                 dojang,
                                 ring,
                                 otherStat,
                             }).map(([key, value]) => (
-                                <section key={key}>
-                                    <h2 className="text-xl font-bold mb-2">{key}</h2>
-                                    <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                        {JSON.stringify(value, null, 2)}
-                                    </pre>
-                                </section>
+                                <JsonSection key={key} title={key} data={value} loading={!value} />
                             ))}
 
-                            {/* 꾸미기 / 기타 - JSON 프리뷰 */}
+                            {/* 꾸미기 / 기타 */}
                             {Object.entries({
                                 beauty,
                                 android,
@@ -250,12 +244,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 propensity,
                                 ability,
                             }).map(([key, value]) => (
-                                <section key={key}>
-                                    <h2 className="text-xl font-bold mb-2">{key}</h2>
-                                    <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                        {JSON.stringify(value, null, 2)}
-                                    </pre>
-                                </section>
+                                <JsonSection key={key} title={key} data={value} loading={!value} />
                             ))}
                         </>
                     )}
