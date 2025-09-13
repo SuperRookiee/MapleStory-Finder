@@ -59,12 +59,14 @@ const SignInPage = () => {
                 ? undefined
                 : { redirectTo: window.location.origin };
 
-        await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options,
         });
-        toast.success('로그인 성공');
-        setGoogleLoading(false);
+        if (error) {
+            toast.error(error.message);
+            setGoogleLoading(false);
+        }
     };
 
     return (
