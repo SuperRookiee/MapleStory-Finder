@@ -11,7 +11,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
 
     if (loading || !stat) {
         return (
-            <div className="w-full max-w-xl mx-auto rounded-md overflow-hidden shadow bg-neutral-100">
+            <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100">
                 <div className="bg-neutral-300 px-4 py-2">
                     <Skeleton className="h-4 w-32" />
                 </div>
@@ -40,7 +40,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
     );
 
     return (
-        <div className="w-full max-w-xl mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800">
+        <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800">
             <div className="bg-neutral-300 px-4 py-2 text-sm font-bold">{stat.character_class} 스탯</div>
             <div className="bg-neutral-200 px-4 py-4 border-b border-neutral-300">
                 <div className="text-xs text-neutral-600">전투력</div>

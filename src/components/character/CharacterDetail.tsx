@@ -164,7 +164,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
-                <div className="space-y-6 p-4">
+                <div className="space-y-6 p-4 w-full max-w-xl mx-auto lg:max-w-3xl">
                     <div
                         className="relative w-80 h-80 mx-auto"
                         style={{
