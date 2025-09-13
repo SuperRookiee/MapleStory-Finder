@@ -23,21 +23,21 @@ const CharacterList = () => {
 
     useEffect(() => {
         const load = async () => {
-            const { data } = await supabase.auth.getSession();
-            const session = data.session;
+            const { data } = await supabase.auth.getUser();
+            const user = data.user;
 
-            if (!session) {
+            if (!user) {
                 return;
             }
 
-            setUserId(session.user.id);
-            const key = session.user.user_metadata?.nexon_api_key;
+            setUserId(user.id);
+            const key = user.user_metadata?.nexon_api_key;
             if (key) setApiKey(key);
 
             try {
                 await fetchCharacters();
-                const favorite = await getFavorites(session.user.id);
-                setFavorites(favorite);
+                const favOcids = await getFavorites(user.id);
+                setFavorites(favOcids);
             } catch (err) {
                 if (err instanceof Error) toast.error(err.message);
             }
@@ -58,11 +58,11 @@ const CharacterList = () => {
         if (!userId) return;
         if (favorites.includes(ocid)) {
             await removeFavorite(userId, ocid);
-            setFavorites(favorites.filter((f) => f !== ocid));
         } else {
             await addFavorite(userId, ocid);
-            setFavorites([...favorites, ocid]);
         }
+        const updated = await getFavorites(userId);
+        setFavorites(updated);
     };
 
     const worlds = ["전체월드", ...Array.from(new Set(characters.map((c) => c.world_name)))];

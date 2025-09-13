@@ -21,14 +21,14 @@ const Home = () => {
     useEffect(() => {
         const load = async () => {
             setLoading(true);
-            const { data } = await supabase.auth.getSession();
-            const session = data.session;
-            if (!session) {
+            const { data } = await supabase.auth.getUser();
+            const authUser = data.user;
+            if (!authUser) {
                 setLoading(false);
                 return;
             }
-            setUser({ id: session.user.id, email: session.user.email ?? undefined });
-            const favOcids = await getFavorites(session.user.id);
+            setUser({ id: authUser.id, email: authUser.email ?? undefined });
+            const favOcids = await getFavorites(authUser.id);
             const chars = await Promise.all(
                 favOcids.map(async (ocid) => {
                     const data = await findCharacterBasic(ocid);
@@ -53,23 +53,26 @@ const Home = () => {
         if (!user) return;
         if (favorites.find((f) => f.ocid === ocid)) {
             await removeFavorite(user.id, ocid);
-            setFavorites(favorites.filter((f) => f.ocid !== ocid));
-            if (selected === ocid) setSelected(null);
         } else {
             await addFavorite(user.id, ocid);
-            const data = await findCharacterBasic(ocid);
-            setFavorites([
-                ...favorites,
-                {
-                    ocid,
+        }
+
+        const favOcids = await getFavorites(user.id);
+        const chars = await Promise.all(
+            favOcids.map(async (id) => {
+                const data = await findCharacterBasic(id);
+                return {
+                    ocid: id,
                     character_name: data.data.character_name,
                     world_name: data.data.world_name,
                     character_class: data.data.character_class,
                     character_level: data.data.character_level,
                     image: data.data.character_image,
-                },
-            ]);
-        }
+                } as ICharacterSummary;
+            })
+        );
+        setFavorites(chars);
+        if (selected === ocid && !favOcids.includes(ocid)) setSelected(null);
     };
 
     const handleSelect = (ocid: string) => {
