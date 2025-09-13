@@ -25,13 +25,18 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         reset,
     } = characterDetailStore();
     const [imageScale, setImageScale] = useState(1);
+    // 전체 로딩과 기본 정보 로딩을 분리하여
+    // 먼저 받은 정보는 바로 화면에 표시하고
+    // 이후 데이터는 순차적으로 받아오도록 한다.
     const [loading, setLoading] = useState(true);
+    const [basicLoading, setBasicLoading] = useState(true);
 
     useEffect(() => {
         if (!ocid) return;
 
         const load = async () => {
             setLoading(true);
+            setBasicLoading(true);
             try {
                 // 필수 정보
                 const [basicRes, stat, popularity, hyper] = await Promise.all([
@@ -44,6 +49,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setStat(stat.data)
                 setPopularity(popularity.data)
                 setHyper(hyper.data)
+                // 기본 정보가 준비되면 즉시 화면에 반영
+                setBasicLoading(false);
 
                 // 장비/스킬
                 const grades = ["0", "1", "2", "3", "4", "5", "6", "hyperpassive", "hyperactive"]
@@ -152,7 +159,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
         viewport.addEventListener('scroll', handleScroll);
         return () => viewport.removeEventListener('scroll', handleScroll);
-    }, [loading]);
+    }, [basicLoading]);
 
     return (
         <ViewTransition enter="fade" exit="fade">
@@ -165,7 +172,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             opacity: imageScale,
                         }}
                     >
-                        {loading || !basic ? (
+                        {basicLoading || !basic ? (
                             <Skeleton className="w-full h-full" />
                         ) : (
                             basic.character_image && (
@@ -179,24 +186,24 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             )
                         )}
                     </div>
-                    {loading || !basic ? (
+                    {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
                         <p className="text-center font-bold mt-2">{basic.character_name}</p>
                     )}
 
                     {/* 주요 스탯 */}
-                    <Stat stat={stat} loading={loading || !stat} />
+                    <Stat stat={stat} loading={basicLoading || !stat} />
                     <Popularity
                         popularity={popularity?.popularity}
-                        loading={loading || !popularity}
+                        loading={basicLoading || !popularity}
                     />
-                    <HyperStat hyper={hyper} loading={loading || !hyper} />
+                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
 
                     {/* 장비 */}
                     <ItemEquipments
                         items={itemEquip?.item_equipment || []}
-                        loading={loading || !itemEquip}
+                        loading={!itemEquip}
                     />
 
                     {/* 상세 정보는 로딩 완료 후 표시 */}
