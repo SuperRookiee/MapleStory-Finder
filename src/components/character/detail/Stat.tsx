@@ -1,7 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ICharacterStat } from "@/interface/character/ICharacter";
 
 interface StatProps {
@@ -10,53 +7,74 @@ interface StatProps {
 }
 
 export const Stat = ({ stat, loading }: StatProps) => {
-    const highlights = ["전투력", "보스 몬스터 데미지", "크리티컬 확률", "크리티컬 데미지"];
+    const highlights = ["보스 몬스터 데미지", "크리티컬 확률", "크리티컬 데미지"];
+
+    if (loading || !stat) {
+        return (
+            <div className="w-full max-w-xl mx-auto rounded-md overflow-hidden shadow bg-neutral-100">
+                <div className="bg-neutral-300 px-4 py-2">
+                    <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="p-4 space-y-4">
+                    <Skeleton className="h-8 w-40" />
+                    <div className="grid grid-cols-2 gap-4">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="space-y-2">
+                                <Skeleton className="h-4 w-10" />
+                                <Skeleton className="h-4 w-20" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const statMap: Record<string, string> = Object.fromEntries(
+        stat.final_stat.map((s) => [s.stat_name, s.stat_value])
+    );
+    const mainKeys = ["HP", "MP", "STR", "DEX", "INT", "LUK"];
+    const battlePower = statMap["전투력"];
+    const otherStats = stat.final_stat.filter(
+        (s) => !mainKeys.includes(s.stat_name) && s.stat_name !== "전투력"
+    );
 
     return (
-        <Card className="w-full">
-            <CardHeader>
-                {loading || !stat ? (
-                    <Skeleton className="h-6 w-32" />
-                ) : (
-                    <CardTitle>{stat.character_class} 스탯</CardTitle>
-                )}
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>스탯</TableHead>
-                            <TableHead className="text-right">값</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {loading || !stat
-                            ? Array.from({ length: 4 }).map((_, i) => (
-                                  <TableRow key={i}>
-                                      <TableCell>
-                                          <Skeleton className="h-4 w-24" />
-                                      </TableCell>
-                                      <TableCell className="text-right font-medium">
-                                          <Skeleton className="h-4 w-16 ml-auto" />
-                                      </TableCell>
-                                  </TableRow>
-                              ))
-                            : stat.final_stat.map((s) => (
-                                  <TableRow key={s.stat_name}>
-                                      <TableCell>
-                                          {highlights.includes(s.stat_name) ? (
-                                              <Badge variant="secondary">{s.stat_name}</Badge>
-                                          ) : (
-                                              s.stat_name
-                                          )}
-                                      </TableCell>
-                                      <TableCell className="text-right font-medium">{s.stat_value}</TableCell>
-                                  </TableRow>
-                              ))}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+        <div className="w-full max-w-xl mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800">
+            <div className="bg-neutral-300 px-4 py-2 text-sm font-bold">{stat.character_class} 스탯</div>
+            <div className="bg-neutral-200 px-4 py-4 border-b border-neutral-300">
+                <div className="text-xs text-neutral-600">전투력</div>
+                <div className="text-2xl font-extrabold text-amber-600">
+                    {battlePower}
+                </div>
+            </div>
+            <div className="p-4 grid grid-cols-2 gap-4 text-sm">
+                <div className="space-y-2">
+                    {mainKeys.map((key) => (
+                        <div key={key} className="flex justify-between">
+                            <span className="font-medium">{key}</span>
+                            <span>{statMap[key] ?? "-"}</span>
+                        </div>
+                    ))}
+                </div>
+                <div className="space-y-2 border-l border-neutral-300 pl-4">
+                    {otherStats.map((s) => (
+                        <div key={s.stat_name} className="flex justify-between">
+                            <span
+                                className={
+                                    highlights.includes(s.stat_name)
+                                        ? "text-amber-600 font-semibold"
+                                        : undefined
+                                }
+                            >
+                                {s.stat_name}
+                            </span>
+                            <span className="font-medium">{s.stat_value}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
     );
 };
 
