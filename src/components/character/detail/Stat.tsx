@@ -11,8 +11,8 @@ export const Stat = ({ stat, loading }: StatProps) => {
 
     if (loading || !stat) {
         return (
-            <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100">
-                <div className="bg-neutral-300 px-4 py-2">
+            <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 dark:bg-neutral-800">
+                <div className="bg-neutral-300 dark:bg-neutral-700 px-4 py-2">
                     <Skeleton className="h-4 w-32" />
                 </div>
                 <div className="p-4 space-y-4">
@@ -40,10 +40,10 @@ export const Stat = ({ stat, loading }: StatProps) => {
     );
 
     return (
-        <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800">
-            <div className="bg-neutral-300 px-4 py-2 text-sm font-bold">{stat.character_class} 스탯</div>
-            <div className="bg-neutral-200 px-4 py-4 border-b border-neutral-300">
-                <div className="text-xs text-neutral-600">전투력</div>
+        <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+            <div className="bg-neutral-300 dark:bg-neutral-700 px-4 py-2 text-sm font-bold">{stat.character_class} 스탯</div>
+            <div className="bg-neutral-200 dark:bg-neutral-700 px-4 py-4 border-b border-neutral-300 dark:border-neutral-600">
+                <div className="text-xs text-neutral-600 dark:text-neutral-400">전투력</div>
                 <div className="text-2xl font-extrabold text-amber-600">
                     {battlePower}
                 </div>
@@ -57,7 +57,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
                         </div>
                     ))}
                 </div>
-                <div className="space-y-2 border-l border-neutral-300 pl-4">
+                <div className="space-y-2 border-l border-neutral-300 dark:border-neutral-600 pl-4">
                     {otherStats.map((s) => (
                         <div key={s.stat_name} className="flex justify-between">
                             <span
