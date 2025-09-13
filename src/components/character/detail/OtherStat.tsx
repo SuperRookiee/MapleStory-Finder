@@ -8,7 +8,7 @@ interface OtherStatProps {
 }
 
 export const OtherStat = ({ otherStat, loading }: OtherStatProps) => {
-    if (loading || !otherStat) {
+    if (loading) {
         return (
             <Card className="w-full">
                 <CardHeader>
@@ -16,6 +16,19 @@ export const OtherStat = ({ otherStat, loading }: OtherStatProps) => {
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-6 w-full" />
+                </CardContent>
+            </Card>
+        );
+    }
+
+    if (!otherStat || !otherStat.other_stat) {
+        return (
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>기타 스탯</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm">
+                    <p>정보가 없습니다.</p>
                 </CardContent>
             </Card>
         );
@@ -31,7 +44,9 @@ export const OtherStat = ({ otherStat, loading }: OtherStatProps) => {
                     <div key={group.other_stat_type}>
                         <p className="font-semibold">{group.other_stat_type}</p>
                         {group.stat_info.map((s) => (
-                            <p key={s.stat_name} className="text-xs">{s.stat_name}: {s.stat_value}</p>
+                            <p key={s.stat_name} className="text-xs">
+                                {s.stat_name}: {s.stat_value}
+                            </p>
                         ))}
                     </div>
                 ))}
