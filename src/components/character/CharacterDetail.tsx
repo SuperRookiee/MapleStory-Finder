@@ -3,13 +3,25 @@
 import Image from 'next/image';
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import { toast } from "sonner";
+import { Ability } from "@/components/character/detail/Ability";
+import { Android } from "@/components/character/detail/Android";
+import { Beauty } from "@/components/character/detail/Beauty";
 import { CashEquip } from "@/components/character/detail/CashEquip";
+import { Dojang } from "@/components/character/detail/Dojang";
+import { HexaMatrix } from "@/components/character/detail/HexaMatrix";
 import { HexaStat } from "@/components/character/detail/HexaStat";
 import { HyperStat } from "@/components/character/detail/HyperStat";
-import { JsonSection } from "@/components/character/detail/JsonSection";
+import { LinkSkill } from "@/components/character/detail/LinkSkill";
+import { OtherStat } from "@/components/character/detail/OtherStat";
+import { Pet } from "@/components/character/detail/Pet";
 import { Popularity } from "@/components/character/detail/Popularity";
+import { Propensity } from "@/components/character/detail/Propensity";
+import { Ring } from "@/components/character/detail/Ring";
+import { SetEffect } from "@/components/character/detail/SetEffect";
 import { Skill } from "@/components/character/detail/Skill";
 import { Stat } from "@/components/character/detail/Stat";
+import { SymbolEquip } from "@/components/character/detail/SymbolEquip";
+import { VMatrix } from "@/components/character/detail/VMatrix";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -216,36 +228,24 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             {/* 스킬 등 */}
                             <CashEquip equip={cashEquip} loading={!cashEquip} />
                             <Skill skill={skill} loading={!skill} />
-                            {Object.entries({
-                                symbolEquip,
-                                setEffect,
-                                linkSkill,
-                            }).map(([key, value]) => (
-                                <JsonSection key={key} title={key} data={value} loading={!value} />
-                            ))}
+                            <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
+                            <SetEffect setEffect={setEffect} loading={!setEffect} />
+                            <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
 
                             {/* 심화 */}
                             <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
-                            {Object.entries({
-                                hexaMatrix,
-                                vMatrix,
-                                dojang,
-                                ring,
-                                otherStat,
-                            }).map(([key, value]) => (
-                                <JsonSection key={key} title={key} data={value} loading={!value} />
-                            ))}
+                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
+                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
+                            <Dojang dojang={dojang} loading={!dojang} />
+                            <Ring ring={ring} loading={!ring} />
+                            <OtherStat otherStat={otherStat} loading={!otherStat} />
 
                             {/* 꾸미기 / 기타 */}
-                            {Object.entries({
-                                beauty,
-                                android,
-                                pet,
-                                propensity,
-                                ability,
-                            }).map(([key, value]) => (
-                                <JsonSection key={key} title={key} data={value} loading={!value} />
-                            ))}
+                            <Beauty beauty={beauty} loading={!beauty} />
+                            <Android android={android} loading={!android} />
+                            <Pet pet={pet} loading={!pet} />
+                            <Propensity propensity={propensity} loading={!propensity} />
+                            <Ability ability={ability} loading={!ability} />
                         </>
                     )}
                 </div>
