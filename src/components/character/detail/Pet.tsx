@@ -26,13 +26,11 @@ export const Pet = ({ pet, loading }: PetProps) => {
         );
     }
 
-    const petData = pet as Record<string, string>;
-    const pets = [1, 2, 3]
-        .map((i) => ({
-            name: petData[`pet_${i}_name`],
-            icon: petData[`pet_${i}_icon`],
-        }))
-        .filter((p) => p.name);
+    const pets = [
+        { name: pet.pet_1_name, icon: pet.pet_1_icon },
+        { name: pet.pet_2_name, icon: pet.pet_2_icon },
+        { name: pet.pet_3_name, icon: pet.pet_3_icon },
+    ].filter((p) => p.name);
 
     return (
         <Card className="w-full">
