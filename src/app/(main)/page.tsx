@@ -9,11 +9,13 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { favoriteStore } from "@/stores/favoriteStore";
 
 const Home = () => {
     const router = useRouter();
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
     const [favorites, setFavorites] = useState<ICharacterSummary[]>([]);
+    const { setFavorites: setFavoriteOcids, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
     const [selected, setSelected] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
@@ -29,6 +31,7 @@ const Home = () => {
             }
             setUser({ id: session.user.id, email: session.user.email ?? undefined });
             const favOcids = await getFavorites(session.user.id);
+            setFavoriteOcids(favOcids);
             const chars = await Promise.all(
                 favOcids.map(async (ocid) => {
                     const data = await findCharacterBasic(ocid);
@@ -54,6 +57,7 @@ const Home = () => {
         if (favorites.find((f) => f.ocid === ocid)) {
             await removeFavorite(user.id, ocid);
             setFavorites(favorites.filter((f) => f.ocid !== ocid));
+            removeFavoriteOcid(ocid);
             if (selected === ocid) setSelected(null);
         } else {
             await addFavorite(user.id, ocid);
@@ -69,6 +73,7 @@ const Home = () => {
                     image: data.data.character_image,
                 },
             ]);
+            addFavoriteOcid(ocid);
         }
     };
 
