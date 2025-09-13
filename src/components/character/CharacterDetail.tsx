@@ -3,9 +3,25 @@
 import Image from 'next/image';
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import { toast } from "sonner";
+import { Ability } from "@/components/character/detail/Ability";
+import { Android } from "@/components/character/detail/Android";
+import { Beauty } from "@/components/character/detail/Beauty";
+import { CashEquip } from "@/components/character/detail/CashEquip";
+import { Dojang } from "@/components/character/detail/Dojang";
+import { HexaMatrix } from "@/components/character/detail/HexaMatrix";
+import { HexaStat } from "@/components/character/detail/HexaStat";
 import { HyperStat } from "@/components/character/detail/HyperStat";
+import { LinkSkill } from "@/components/character/detail/LinkSkill";
+import { OtherStat } from "@/components/character/detail/OtherStat";
+import { Pet } from "@/components/character/detail/Pet";
 import { Popularity } from "@/components/character/detail/Popularity";
+import { Propensity } from "@/components/character/detail/Propensity";
+import { Ring } from "@/components/character/detail/Ring";
+import { SetEffect } from "@/components/character/detail/SetEffect";
+import { Skill } from "@/components/character/detail/Skill";
 import { Stat } from "@/components/character/detail/Stat";
+import { SymbolEquip } from "@/components/character/detail/SymbolEquip";
+import { VMatrix } from "@/components/character/detail/VMatrix";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -209,54 +225,27 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {/* 상세 정보는 로딩 완료 후 표시 */}
                     {!loading && (
                         <>
-                            {/* 스킬 등 - JSON 프리뷰 */}
-                            {Object.entries({
-                                cashEquip,
-                                symbolEquip,
-                                setEffect,
-                                skill,
-                                linkSkill,
-                            }).map(([key, value]) => (
-                                <section key={key} className="w-full">
-                                    <h2 className="text-xl font-bold mb-2">{key}</h2>
-                                    <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                        {JSON.stringify(value, null, 2)}
-                                    </pre>
-                                </section>
-                            ))}
+                            {/* 스킬 등 */}
+                            <CashEquip equip={cashEquip} loading={!cashEquip} />
+                            <Skill skill={skill} loading={!skill} />
+                            <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
+                            <SetEffect setEffect={setEffect} loading={!setEffect} />
+                            <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
 
-                            {/* 심화 - JSON 프리뷰 */}
-                            {Object.entries({
-                                hexaMatrix,
-                                hexaStat,
-                                vMatrix,
-                                dojang,
-                                ring,
-                                otherStat,
-                            }).map(([key, value]) => (
-                                <section key={key}>
-                                    <h2 className="text-xl font-bold mb-2">{key}</h2>
-                                    <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                        {JSON.stringify(value, null, 2)}
-                                    </pre>
-                                </section>
-                            ))}
+                            {/* 심화 */}
+                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
+                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
+                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
+                            <Dojang dojang={dojang} loading={!dojang} />
+                            <Ring ring={ring} loading={!ring} />
+                            <OtherStat otherStat={otherStat} loading={!otherStat} />
 
-                            {/* 꾸미기 / 기타 - JSON 프리뷰 */}
-                            {Object.entries({
-                                beauty,
-                                android,
-                                pet,
-                                propensity,
-                                ability,
-                            }).map(([key, value]) => (
-                                <section key={key}>
-                                    <h2 className="text-xl font-bold mb-2">{key}</h2>
-                                    <pre className="text-sm bg-muted p-2 rounded overflow-x-auto max-w-full break-words whitespace-pre-wrap">
-                                        {JSON.stringify(value, null, 2)}
-                                    </pre>
-                                </section>
-                            ))}
+                            {/* 꾸미기 / 기타 */}
+                            <Beauty beauty={beauty} loading={!beauty} />
+                            <Android android={android} loading={!android} />
+                            <Pet pet={pet} loading={!pet} />
+                            <Propensity propensity={propensity} loading={!propensity} />
+                            <Ability ability={ability} loading={!ability} />
                         </>
                     )}
                 </div>
