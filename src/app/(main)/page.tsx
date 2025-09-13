@@ -118,7 +118,7 @@ const Home = () => {
                     <DialogContent
                         className="
                             absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-                            w-[90vw] max-w-md rounded-2xl shadow-lg bg-white
+                            w-[90vw] max-w-md rounded-2xl shadow-lg bg-background
                         "
                     >
                         <DialogTitle className="px-4 pt-4">Info</DialogTitle>
