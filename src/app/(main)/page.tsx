@@ -72,6 +72,16 @@ const Home = () => {
         }
     };
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768) {
+                setOpen(false);
+            }
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const handleSelect = (ocid: string) => {
         setSelected(ocid);
         // 모바일일 경우 다이얼로그 열기
@@ -100,15 +110,24 @@ const Home = () => {
 
                 {/* 모바일 다이얼로그 */}
                 <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent className="max-w-sm sm:max-w-md p-0">
-                        <DialogTitle>Info</DialogTitle>
+                    <DialogContent
+                        className="
+    absolute left-1/2 top-1/2
+    -translate-x-1/2 -translate-y-1/2
+    w-[90vw] max-w-md
+    rounded-2xl shadow-lg bg-white
+  "
+                    >
+                        <DialogTitle className="px-4 pt-4">Info</DialogTitle>
                         <CharacterInfo
                             ocid={selected}
                             goToDetailPage={goToDetailPage}
                             className="flex md:hidden max-h-[80vh]"
                         />
                     </DialogContent>
+
                 </Dialog>
+
             </div>
         </ViewTransition>
     );

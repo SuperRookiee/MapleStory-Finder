@@ -49,8 +49,8 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
             ) : (
                 <div className="p-4 max-w-6xl mx-auto">
                     <div className="flex flex-col lg:flex-row gap-10">
-                        <section className="flex-1 flex flex-col items-center">
-                            <div className="self-start flex items-center gap-2 text-xl">
+                        <section className="lg:flex-[0.4] flex flex-col items-center max-w-[300px] mx-auto">
+                        <div className="self-start flex items-center gap-2 text-xl">
                                 {loading || !basic ? (
                                     <>
                                         <Skeleton className="w-6 h-6 rounded-full" />
@@ -114,8 +114,8 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                         </section>
 
                         {/* 우측: 장비 */}
-                        <div className="flex-1 flex justify-center">
-                            <div className="w-[420px] mx-auto">
+                        <div className="lg:flex-[0.6] flex justify-center">
+                            <div className="mx-auto max-w-[360px] md:max-w-[420px]">
                                 <ItemEquipments items={items} loading={loading || !basic} />
                             </div>
                         </div>
