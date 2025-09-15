@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image';
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
 import { toast } from "sonner";
 import { Ability } from "@/components/character/detail/Ability";
@@ -25,7 +24,6 @@ import { Union } from "@/components/character/detail/Union";
 import { VMatrix } from "@/components/character/detail/VMatrix";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { findUnion, findUnionArtifact, findUnionRaider } from '@/fetchs/union.fetch';
@@ -45,12 +43,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         setBeauty, setAndroid, setPet, setPropensity, setAbility,
         reset,
     } = characterDetailStore();
-    const [imageScale, setImageScale] = useState(1);
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
-    const smallImageOpacity = (1 - imageScale) / 0.6;
-    const SMALL_IMAGE_SIZE = 40;
-    const SCROLL_HIDE_THRESHOLD = SMALL_IMAGE_SIZE * 6.25;
 
     // 기본 정보 로딩
     useEffect(() => {
@@ -233,77 +227,59 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         setPropensity,
     ]);
 
-    useEffect(() => {
-        const viewport = document.querySelector(
-            '#character-detail-scroll [data-slot="scroll-area-viewport"]'
-        ) as HTMLElement | null;
-        if (!viewport) return;
-
-        let ticking = false;
-        const handleScroll = () => {
-            if (ticking) return;
-
-            window.requestAnimationFrame(() => {
-                const top = viewport.scrollTop;
-                const progress = Math.min(top / SCROLL_HIDE_THRESHOLD, 1);
-                const scale = 1 - progress * 0.6;
-                setImageScale(scale);
-                ticking = false;
-            });
-
-            ticking = true;
-        };
-
-        viewport.addEventListener('scroll', handleScroll);
-        return () => viewport.removeEventListener('scroll', handleScroll);
-    }, [basicLoading]);
-
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
-                    <div
-                        className="relative w-40 h-40 mx-auto"
-                        style={{
-                            transform: `scale(${imageScale})`,
-                            opacity: imageScale,
-                        }}
-                    >
+                    <div className="relative h-40 w-full max-w-xl mx-auto rounded-lg border bg-card">
                         {basicLoading || !basic ? (
-                            <Skeleton className="w-full h-full" />
+                            <div className="absolute inset-0 animate-pulse">
+                                <div className="absolute top-2 left-2 w-24 h-6 bg-muted rounded-md" />
+                                <div className="absolute top-2 right-2 w-24 h-6 bg-muted rounded-md" />
+                                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-6 bg-muted rounded-md" />
+                                <div className="absolute bottom-12 left-2 space-y-2">
+                                    <div className="w-32 h-6 bg-muted rounded-md" />
+                                    <div className="w-32 h-6 bg-muted rounded-md" />
+                                    <div className="w-32 h-6 bg-muted rounded-md" />
+                                </div>
+                                <div className="absolute bottom-12 right-2 w-32 h-6 bg-muted rounded-md" />
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-40 h-8 bg-primary rounded-md" />
+                            </div>
                         ) : (
-                            basic.character_image && (
-                                <Image
-                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
-                                    alt={basic.character_name}
-                                    className="object-contain"
-                                    fill
-                                    priority
-                                    unoptimized
-                                />
-                            )
+                            <>
+                                <div className="absolute top-2 left-2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
+                                    {basic.character_name}
+                                </div>
+                                <div className="absolute top-2 right-2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
+                                    {basic.character_class}
+                                </div>
+                                <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
+                                    Lv. {basic.character_level}
+                                </div>
+                                <div className="absolute bottom-12 left-2 space-y-2 text-sm">
+                                    <div className="bg-muted px-3 py-1 rounded-md">{basic.world_name}</div>
+                                    {basic.character_guild_name && (
+                                        <div className="bg-muted px-3 py-1 rounded-md">
+                                            {basic.character_guild_name}
+                                        </div>
+                                    )}
+                                    {popularity && (
+                                        <div className="bg-muted px-3 py-1 rounded-md">
+                                            인기도 {popularity.popularity}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="absolute bottom-12 right-2 bg-muted px-3 py-1 rounded-md text-sm">
+                                    {basic.character_class_level}
+                                </div>
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+                                    <button className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">
+                                        자세히 보기
+                                    </button>
+                                </div>
+                            </>
                         )}
                     </div>
-                    {basicLoading || !basic ? (
-                        <Skeleton className="h-6 w-40 mx-auto" />
-                    ) : (
-                        <div className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center">
-                            {basic.character_image && (
-                                <Image
-                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
-                                    alt={basic.character_name}
-                                    width={SMALL_IMAGE_SIZE}
-                                    height={SMALL_IMAGE_SIZE}
-                                    className="mr-2 object-contain transition-opacity"
-                                    style={{ opacity: smallImageOpacity }}
-                                />
-                            )}
-                            {basic.character_name}
-                            <span className="ml-2 text-muted-foreground font-normal">
-                                {basic.character_class}
-                            </span>
-                        </div>
-                    )}
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-4">
                         <TabsList>
