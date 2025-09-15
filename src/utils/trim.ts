@@ -2,9 +2,8 @@ import { PNG } from "pngjs";
 
 /**
  * Remove transparent borders from a PNG image buffer.
- * Returns the cropped image as a PNG buffer.
  */
-export function trimImage(buffer: Buffer): Buffer {
+export function trimImage(buffer: Buffer): Uint8Array {
     const png = PNG.sync.read(buffer);
     const { width, height, data } = png;
 
@@ -40,5 +39,6 @@ export function trimImage(buffer: Buffer): Buffer {
         data.copy(cropped.data, destStart, srcStart, srcEnd);
     }
 
+    // pngjs returns a Node Buffer which extends Uint8Array
     return PNG.sync.write(cropped);
 }

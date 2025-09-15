@@ -17,7 +17,7 @@ export const GET = Get(async (query: { url?: string }) => {
 
     const buffer = Buffer.from(await response.arrayBuffer());
 
-    let cropped: Buffer;
+    let cropped: Uint8Array;
     try {
         cropped = trimImage(buffer);
     } catch {
