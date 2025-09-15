@@ -49,8 +49,8 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
             <CardHeader>
                 <CardTitle>장비</CardTitle>
             </CardHeader>
-            <CardContent className="flex w-full justify-center">
-                <div className="grid grid-cols-5 grid-rows-6 gap-2 p-4 bg-muted rounded-lg w-fit">
+            <CardContent className="flex w-full justify-center px-2 sm:px-6">
+                <div className="grid grid-cols-5 grid-rows-6 gap-1.5 sm:gap-2 p-2 sm:p-4 bg-muted rounded-lg w-fit">
                     {Object.entries(slotPosition).map(([slot, pos]) => {
                         const equip = items.find((item) => item.item_equipment_slot === slot);
 
@@ -59,15 +59,15 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                                 <Popover key={slot}>
                                     <PopoverTrigger asChild>
                                         <div
-                                            className="w-12 h-12 md:w-14 md:h-14 p-2 border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
+                                            className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 p-2 border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
                                             style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
                                         >
                                             <Image
                                                 src={equip.item_icon}
                                                 alt={equip.item_name}
-                                                width={36}
-                                                height={36}
-                                                className="md:w-10 md:h-10"
+                                                width={48}
+                                                height={48}
+                                                className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
                                                 priority
                                             />
                                         </div>
@@ -86,10 +86,10 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                         return (
                             <div
                                 key={slot}
-                                className="w-12 h-12 md:w-14 md:h-14 p-2 border rounded-md flex items-center justify-center bg-card"
+                                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 p-2 border rounded-md flex items-center justify-center bg-card"
                                 style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
                             >
-                                <Skeleton className="w-8 h-8 md:w-10 md:h-10"/>
+                                <Skeleton className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10"/>
                             </div>
                         );
                     })}
