@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ICharacterSkill } from '@/interface/character/ICharacter';
@@ -27,8 +27,8 @@ export const Skill = ({ skill, loading }: SkillProps) => {
         );
     }
 
-    const grades = skill.slice(1, 7); // 1~6차 전직 스킬
-    const romans = ['I', 'II', 'III', 'IV', 'V', 'VI'];
+    const grades = skill.slice(0, 7); // 1~6차 전직 스킬
+    const romans = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI'];
 
     return (
         <Card className="w-full">
@@ -37,7 +37,7 @@ export const Skill = ({ skill, loading }: SkillProps) => {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={romans[0]} className="w-full">
-                    <TabsList className="grid w-full grid-cols-6">
+                    <TabsList className="grid w-full grid-cols-7">
                         {grades.map((_, i) => (
                             <TabsTrigger key={romans[i]} value={romans[i]}>
                                 {romans[i]}
