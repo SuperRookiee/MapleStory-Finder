@@ -7,6 +7,7 @@ import { ICharacterBasic, ICharacterPopularity, ICharacterDojang } from "@/inter
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
 import { cn } from "@/utils/utils";
+import { Card, CardContent } from "@/components/ui/card";
 
 type CharacterBannerProps = {
     basic: ICharacterBasic | null
@@ -30,12 +31,13 @@ const CharacterBanner = ({
     imageScale,
     backgroundColor = "bg-card",
 }: CharacterBannerProps) => (
-    <div
+    <Card
         className={cn(
-            "relative h-60 sm:h-64 w-full rounded-none border-0",
+            "relative h-60 sm:h-64 w-full rounded",
             backgroundColor,
         )}
     >
+        <CardContent>
         {loading || !basic ? (
             <div className="absolute inset-0 animate-pulse">
                 <div className="absolute top-2 left-2">
@@ -116,7 +118,8 @@ const CharacterBanner = ({
                 )}
             </>
         )}
-    </div>
+        </CardContent>
+    </Card>
 );
 
 export default CharacterBanner;
