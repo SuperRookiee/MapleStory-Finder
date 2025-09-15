@@ -1,19 +1,23 @@
-import {
-    Radar,
-    RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    PolarRadiusAxis,
-    ResponsiveContainer,
-    Tooltip,
-} from 'recharts';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tooltip, } from 'recharts';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterPropensity } from '@/interface/character/ICharacter';
 
 interface PropensityProps {
     propensity?: ICharacterPropensity | null;
     loading?: boolean;
+}
+
+// Tooltip props type 안전하게 정의
+interface CustomTooltipProps {
+    active?: boolean;
+    label?: NameType;
+    payload?: {
+        value: ValueType;
+        name: NameType;
+        color: string;
+    }[];
 }
 
 export const Propensity = ({ propensity, loading }: PropensityProps) => {
@@ -41,6 +45,23 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
 
     const maxValue = Math.max(100, ...data.map((d) => d.value));
 
+    // 커스텀 툴팁
+    const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+        if (active && payload && payload.length > 0) {
+            return (
+                <div className="rounded-lg border bg-background p-2 shadow-sm">
+                    <p className="text-sm font-medium text-foreground">{label}</p>
+                    {payload.map((entry, index) => (
+                        <p key={index} className="text-sm text-muted-foreground">
+                            {entry.value}
+                        </p>
+                    ))}
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (
         <Card className="w-full">
             <CardHeader>
@@ -51,14 +72,13 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
                     <RadarChart data={data}>
                         <PolarGrid />
                         <PolarAngleAxis dataKey="subject" />
-                        <PolarRadiusAxis domain={[0, maxValue]} />
                         <Radar
                             dataKey="value"
                             stroke="var(--chart-1)"
                             fill="var(--chart-1)"
-                            fillOpacity={0.6}
+                            fillOpacity={0.7}
                         />
-                        <Tooltip />
+                        <Tooltip content={<CustomTooltip />} />
                     </RadarChart>
                 </ResponsiveContainer>
             </CardContent>
