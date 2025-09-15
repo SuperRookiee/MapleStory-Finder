@@ -70,15 +70,11 @@ const CharacterBanner = ({ basic, popularity, union, dojang, guild, loading, ima
                     {popularity && (
                         <div className="bg-muted px-3 py-1 rounded-md">인기도 {popularity.popularity}</div>
                     )}
-                    {basic.character_guild_name && (
-                        <div className="bg-muted px-3 py-1 rounded-md">길드 {basic.character_guild_name}</div>
-                    )}
-                    {guild?.guild_alliance_name && (
-                        <div className="bg-muted px-3 py-1 rounded-md">연합 {guild.guild_alliance_name}</div>
-                    )}
                 </div>
                 <div className="absolute bottom-12 right-2 bg-muted px-3 py-1 rounded-md text-sm">
-                    {basic.character_class_level}
+                    {guild?.guild_name && (
+                        <div className="bg-muted px-3 py-1 rounded-md">길드 {guild.guild_name}</div>
+                    )}
                 </div>
                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
                     <div className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">

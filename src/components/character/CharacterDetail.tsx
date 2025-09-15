@@ -300,7 +300,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         viewport.addEventListener('scroll', handleScroll);
         return () => viewport.removeEventListener('scroll', handleScroll);
     }, [basicLoading]);
-
+console.log(basic, guild)
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
