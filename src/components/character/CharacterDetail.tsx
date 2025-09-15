@@ -290,8 +290,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 <Image
                                     src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                     alt={basic.character_name}
-                                    width={32}
-                                    height={32}
+                                    width={40}
+                                    height={40}
                                     className="mr-2 object-contain transition-opacity"
                                     style={{ opacity: smallImageOpacity }}
                                 />
