@@ -27,30 +27,8 @@ import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    findCharacterAbility,
-    findCharacterAndroidEquipment,
-    findCharacterBasic,
-    findCharacterBeautyEquipment,
-    findCharacterCashItemEquipment,
-    findCharacterDojang,
-    findCharacterHexaMatrix,
-    findCharacterHexaMatrixStat,
-    findCharacterHyperStat,
-    findCharacterItemEquipment,
-    findCharacterLinkSkill,
-    findCharacterOtherStat,
-    findCharacterPetEquipment,
-    findCharacterPopularity,
-    findCharacterPropensity,
-    findCharacterRingExchange,
-    findCharacterSetEffect,
-    findCharacterSkill,
-    findCharacterStat,
-    findCharacterSymbolEquipment,
-    findCharacterVMatrix,
-} from '@/fetchs/character.fetch';
-import { findUnion, findUnionRaider, findUnionArtifact } from '@/fetchs/union.fetch';
+import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
+import { findUnion, findUnionArtifact, findUnionRaider } from '@/fetchs/union.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
@@ -330,11 +308,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 </div>
                                 <div className="space-y-4">
                                     <Ability ability={ability} loading={basicLoading || !ability} />
+                                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
                                     <Popularity
                                         popularity={popularity?.popularity}
                                         loading={basicLoading || !popularity}
                                     />
-                                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
                                 </div>
                             </div>
                         </TabsContent>
