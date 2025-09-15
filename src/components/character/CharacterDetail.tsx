@@ -28,9 +28,31 @@ import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
-import { findGuildBasic, findGuildId } from '@/fetchs/guild.fetch';
-import { findUnion, findUnionArtifact, findUnionRaider } from '@/fetchs/union.fetch';
+import {
+    findCharacterAbility,
+    findCharacterAndroidEquipment,
+    findCharacterBasic,
+    findCharacterBeautyEquipment,
+    findCharacterCashItemEquipment,
+    findCharacterDojang,
+    findCharacterHexaMatrix,
+    findCharacterHexaMatrixStat,
+    findCharacterHyperStat,
+    findCharacterItemEquipment,
+    findCharacterLinkSkill,
+    findCharacterOtherStat,
+    findCharacterPetEquipment,
+    findCharacterPopularity,
+    findCharacterPropensity,
+    findCharacterRingExchange,
+    findCharacterSetEffect,
+    findCharacterSkill,
+    findCharacterStat,
+    findCharacterSymbolEquipment,
+    findCharacterVMatrix,
+} from "@/fetchs/character.fetch";
+import { findGuildBasic, findGuildId } from "@/fetchs/guild.fetch";
+import { findUnion, findUnionArtifact, findUnionRaider } from "@/fetchs/union.fetch";
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
@@ -80,8 +102,13 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
                 if (basicRes.data.character_guild_name) {
                     try {
-                        const guildIdRes = await findGuildId(basicRes.data.character_guild_name);
-                        const guildRes = await findGuildBasic(guildIdRes.data.oguild);
+                        const guildIdRes = await findGuildId(
+                            basicRes.data.character_guild_name,
+                            basicRes.data.world_name,
+                        );
+                        const guildRes = await findGuildBasic(
+                            guildIdRes.data.oguild_id,
+                        );
                         setGuild(guildRes.data);
                     } catch (e) {
                         console.error(e);
