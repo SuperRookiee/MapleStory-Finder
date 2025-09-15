@@ -68,7 +68,9 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
                                     .map((s) => (
                                         <li key={s.stat_type} className="flex justify-between text-sm">
                                             <span>{s.stat_type}</span>
-                                            <span className="font-medium">{s.stat_increase}</span>
+                                            <span className="font-medium">
+                                                {s.stat_increase.match(/\d+%?/)?.[0] ?? ""}
+                                            </span>
                                         </li>
                                     ))}
                             </ul>
