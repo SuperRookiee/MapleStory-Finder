@@ -1,5 +1,5 @@
-export const cropCharacter = (src: string): Promise<HTMLCanvasElement> => {
-    new Promise(res => {
+export const cropCharacter = (src: string): Promise<string> => {
+    return new Promise<string>(res => {
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.src = src;
