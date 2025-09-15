@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FixedSizeList as List } from "react-window";
 import { toast } from "sonner";
 import { supabase } from "@/libs/supabaseClient";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import CharacterCell from "@/components/character/CharacterCell";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
@@ -21,6 +21,7 @@ const CharacterList = () => {
     const [worldFilter, setWorldFilter] = useState("전체월드");
     const { favorites, setFavorites, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
     const [userId, setUserId] = useState<string | null>(null);
+    const [listSize, setListSize] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         const load = async () => {
@@ -58,7 +59,16 @@ const CharacterList = () => {
         setDisplayCharacters(filtered);
     }, [characters, worldFilter]);
 
-    const toggleFavorite = async (ocid: string) => {
+    useEffect(() => {
+        const updateSize = () => {
+            setListSize({ width: window.innerWidth, height: window.innerHeight - 150 });
+        };
+        updateSize();
+        window.addEventListener("resize", updateSize);
+        return () => window.removeEventListener("resize", updateSize);
+    }, []);
+
+    const toggleFavorite = useCallback(async (ocid: string) => {
         if (!userId) return;
         if (favorites.includes(ocid)) {
             await removeFavorite(userId, ocid);
@@ -67,9 +77,12 @@ const CharacterList = () => {
             await addFavorite(userId, ocid);
             addFavoriteOcid(ocid);
         }
-    };
+    }, [userId, favorites, addFavoriteOcid, removeFavoriteOcid]);
 
-    const worlds = ["전체월드", ...Array.from(new Set(characters.map((c) => c.world_name)))];
+    const worlds = useMemo(
+        () => ["전체월드", ...Array.from(new Set(characters.map((c) => c.world_name)))],
+        [characters],
+    );
 
     return (
         <div className="flex h-[calc(100vh-var(--header-height))] flex-col">
@@ -98,18 +111,24 @@ const CharacterList = () => {
                     ))}
                 </div>
             ) : (
-                <ScrollArea className="w-full h-page flex-1 rounded-md border p-4">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        {displayCharacters.map((character) => (
-                            <CharacterCell
-                                key={character.ocid}
-                                character={character}
-                                favorites={favorites}
-                                toggleFavorite={toggleFavorite}
-                            />
-                        ))}
-                    </div>
-                </ScrollArea>
+                <div className="w-full flex-1 rounded-md border">
+                    <List
+                        height={listSize.height}
+                        width={listSize.width}
+                        itemCount={displayCharacters.length}
+                        itemSize={340}
+                    >
+                        {({ index, style }) => (
+                            <div style={style}>
+                                <CharacterCell
+                                    character={displayCharacters[index]}
+                                    favorites={favorites}
+                                    toggleFavorite={toggleFavorite}
+                                />
+                            </div>
+                        )}
+                    </List>
+                </div>
             )}
         </div>
     );

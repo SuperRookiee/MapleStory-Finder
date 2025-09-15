@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { memo } from "react";
 import CharacterCard from "@/components/character/CharacterCard";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
@@ -8,7 +9,7 @@ interface ICharacterCellProps {
     toggleFavorite: (ocid: string) => void;
 }
 
-const CharacterCell = ({ character, favorites, toggleFavorite }: ICharacterCellProps) => {
+const CharacterCell = memo(({ character, favorites, toggleFavorite }: ICharacterCellProps) => {
     const router = useRouter();
 
     return (
@@ -20,8 +21,10 @@ const CharacterCell = ({ character, favorites, toggleFavorite }: ICharacterCellP
                 onSelect={() => router.push(`/character/${character.ocid}`)}
             />
         </div>
-    )
-};
+    );
+});
+
+CharacterCell.displayName = "CharacterCell";
 
 export default CharacterCell;
 

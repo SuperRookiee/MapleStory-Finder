@@ -1,13 +1,34 @@
 import axios, { AxiosError } from "axios";
-import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import pLimit from "p-limit";
+import {
+    ICharacterAbility,
+    ICharacterAndroidEquipment,
+    ICharacterBasic,
+    ICharacterBeautyEquipment,
+    ICharacterCashItemEquipment,
+    ICharacterDojang,
+    ICharacterHexaMatrix,
+    ICharacterHexaMatrixStat,
+    ICharacterHyperStat,
+    ICharacterItemEquipment,
+    ICharacterLinkSkill,
+    ICharacterOtherStat,
+    ICharacterPetEquipment,
+    ICharacterPopularity,
+    ICharacterPropensity,
+    ICharacterSetEffect,
+    ICharacterSkill,
+    ICharacterStat,
+    ICharacterSymbolEquipment,
+    ICharacterVMatrix,
+    IRingExchangeSkillEquipment,
+} from "@/interface/character/ICharacter";
 import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { userStore } from "@/stores/userStore";
 
-const delay = (ms: number) =>
-    new Promise<void>((resolve) => setTimeout(resolve, ms));
-
-let requestQueue: Promise<unknown> = Promise.resolve();
+// Allow up to five concurrent API calls.
+const limit = pLimit(5);
 
 export const findCharacterList = async () => {
     const apiKey = userStore.getState().user.apiKey;
@@ -31,17 +52,16 @@ export const findCharacterList = async () => {
 
 const callCharacterApi = async <T>(
     endpoint: string,
-    params: Record<string, string | number | undefined> = {}
+    params: Record<string, string | number | undefined> = {},
 ): Promise<ICharacterResponse<T>> => {
     const apiKey = userStore.getState().user.apiKey;
 
-    const task = async () => {
-        await delay(200);
+    return limit(async () => {
         try {
             const response = await axios.get<ICharacterResponse<T>>(`/api/character/${endpoint}`, {
                 headers: { "x-nxopen-api-key": apiKey ?? "" },
                 params: Object.fromEntries(
-                    Object.entries(params).filter(([, v]) => v !== undefined)
+                    Object.entries(params).filter(([, v]) => v !== undefined),
                 ),
             });
             return response.data;
@@ -53,11 +73,7 @@ const callCharacterApi = async <T>(
             }
             throw err;
         }
-    };
-
-    const result = requestQueue.then(task);
-    requestQueue = result.catch(() => undefined);
-    return result;
+    });
 };
 
 /* ---------------- 기본 API ---------------- */
