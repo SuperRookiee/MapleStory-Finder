@@ -44,14 +44,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     // 전체 로딩과 기본 정보 로딩을 분리하여
     // 먼저 받은 정보는 바로 화면에 표시하고
     // 이후 데이터는 순차적으로 받아오도록 한다.
-    const [loading, setLoading] = useState(true);
     const [basicLoading, setBasicLoading] = useState(true);
 
     useEffect(() => {
         if (!ocid) return;
 
         const load = async () => {
-            setLoading(true);
             setBasicLoading(true);
             try {
                 // 필수 정보
@@ -119,8 +117,6 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             } catch (e) {
                 console.error(e)
                 toast.error('캐릭터 정보 로딩 실패');
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -222,32 +218,28 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         loading={!itemEquip}
                     />
 
-                    {/* 상세 정보는 로딩 완료 후 표시 */}
-                    {!loading && (
-                        <>
-                            {/* 스킬 등 */}
-                            <CashEquip equip={cashEquip} loading={!cashEquip} />
-                            <Skill skill={skill} loading={!skill} />
-                            <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
-                            <SetEffect setEffect={setEffect} loading={!setEffect} />
-                            <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
+                    {/* 상세 정보 */}
+                    {/* 스킬 등 */}
+                    <CashEquip equip={cashEquip} loading={!cashEquip} />
+                    <Skill skill={skill} loading={!skill} />
+                    <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
+                    <SetEffect setEffect={setEffect} loading={!setEffect} />
+                    <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
 
-                            {/* 심화 */}
-                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
-                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
-                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
-                            <Dojang dojang={dojang} loading={!dojang} />
-                            <Ring ring={ring} loading={!ring} />
-                            <OtherStat otherStat={otherStat} loading={!otherStat} />
+                    {/* 심화 */}
+                    <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
+                    <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
+                    <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
+                    <Dojang dojang={dojang} loading={!dojang} />
+                    <Ring ring={ring} loading={!ring} />
+                    <OtherStat otherStat={otherStat} loading={!otherStat} />
 
-                            {/* 꾸미기 / 기타 */}
-                            <Beauty beauty={beauty} loading={!beauty} />
-                            <Android android={android} loading={!android} />
-                            <Pet pet={pet} loading={!pet} />
-                            <Propensity propensity={propensity} loading={!propensity} />
-                            <Ability ability={ability} loading={!ability} />
-                        </>
-                    )}
+                    {/* 꾸미기 / 기타 */}
+                    <Beauty beauty={beauty} loading={!beauty} />
+                    <Android android={android} loading={!android} />
+                    <Pet pet={pet} loading={!pet} />
+                    <Propensity propensity={propensity} loading={!propensity} />
+                    <Ability ability={ability} loading={!ability} />
                 </div>
             </ScrollArea>
         </ViewTransition>
