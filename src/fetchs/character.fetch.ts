@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
-import { CharacterResponse } from "@/interface/CharacterResponse";
 import { userStore } from "@/stores/userStore";
 
 const delay = (ms: number) =>
@@ -12,7 +12,7 @@ let requestQueue: Promise<unknown> = Promise.resolve();
 export const findCharacterList = async () => {
     const apiKey = userStore.getState().user.apiKey;
     try {
-        const response = await axios.get<CharacterResponse<{ characters: ICharacterSummary[] }>>(
+        const response = await axios.get<ICharacterResponse<{ characters: ICharacterSummary[] }>>(
             `/api/character/list`,
             {
                 headers: { "x-nxopen-api-key": apiKey ?? "" },
@@ -32,13 +32,13 @@ export const findCharacterList = async () => {
 const callCharacterApi = async <T>(
     endpoint: string,
     params: Record<string, string | number | undefined> = {}
-): Promise<CharacterResponse<T>> => {
+): Promise<ICharacterResponse<T>> => {
     const apiKey = userStore.getState().user.apiKey;
 
     const task = async () => {
         await delay(200);
         try {
-            const response = await axios.get<CharacterResponse<T>>(`/api/character/${endpoint}`, {
+            const response = await axios.get<ICharacterResponse<T>>(`/api/character/${endpoint}`, {
                 headers: { "x-nxopen-api-key": apiKey ?? "" },
                 params: Object.fromEntries(
                     Object.entries(params).filter(([, v]) => v !== undefined)
