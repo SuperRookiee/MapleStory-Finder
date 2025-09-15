@@ -122,23 +122,48 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
     // 스킬 탭 로딩
     useEffect(() => {
-        if (tab !== "skill" || (skill && linkSkill)) return;
+        if (tab !== "skill" || (skill && linkSkill && hexaMatrix && hexaStat && vMatrix)) return;
         const loadSkill = async () => {
             try {
                 const grades = ['0', '1', '2', '3', '4', '5', '6', 'hyperpassive', 'hyperactive'];
-                const [skillRes, linkSkillRes] = await Promise.all([
+                const [
+                    skillRes,
+                    linkSkillRes,
+                    hexaMatrixRes,
+                    hexaStatRes,
+                    vMatrixRes,
+                ] = await Promise.all([
                     Promise.all(grades.map((g) => findCharacterSkill(ocid, g))),
                     findCharacterLinkSkill(ocid),
+                    findCharacterHexaMatrix(ocid),
+                    findCharacterHexaMatrixStat(ocid),
+                    findCharacterVMatrix(ocid),
                 ]);
                 setSkill(skillRes.map((s) => s.data));
                 setLinkSkill(linkSkillRes.data);
+                setHexaMatrix(hexaMatrixRes.data);
+                setHexaStat(hexaStatRes.data);
+                setVMatrix(vMatrixRes.data);
             } catch (e) {
                 console.error(e);
                 toast.error('스킬 정보 로딩 실패');
             }
         };
         loadSkill();
-    }, [tab, ocid, skill, linkSkill, setSkill, setLinkSkill]);
+    }, [
+        tab,
+        ocid,
+        skill,
+        linkSkill,
+        hexaMatrix,
+        hexaStat,
+        vMatrix,
+        setSkill,
+        setLinkSkill,
+        setHexaMatrix,
+        setHexaStat,
+        setVMatrix,
+    ]);
 
     // 캐시 탭 로딩
     useEffect(() => {
@@ -165,33 +190,20 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
     // 기타 탭 로딩
     useEffect(() => {
-        if (
-            tab !== "etc" ||
-            (hexaMatrix && hexaStat && vMatrix && dojang && ring && otherStat && propensity)
-        )
-            return;
+        if (tab !== "etc" || (dojang && ring && otherStat && propensity)) return;
         const loadEtc = async () => {
             try {
                 const [
-                    hexaMatrixRes,
-                    hexaStatRes,
-                    vMatrixRes,
                     dojangRes,
                     ringRes,
                     otherStatRes,
                     propensityRes,
                 ] = await Promise.all([
-                    findCharacterHexaMatrix(ocid),
-                    findCharacterHexaMatrixStat(ocid),
-                    findCharacterVMatrix(ocid),
                     findCharacterDojang(ocid),
                     findCharacterRingExchange(ocid),
                     findCharacterOtherStat(ocid),
                     findCharacterPropensity(ocid),
                 ]);
-                setHexaMatrix(hexaMatrixRes.data);
-                setHexaStat(hexaStatRes.data);
-                setVMatrix(vMatrixRes.data);
                 setDojang(dojangRes.data);
                 setRing(ringRes.data);
                 setOtherStat(otherStatRes.data);
@@ -205,16 +217,10 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     }, [
         tab,
         ocid,
-        hexaMatrix,
-        hexaStat,
-        vMatrix,
         dojang,
         ring,
         otherStat,
         propensity,
-        setHexaMatrix,
-        setHexaStat,
-        setVMatrix,
         setDojang,
         setRing,
         setOtherStat,
@@ -314,6 +320,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <TabsContent value="skill" className="space-y-4">
                             <Skill skill={skill} loading={!skill} />
                             <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
+                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
+                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
+                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
                         </TabsContent>
 
                         <TabsContent value="cash" className="space-y-4">
@@ -324,9 +333,6 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         </TabsContent>
 
                         <TabsContent value="etc" className="space-y-4">
-                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
-                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
-                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
                             <Dojang dojang={dojang} loading={!dojang} />
                             <Ring ring={ring} loading={!ring} />
                             <OtherStat otherStat={otherStat} loading={!otherStat} />
