@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import { IUnion, IUnionRaider, IUnionArtifact, IUnionChampion } from "@/interface/union/IUnion";
 
 type CharacterDetailSlice = {
     // 기본 정보
@@ -8,6 +9,12 @@ type CharacterDetailSlice = {
     stat: ICharacterStat | null
     popularity: ICharacterPopularity | null
     hyper: ICharacterHyperStat | null
+
+    // 유니온
+    union: IUnion | null
+    unionRaider: IUnionRaider | null
+    unionArtifact: IUnionArtifact | null
+    unionChampion: IUnionChampion | null
 
     // 장비 / 스킬
     itemEquip: ICharacterItemEquipment | null
@@ -37,6 +44,10 @@ type CharacterDetailSlice = {
     setStat: (stat: CharacterDetailSlice['stat']) => void
     setPopularity: (popularity: CharacterDetailSlice['popularity']) => void
     setHyper: (hyper: CharacterDetailSlice['hyper']) => void
+    setUnion: (union: CharacterDetailSlice['union']) => void
+    setUnionRaider: (unionRaider: CharacterDetailSlice['unionRaider']) => void
+    setUnionArtifact: (unionArtifact: CharacterDetailSlice['unionArtifact']) => void
+    setUnionChampion: (unionChampion: CharacterDetailSlice['unionChampion']) => void
     setItemEquip: (itemEquip: CharacterDetailSlice['itemEquip']) => void
     setCashEquip: (cashEquip: CharacterDetailSlice['cashEquip']) => void
     setSymbolEquip: (symbolEquip: CharacterDetailSlice['symbolEquip']) => void
@@ -82,12 +93,21 @@ const initialState: Omit<
     | 'setPet'
     | 'setPropensity'
     | 'setAbility'
+    | 'setUnion'
+    | 'setUnionRaider'
+    | 'setUnionArtifact'
+    | 'setUnionChampion'
     | 'reset'
 > = {
     basic: null,
     stat: null,
     popularity: null,
     hyper: null,
+
+    union: null,
+    unionRaider: null,
+    unionArtifact: null,
+    unionChampion: null,
 
     itemEquip: null,
     cashEquip: null,
@@ -119,6 +139,10 @@ export const characterDetailStore = create<CharacterDetailSlice>()(
             setStat: (stat) => set({ stat }),
             setPopularity: (popularity) => set({ popularity }),
             setHyper: (hyper) => set({ hyper }),
+            setUnion: (union) => set({ union }),
+            setUnionRaider: (unionRaider) => set({ unionRaider }),
+            setUnionArtifact: (unionArtifact) => set({ unionArtifact }),
+            setUnionChampion: (unionChampion) => set({ unionChampion }),
             setItemEquip: (itemEquip) => set({ itemEquip }),
             setCashEquip: (cashEquip) => set({ cashEquip }),
             setSymbolEquip: (symbolEquip) => set({ symbolEquip }),
