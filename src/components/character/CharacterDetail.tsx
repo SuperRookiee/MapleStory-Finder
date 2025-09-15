@@ -25,6 +25,13 @@ import { Union } from "@/components/character/detail/Union";
 import { VMatrix } from "@/components/character/detail/VMatrix";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
@@ -48,7 +55,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const [imageScale, setImageScale] = useState(1);
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
-    const smallImageOpacity = (1 - imageScale) / 0.6;
+    const headerOpacity = (1 - imageScale) / 0.6;
+    const [bgColor, setBgColor] = useState<'white' | 'black'>("white");
     const SMALL_IMAGE_SIZE = 40;
     const SCROLL_HIDE_THRESHOLD = SMALL_IMAGE_SIZE * 6.25;
 
@@ -262,40 +270,64 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
-                    <div
-                        className="relative w-40 h-40 mx-auto"
-                        style={{
-                            transform: `scale(${imageScale})`,
-                            opacity: imageScale,
-                        }}
-                    >
-                        {basicLoading || !basic ? (
-                            <Skeleton className="w-full h-full" />
-                        ) : (
-                            basic.character_image && (
-                                <Image
-                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
-                                    alt={basic.character_name}
-                                    className="object-contain"
-                                    fill
-                                    priority
-                                    unoptimized
-                                />
-                            )
-                        )}
+                    <div className="space-y-2">
+                        <div className="flex justify-end">
+                            <Select
+                                value={bgColor}
+                                onValueChange={(value) => setBgColor(value as 'white' | 'black')}
+                            >
+                                <SelectTrigger className="w-24">
+                                    <SelectValue placeholder="배경" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="white">화이트</SelectItem>
+                                    <SelectItem value="black">블랙</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div
+                            className="relative w-full aspect-[5/2] mx-auto overflow-hidden"
+                            style={{
+                                transform: `scale(${imageScale})`,
+                                opacity: imageScale,
+                                backgroundColor: bgColor,
+                            }}
+                        >
+                            {basicLoading || !basic ? (
+                                <Skeleton className="w-full h-full" />
+                            ) : (
+                                basic.character_image && (
+                                    <Image
+                                        src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
+                                        alt={basic.character_name}
+                                        className="object-contain"
+                                        fill
+                                        priority
+                                        unoptimized
+                                    />
+                                )
+                            )}
+                            {!basicLoading && basic && (
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white px-2 py-1 rounded">
+                                    {basic.character_name}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
-                        <div className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center">
+                        <div
+                            className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center"
+                            style={{ opacity: headerOpacity }}
+                        >
                             {basic.character_image && (
                                 <Image
                                     src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                     alt={basic.character_name}
                                     width={SMALL_IMAGE_SIZE}
                                     height={SMALL_IMAGE_SIZE}
-                                    className="mr-2 object-contain transition-opacity"
-                                    style={{ opacity: smallImageOpacity }}
+                                    className="mr-2 object-contain"
                                 />
                             )}
                             {basic.character_name}
