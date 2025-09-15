@@ -9,7 +9,6 @@ interface HyperStatProps {
 }
 
 export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
-    console.log(hyper)
     if (loading || !hyper) {
         return (
             <Card className="w-full">
