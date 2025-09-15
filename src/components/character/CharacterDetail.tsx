@@ -332,7 +332,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             </Tabs>
 
                             {/* 오른쪽: 캐릭터 요약 */}
-                            <div className="flex items-center font-bold">
+                            <div className="hidden sm:flex items-center font-bold">
                                 {basic.character_image && (
                                     <Image
                                         src={`/api/crop?url=${encodeURIComponent(
