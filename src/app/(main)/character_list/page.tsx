@@ -113,13 +113,12 @@ const CharacterList = () => {
             ) : (
                 <div className="w-full flex-1 rounded-md border">
                     <List
-                        height={listSize.height}
-                        width={listSize.width}
-                        itemCount={displayCharacters.length}
-                        itemSize={340}
-                    >
-                        {({ index, style }) => (
-                            <div style={style}>
+                        style={{ height: listSize.height, width: listSize.width }}
+                        rowCount={displayCharacters.length}
+                        rowHeight={340}
+                        rowProps={{}}
+                        rowComponent={({ index, style, ariaAttributes }) => (
+                            <div style={style} {...ariaAttributes}>
                                 <CharacterCell
                                     character={displayCharacters[index]}
                                     favorites={favorites}
@@ -127,7 +126,7 @@ const CharacterList = () => {
                                 />
                             </div>
                         )}
-                    </List>
+                    />
                 </div>
             )}
         </div>
