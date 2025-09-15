@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Star } from "lucide-react";
+import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
@@ -24,6 +25,14 @@ const CharacterCard = ({
             className={`p-4 flex flex-col relative w-full ${onSelect ? "cursor-pointer" : ""}`}
             onClick={onSelect}
         >
+            {/* 서버 정보 */}
+            <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
+                <WorldIcon name={character.world_name} />
+                <span className="text-xs sm:text-sm md:text-base">
+                    {character.world_name}
+                </span>
+            </div>
+
             {/* 즐겨찾기 버튼 */}
             <div className="absolute top-2 right-2 z-10">
                 <Button

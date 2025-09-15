@@ -3,7 +3,13 @@
 import { Card } from '@/components/ui/card';
 
 const CharacterCardSkeleton = () => (
-    <Card className="p-4 flex flex-col w-full">
+    <Card className="p-4 flex flex-col w-full relative">
+        {/* 서버 정보 Skeleton */}
+        <div className="absolute top-2 left-2 flex items-center gap-1">
+            <div className="w-5 h-5 bg-muted animate-pulse rounded-full" />
+            <div className="h-3 w-16 bg-muted animate-pulse rounded" />
+        </div>
+
         {/* 캐릭터 이미지 Skeleton (비율 고정) */}
         <div className="relative w-full aspect-[4/3] mb-4 bg-muted animate-pulse rounded-md" />
 
