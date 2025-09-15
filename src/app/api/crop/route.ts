@@ -1,6 +1,6 @@
-import sharp from "sharp";
 import { Get } from "@/utils/fetch";
 import { Failed } from "@/utils/message";
+import { trimImage } from "@/utils/trim";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,11 +16,15 @@ export const GET = Get(async (query: { url?: string }) => {
     if (!response.ok) return Failed("failed to fetch image");
 
     const buffer = Buffer.from(await response.arrayBuffer());
-    const cropped = await sharp(buffer).trim().png().toBuffer();
-    const uint8 = new Uint8Array(cropped);
-    const blob = new Blob([uint8], { type: "image/png" });
 
-    return new Response(blob, {
+    let cropped: Buffer;
+    try {
+        cropped = trimImage(buffer);
+    } catch {
+        return Failed("failed to process image");
+    }
+
+    return new Response(cropped, {
         headers: {
             "Content-Type": "image/png",
             "Access-Control-Allow-Origin": "*",
