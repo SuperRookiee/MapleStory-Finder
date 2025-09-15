@@ -15,7 +15,7 @@ export const GET = async (req: Request) => {
         req.headers.get("x-nxopen-api-key") || process.env.VITE_NEXON_API_KEY;
 
     const handler = Get(async () => {
-        if (!apiKey) return Failed("Missing API Key", 500);
+        if (!apiKey) return Failed("Missing API Key", 401);
 
         try {
             const res = await axios.get<ICharacterListApiResponse>(

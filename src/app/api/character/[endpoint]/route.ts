@@ -13,7 +13,7 @@ export const GET = async (
     const handler = GetWithParams<
         { endpoint: string } & Record<string, string>
     >(async (params) => {
-        if (!apiKey) return Failed("Missing API Key", 500);
+        if (!apiKey) return Failed("Missing API Key", 401);
 
         const { endpoint, ...query } = params;
 
