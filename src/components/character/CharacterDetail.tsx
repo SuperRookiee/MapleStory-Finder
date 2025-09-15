@@ -269,43 +269,51 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         loading={basicLoading || !basic}
                         imageScale={imageScale}
                     />
+
                     {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
-                        <div className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center">
-                            {basic.character_image && (
-                                <Image
-                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
-                                    alt={basic.character_name}
-                                    width={SMALL_IMAGE_SIZE}
-                                    height={SMALL_IMAGE_SIZE}
-                                    className="mr-2 object-contain transition-opacity"
-                                    style={{ opacity: smallImageOpacity }}
-                                />
-                            )}
-                            <span
-                                className="transition-opacity"
-                                style={{ opacity: smallImageOpacity }}
-                            >
-    {basic.character_name}
-                                <span className="ml-2 text-muted-foreground font-normal">
-      {basic.character_class}
-    </span>
-  </span>
-                        </div>
+                        <div className="sticky top-0 z-50 bg-background/90 py-2 mt-0 -mx-4 px-4 flex items-center justify-between">
+                            {/* 왼쪽: 탭 */}
+                            <Tabs value={tab} onValueChange={setTab} className="flex-1">
+                                <TabsList className="flex space-x-2">
+                                    <TabsTrigger value="basic">기본 정보</TabsTrigger>
+                                    <TabsTrigger value="union">유니온</TabsTrigger>
+                                    <TabsTrigger value="equip">장비</TabsTrigger>
+                                    <TabsTrigger value="skill">스킬</TabsTrigger>
+                                    <TabsTrigger value="cash">캐시</TabsTrigger>
+                                    <TabsTrigger value="etc">기타</TabsTrigger>
+                                </TabsList>
+                            </Tabs>
 
+                            {/* 오른쪽: 캐릭터 요약 */}
+                            <div className="flex items-center font-bold">
+                                {basic.character_image && (
+                                    <Image
+                                        src={`/api/crop?url=${encodeURIComponent(
+                                            basic.character_image
+                                        )}`}
+                                        alt={basic.character_name}
+                                        width={SMALL_IMAGE_SIZE}
+                                        height={SMALL_IMAGE_SIZE}
+                                        className="mr-2 object-contain transition-opacity"
+                                        style={{ opacity: smallImageOpacity }}
+                                    />
+                                )}
+                                <span
+                                    className="transition-opacity"
+                                    style={{ opacity: smallImageOpacity }}
+                                >
+                                    {basic.character_name}
+                                    <span className="ml-2 text-muted-foreground font-normal">
+                                        {basic.character_class}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
                     )}
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-4">
-                        <TabsList>
-                            <TabsTrigger value="basic">기본 정보</TabsTrigger>
-                            <TabsTrigger value="union">유니온</TabsTrigger>
-                            <TabsTrigger value="equip">장비</TabsTrigger>
-                            <TabsTrigger value="skill">스킬</TabsTrigger>
-                            <TabsTrigger value="cash">캐시</TabsTrigger>
-                            <TabsTrigger value="etc">기타</TabsTrigger>
-                        </TabsList>
-
                         {/* 기본 정보 */}
                         <TabsContent value="basic" className="space-y-4">
                             <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
@@ -313,8 +321,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                     <Stat stat={stat} loading={basicLoading || !stat} />
                                 </div>
                                 <div className="space-y-4">
-                                    <Ability ability={ability} loading={basicLoading || !ability} />
                                     <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
+                                    <Ability ability={ability} loading={basicLoading || !ability} />
                                     <Popularity
                                         popularity={popularity?.popularity}
                                         loading={basicLoading || !popularity}
@@ -325,7 +333,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
                         {/* 유니온 */}
                         <TabsContent value="union" className="space-y-4">
-                            <Union union={union} raider={unionRaider} artifact={unionArtifact} loading={!union || !unionRaider || !unionArtifact} />
+                            <Union
+                                union={union}
+                                raider={unionRaider}
+                                artifact={unionArtifact}
+                                loading={!union || !unionRaider || !unionArtifact}
+                            />
                         </TabsContent>
 
                         {/* 장비 */}
