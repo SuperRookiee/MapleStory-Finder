@@ -49,6 +49,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
     const smallImageOpacity = (1 - imageScale) / 0.6;
+    const SMALL_IMAGE_SIZE = 40;
+    const SCROLL_HIDE_THRESHOLD = SMALL_IMAGE_SIZE * 6.25;
 
     // 기본 정보 로딩
     useEffect(() => {
@@ -243,7 +245,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
             window.requestAnimationFrame(() => {
                 const top = viewport.scrollTop;
-                const progress = Math.min(top / 200, 1);
+                const progress = Math.min(top / SCROLL_HIDE_THRESHOLD, 1);
                 const scale = 1 - progress * 0.6;
                 setImageScale(scale);
                 ticking = false;
@@ -290,8 +292,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 <Image
                                     src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                     alt={basic.character_name}
-                                    width={40}
-                                    height={40}
+                                    width={SMALL_IMAGE_SIZE}
+                                    height={SMALL_IMAGE_SIZE}
                                     className="mr-2 object-contain transition-opacity"
                                     style={{ opacity: smallImageOpacity }}
                                 />
