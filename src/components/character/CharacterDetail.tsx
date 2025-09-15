@@ -287,7 +287,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         </TabsList>
 
                         <TabsContent value="basic" className="space-y-4">
-                            <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+                            <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
                                 <div className="space-y-4">
                                     <Stat stat={stat} loading={basicLoading || !stat} />
                                 </div>

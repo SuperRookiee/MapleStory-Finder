@@ -14,6 +14,7 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
             <Card className="w-full">
                 <CardHeader>
                     <CardTitle>하이퍼 스탯</CardTitle>
+                    <Skeleton className="h-4 w-32" />
                 </CardHeader>
                 <CardContent>
                     <div className="grid w-full grid-cols-3 gap-2">
@@ -42,8 +43,11 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
 
     return (
         <Card className="w-full">
-            <CardHeader>
+            <CardHeader className="space-y-1">
                 <CardTitle>하이퍼 스탯</CardTitle>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    사용 가능 포인트: {hyper.use_available_hyper_stat}
+                </p>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={hyper.use_preset_no}>
