@@ -25,7 +25,30 @@ import { VMatrix } from "@/components/character/detail/VMatrix";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+    findCharacterAbility,
+    findCharacterAndroidEquipment,
+    findCharacterBasic,
+    findCharacterBeautyEquipment,
+    findCharacterCashItemEquipment,
+    findCharacterDojang,
+    findCharacterHexaMatrix,
+    findCharacterHexaMatrixStat,
+    findCharacterHyperStat,
+    findCharacterItemEquipment,
+    findCharacterLinkSkill,
+    findCharacterOtherStat,
+    findCharacterPetEquipment,
+    findCharacterPopularity,
+    findCharacterPropensity,
+    findCharacterRingExchange,
+    findCharacterSetEffect,
+    findCharacterSkill,
+    findCharacterStat,
+    findCharacterSymbolEquipment,
+    findCharacterVMatrix,
+} from '@/fetchs/character.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
@@ -41,111 +64,161 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         reset,
     } = characterDetailStore();
     const [imageScale, setImageScale] = useState(1);
-    // 전체 로딩과 기본 정보 로딩을 분리하여
-    // 먼저 받은 정보는 바로 화면에 표시하고
-    // 이후 데이터는 순차적으로 받아오도록 한다.
     const [basicLoading, setBasicLoading] = useState(true);
+    const [tab, setTab] = useState("basic");
 
+    // 기본 정보 로딩
     useEffect(() => {
         if (!ocid) return;
 
         const load = async () => {
             setBasicLoading(true);
             try {
-                // 필수 정보
-                const [basicRes, stat, popularity, hyper] = await Promise.all([
+                const [basicRes, statRes, popularityRes, hyperRes, abilityRes] = await Promise.all([
                     findCharacterBasic(ocid),
                     findCharacterStat(ocid),
                     findCharacterPopularity(ocid),
                     findCharacterHyperStat(ocid),
-                ]);
-                setBasic(basicRes.data)
-                setStat(stat.data)
-                setPopularity(popularity.data)
-                setHyper(hyper.data)
-                // 기본 정보가 준비되면 즉시 화면에 반영
-                setBasicLoading(false);
-
-                // 장비/스킬
-                const grades = ["0", "1", "2", "3", "4", "5", "6", "hyperpassive", "hyperactive"]
-                const [itemEquipRes, cashEquipRes, symbolEquipRes, setEffectRes, skillRes, linkSkillRes] =
-                    await Promise.all([
-                        findCharacterItemEquipment(ocid),
-                        findCharacterCashItemEquipment(ocid),
-                        findCharacterSymbolEquipment(ocid),
-                        findCharacterSetEffect(ocid),
-                        Promise.all(grades.map((g) => findCharacterSkill(ocid, g))),
-                        findCharacterLinkSkill(ocid),
-                    ]);
-                setItemEquip(itemEquipRes.data)
-                setCashEquip(cashEquipRes.data)
-                setSymbolEquip(symbolEquipRes.data)
-                setSetEffect(setEffectRes.data)
-                setSkill(skillRes.map((s) => s.data))
-                setLinkSkill(linkSkillRes.data)
-
-                // 심화
-                const [hexaMatrixRes, hexaStatRes, vMatrixRes, dojangRes, ringRes, otherStatRes] =
-                    await Promise.all([
-                        findCharacterHexaMatrix(ocid),
-                        findCharacterHexaMatrixStat(ocid),
-                        findCharacterVMatrix(ocid),
-                        findCharacterDojang(ocid),
-                        findCharacterRingExchange(ocid),
-                        findCharacterOtherStat(ocid),
-                    ]);
-                setHexaMatrix(hexaMatrixRes.data)
-                setHexaStat(hexaStatRes.data)
-                setVMatrix(vMatrixRes.data)
-                setDojang(dojangRes.data)
-                setRing(ringRes.data)
-                setOtherStat(otherStatRes.data)
-
-                // 꾸미기/기타
-                const [beautyRes, androidRes, petRes, propensityRes, abilityRes] = await Promise.all([
-                    findCharacterBeautyEquipment(ocid),
-                    findCharacterAndroidEquipment(ocid),
-                    findCharacterPetEquipment(ocid),
-                    findCharacterPropensity(ocid),
                     findCharacterAbility(ocid),
                 ]);
-                setBeauty(beautyRes.data)
-                setAndroid(androidRes.data)
-                setPet(petRes.data)
-                setPropensity(propensityRes.data)
-                setAbility(abilityRes.data)
+                setBasic(basicRes.data);
+                setStat(statRes.data);
+                setPopularity(popularityRes.data);
+                setHyper(hyperRes.data);
+                setAbility(abilityRes.data);
             } catch (e) {
-                console.error(e)
+                console.error(e);
                 toast.error('캐릭터 정보 로딩 실패');
+            } finally {
+                setBasicLoading(false);
             }
         };
 
         reset();
+        setTab("basic");
         load();
+    }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility]);
+
+    // 장비 탭 로딩
+    useEffect(() => {
+        if (tab !== "equip" || (itemEquip && symbolEquip && setEffect)) return;
+        const loadEquip = async () => {
+            try {
+                const [itemEquipRes, symbolEquipRes, setEffectRes] = await Promise.all([
+                    findCharacterItemEquipment(ocid),
+                    findCharacterSymbolEquipment(ocid),
+                    findCharacterSetEffect(ocid),
+                ]);
+                setItemEquip(itemEquipRes.data);
+                setSymbolEquip(symbolEquipRes.data);
+                setSetEffect(setEffectRes.data);
+            } catch (e) {
+                console.error(e);
+                toast.error('장비 정보 로딩 실패');
+            }
+        };
+        loadEquip();
+    }, [tab, ocid, itemEquip, symbolEquip, setEffect, setItemEquip, setSymbolEquip, setSetEffect]);
+
+    // 스킬 탭 로딩
+    useEffect(() => {
+        if (tab !== "skill" || (skill && linkSkill)) return;
+        const loadSkill = async () => {
+            try {
+                const grades = ['0', '1', '2', '3', '4', '5', '6', 'hyperpassive', 'hyperactive'];
+                const [skillRes, linkSkillRes] = await Promise.all([
+                    Promise.all(grades.map((g) => findCharacterSkill(ocid, g))),
+                    findCharacterLinkSkill(ocid),
+                ]);
+                setSkill(skillRes.map((s) => s.data));
+                setLinkSkill(linkSkillRes.data);
+            } catch (e) {
+                console.error(e);
+                toast.error('스킬 정보 로딩 실패');
+            }
+        };
+        loadSkill();
+    }, [tab, ocid, skill, linkSkill, setSkill, setLinkSkill]);
+
+    // 캐시 탭 로딩
+    useEffect(() => {
+        if (tab !== "cash" || (cashEquip && beauty && android && pet)) return;
+        const loadCash = async () => {
+            try {
+                const [cashEquipRes, beautyRes, androidRes, petRes] = await Promise.all([
+                    findCharacterCashItemEquipment(ocid),
+                    findCharacterBeautyEquipment(ocid),
+                    findCharacterAndroidEquipment(ocid),
+                    findCharacterPetEquipment(ocid),
+                ]);
+                setCashEquip(cashEquipRes.data);
+                setBeauty(beautyRes.data);
+                setAndroid(androidRes.data);
+                setPet(petRes.data);
+            } catch (e) {
+                console.error(e);
+                toast.error('캐시 정보 로딩 실패');
+            }
+        };
+        loadCash();
+    }, [tab, ocid, cashEquip, beauty, android, pet, setCashEquip, setBeauty, setAndroid, setPet]);
+
+    // 기타 탭 로딩
+    useEffect(() => {
+        if (
+            tab !== "etc" ||
+            (hexaMatrix && hexaStat && vMatrix && dojang && ring && otherStat && propensity)
+        )
+            return;
+        const loadEtc = async () => {
+            try {
+                const [
+                    hexaMatrixRes,
+                    hexaStatRes,
+                    vMatrixRes,
+                    dojangRes,
+                    ringRes,
+                    otherStatRes,
+                    propensityRes,
+                ] = await Promise.all([
+                    findCharacterHexaMatrix(ocid),
+                    findCharacterHexaMatrixStat(ocid),
+                    findCharacterVMatrix(ocid),
+                    findCharacterDojang(ocid),
+                    findCharacterRingExchange(ocid),
+                    findCharacterOtherStat(ocid),
+                    findCharacterPropensity(ocid),
+                ]);
+                setHexaMatrix(hexaMatrixRes.data);
+                setHexaStat(hexaStatRes.data);
+                setVMatrix(vMatrixRes.data);
+                setDojang(dojangRes.data);
+                setRing(ringRes.data);
+                setOtherStat(otherStatRes.data);
+                setPropensity(propensityRes.data);
+            } catch (e) {
+                console.error(e);
+                toast.error('기타 정보 로딩 실패');
+            }
+        };
+        loadEtc();
     }, [
+        tab,
         ocid,
-        reset,
-        setBasic,
-        setStat,
-        setPopularity,
-        setHyper,
-        setItemEquip,
-        setCashEquip,
-        setSymbolEquip,
-        setSetEffect,
-        setSkill,
-        setLinkSkill,
+        hexaMatrix,
+        hexaStat,
+        vMatrix,
+        dojang,
+        ring,
+        otherStat,
+        propensity,
         setHexaMatrix,
         setHexaStat,
         setVMatrix,
         setDojang,
         setRing,
         setOtherStat,
-        setBeauty,
-        setAndroid,
-        setPet,
         setPropensity,
-        setAbility,
     ]);
 
     useEffect(() => {
@@ -176,7 +249,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
-                <div className="space-y-6 p-4 w-full max-w-xl mx-auto lg:max-w-3xl">
+                <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
                     <div
                         className="relative w-80 h-80 mx-auto"
                         style={{
@@ -204,42 +277,62 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <p className="text-center font-bold mt-2">{basic.character_name}</p>
                     )}
 
-                    {/* 주요 스탯 */}
-                    <Stat stat={stat} loading={basicLoading || !stat} />
-                    <Popularity
-                        popularity={popularity?.popularity}
-                        loading={basicLoading || !popularity}
-                    />
-                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
+                    <Tabs value={tab} onValueChange={setTab} className="space-y-4">
+                        <TabsList>
+                            <TabsTrigger value="basic">기본정보</TabsTrigger>
+                            <TabsTrigger value="equip">장비</TabsTrigger>
+                            <TabsTrigger value="skill">스킬</TabsTrigger>
+                            <TabsTrigger value="cash">캐시</TabsTrigger>
+                            <TabsTrigger value="etc">기타</TabsTrigger>
+                        </TabsList>
 
-                    {/* 장비 */}
-                    <ItemEquipments
-                        items={itemEquip?.item_equipment || []}
-                        loading={!itemEquip}
-                    />
+                        <TabsContent value="basic" className="space-y-4">
+                            <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+                                <div className="space-y-4">
+                                    <Stat stat={stat} loading={basicLoading || !stat} />
+                                </div>
+                                <div className="space-y-4">
+                                    <Ability ability={ability} loading={basicLoading || !ability} />
+                                    <Popularity
+                                        popularity={popularity?.popularity}
+                                        loading={basicLoading || !popularity}
+                                    />
+                                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
+                                </div>
+                            </div>
+                        </TabsContent>
 
-                    {/* 상세 정보 */}
-                    {/* 스킬 등 */}
-                    <CashEquip equip={cashEquip} loading={!cashEquip} />
-                    <Skill skill={skill} loading={!skill} />
-                    <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
-                    <SetEffect setEffect={setEffect} loading={!setEffect} />
-                    <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
+                        <TabsContent value="equip" className="space-y-4">
+                            <ItemEquipments
+                                items={itemEquip?.item_equipment || []}
+                                loading={!itemEquip}
+                            />
+                            <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
+                            <SetEffect setEffect={setEffect} loading={!setEffect} />
+                        </TabsContent>
 
-                    {/* 심화 */}
-                    <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
-                    <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
-                    <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
-                    <Dojang dojang={dojang} loading={!dojang} />
-                    <Ring ring={ring} loading={!ring} />
-                    <OtherStat otherStat={otherStat} loading={!otherStat} />
+                        <TabsContent value="skill" className="space-y-4">
+                            <Skill skill={skill} loading={!skill} />
+                            <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
+                        </TabsContent>
 
-                    {/* 꾸미기 / 기타 */}
-                    <Beauty beauty={beauty} loading={!beauty} />
-                    <Android android={android} loading={!android} />
-                    <Pet pet={pet} loading={!pet} />
-                    <Propensity propensity={propensity} loading={!propensity} />
-                    <Ability ability={ability} loading={!ability} />
+                        <TabsContent value="cash" className="space-y-4">
+                            <CashEquip equip={cashEquip} loading={!cashEquip} />
+                            <Beauty beauty={beauty} loading={!beauty} />
+                            <Android android={android} loading={!android} />
+                            <Pet pet={pet} loading={!pet} />
+                        </TabsContent>
+
+                        <TabsContent value="etc" className="space-y-4">
+                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
+                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
+                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
+                            <Dojang dojang={dojang} loading={!dojang} />
+                            <Ring ring={ring} loading={!ring} />
+                            <OtherStat otherStat={otherStat} loading={!otherStat} />
+                            <Propensity propensity={propensity} loading={!propensity} />
+                        </TabsContent>
+                    </Tabs>
                 </div>
             </ScrollArea>
         </ViewTransition>
