@@ -5,7 +5,7 @@ import { IUnion, IUnionArtifact, IUnionChampion, IUnionRaider } from "@/interfac
 
 type CharacterDetailSlice = {
     // 기본 정보
-    basic: Pick<ICharacterBasic, 'character_image' | 'character_name' | 'character_class'> | null
+    basic: ICharacterBasic | null
     stat: ICharacterStat | null
     popularity: ICharacterPopularity | null
     hyper: ICharacterHyperStat | null

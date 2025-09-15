@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
-import Image from 'next/image';
-import { unstable_ViewTransition as ViewTransition, useEffect, useState } from 'react';
+import Image from "next/image";
+import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
 import { toast } from "sonner";
+import CharacterBanner from "@/components/character/CharacterBanner";
 import { Ability } from "@/components/character/detail/Ability";
 import { Android } from "@/components/character/detail/Android";
 import { Beauty } from "@/components/character/detail/Beauty";
@@ -262,28 +263,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
-                    <div
-                        className="relative w-40 h-40 mx-auto"
-                        style={{
-                            transform: `scale(${imageScale})`,
-                            opacity: imageScale,
-                        }}
-                    >
-                        {basicLoading || !basic ? (
-                            <Skeleton className="w-full h-full" />
-                        ) : (
-                            basic.character_image && (
-                                <Image
-                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
-                                    alt={basic.character_name}
-                                    className="object-contain"
-                                    fill
-                                    priority
-                                    unoptimized
-                                />
-                            )
-                        )}
-                    </div>
+                    <CharacterBanner
+                        basic={basic}
+                        popularity={popularity}
+                        loading={basicLoading || !basic}
+                        imageScale={imageScale}
+                    />
                     {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
