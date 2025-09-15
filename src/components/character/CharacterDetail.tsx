@@ -48,6 +48,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const [imageScale, setImageScale] = useState(1);
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
+    const smallImageOpacity = (1 - imageScale) / 0.6;
 
     // 기본 정보 로딩
     useEffect(() => {
@@ -283,7 +284,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
-                        <div className="sticky top-0 z-50 bg-background/90 text-center font-bold py-2 mt-0 -mx-4 px-4">
+                        <div className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center">
+                            {basic.character_image && (
+                                <Image
+                                    src={basic.character_image}
+                                    alt={basic.character_name}
+                                    width={32}
+                                    height={32}
+                                    className="mr-2 object-contain transition-opacity"
+                                    style={{ opacity: smallImageOpacity }}
+                                />
+                            )}
                             {basic.character_name}
                             <span className="ml-2 text-muted-foreground font-normal">
                                 {basic.character_class}
