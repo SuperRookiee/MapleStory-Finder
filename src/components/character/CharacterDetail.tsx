@@ -318,43 +318,49 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
-                        <div className="sticky top-0 z-50 bg-background/90 py-2 mt-0 -mx-4 px-4 flex items-center justify-between">
-                            {/* 왼쪽: 탭 */}
-                            <Tabs value={tab} onValueChange={setTab} className="flex-1">
-                                <TabsList className="flex space-x-2">
-                                    <TabsTrigger value="basic">기본 정보</TabsTrigger>
-                                    <TabsTrigger value="union">유니온</TabsTrigger>
-                                    <TabsTrigger value="equip">장비</TabsTrigger>
-                                    <TabsTrigger value="skill">스킬</TabsTrigger>
-                                    <TabsTrigger value="cash">캐시</TabsTrigger>
-                                    <TabsTrigger value="etc">기타</TabsTrigger>
-                                </TabsList>
-                            </Tabs>
-
-                            {/* 오른쪽: 캐릭터 요약 */}
-                            <div className="hidden sm:flex items-center font-bold">
-                                {basic.character_image && (
-                                    <Image
-                                        src={`/api/crop?url=${encodeURIComponent(
-                                            basic.character_image
-                                        )}`}
-                                        alt={basic.character_name}
-                                        width={SMALL_IMAGE_SIZE}
-                                        height={SMALL_IMAGE_SIZE}
-                                        className="mr-2 object-contain transition-opacity"
+                        <div className="sticky top-0 z-50 bg-background/90 py-2 mt-0 -mx-4 px-4">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                {/* 오른쪽: 캐릭터 요약 (모바일에서는 상단) */}
+                                <div className="order-1 flex flex-col items-center gap-2 text-center font-bold sm:order-2 sm:flex-row sm:items-center sm:gap-2 sm:justify-end sm:text-left">
+                                    {basic.character_image && (
+                                        <Image
+                                            src={`/api/crop?url=${encodeURIComponent(
+                                                basic.character_image
+                                            )}`}
+                                            alt={basic.character_name}
+                                            width={SMALL_IMAGE_SIZE}
+                                            height={SMALL_IMAGE_SIZE}
+                                            className="object-contain transition-opacity"
+                                            style={{ opacity: smallImageOpacity }}
+                                        />
+                                    )}
+                                    <div
+                                        className="transition-opacity"
                                         style={{ opacity: smallImageOpacity }}
-                                    />
-                                )}
-                                <span
-                                    className="transition-opacity"
-                                    style={{ opacity: smallImageOpacity }}
+                                    >
+                                        <div>{basic.character_name}</div>
+                                        <div className="mt-1 text-sm font-normal text-muted-foreground sm:mt-0 sm:flex sm:items-center sm:gap-2">
+                                            <span>{basic.character_class}</span>
+                                            <span>Lv. {basic.character_level}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 왼쪽: 탭 (모바일에서는 하단) */}
+                                <Tabs
+                                    value={tab}
+                                    onValueChange={setTab}
+                                    className="order-2 w-full sm:order-1 sm:flex-1"
                                 >
-                                    {basic.character_name}
-                                    <span className="ml-2 text-muted-foreground font-normal">
-                                        {basic.character_class}
-                                        <span className="ml-2">Lv. {basic.character_level}</span>
-                                    </span>
-                                </span>
+                                    <TabsList className="flex flex-wrap gap-2 sm:flex-nowrap sm:gap-0 sm:space-x-2">
+                                        <TabsTrigger value="basic">기본 정보</TabsTrigger>
+                                        <TabsTrigger value="union">유니온</TabsTrigger>
+                                        <TabsTrigger value="equip">장비</TabsTrigger>
+                                        <TabsTrigger value="skill">스킬</TabsTrigger>
+                                        <TabsTrigger value="cash">캐시</TabsTrigger>
+                                        <TabsTrigger value="etc">기타</TabsTrigger>
+                                    </TabsList>
+                                </Tabs>
                             </div>
                         </div>
                     )}
