@@ -283,11 +283,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                     style={{ opacity: smallImageOpacity }}
                                 />
                             )}
-                            {basic.character_name}
-                            <span className="ml-2 text-muted-foreground font-normal">
-                                {basic.character_class}
-                            </span>
+                            <span
+                                className="transition-opacity"
+                                style={{ opacity: smallImageOpacity }}
+                            >
+    {basic.character_name}
+                                <span className="ml-2 text-muted-foreground font-normal">
+      {basic.character_class}
+    </span>
+  </span>
                         </div>
+
                     )}
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-4">

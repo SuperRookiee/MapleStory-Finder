@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ICharacterBasic, ICharacterPopularity } from "@/interface/character/ICharacter";
+import WorldIcon from "@/components/common/WorldIcon";
 
 type CharacterBannerProps = {
     basic: ICharacterBasic | null
@@ -12,7 +13,7 @@ type CharacterBannerProps = {
 }
 
 const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBannerProps) => (
-    <div className="relative h-60 sm:h-64 w-full max-w-2xl mx-auto rounded-lg border bg-card">
+    <div className="relative h-60 sm:h-64 w-full rounded-none border-0 bg-card">
         {loading || !basic ? (
             <div className="absolute inset-0 animate-pulse">
                 <div className="absolute top-2 left-2">
@@ -42,7 +43,9 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
         ) : (
             <>
                 <div className="absolute top-2 left-2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
-                    {basic.character_name}
+                    <div className="flex gap-1.5">
+                        <WorldIcon name={basic.world_name} /> {basic.world_name}
+                    </div>
                 </div>
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
                     Lv. {basic.character_level}
@@ -67,9 +70,9 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
                     {basic.character_class_level}
                 </div>
                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-                    <button className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">
-                        자세히 보기
-                    </button>
+                    <div className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">
+                        {basic.character_name}
+                    </div>
                 </div>
                 {basic.character_image && (
                     <div
@@ -79,8 +82,8 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
                         <Image
                             src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                             alt={basic.character_name}
-                            width={160}
-                            height={160}
+                            width={120}
+                            height={120}
                             className="object-contain"
                             priority
                             unoptimized

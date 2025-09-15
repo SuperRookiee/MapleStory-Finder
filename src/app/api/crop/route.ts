@@ -24,7 +24,7 @@ export const GET = Get(async (query: { url?: string }) => {
         return Failed("failed to process image");
     }
 
-    return new Response(cropped, {
+    return new Response(Buffer.from(cropped), {
         headers: {
             "Content-Type": "image/png",
             "Access-Control-Allow-Origin": "*",
