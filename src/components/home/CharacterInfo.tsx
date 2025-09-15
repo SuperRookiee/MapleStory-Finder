@@ -70,7 +70,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                                 basic.character_image && (
                                     <div className="relative w-64 h-64 mt-4">
                                         <Image
-                                            src={basic.character_image}
+                                            src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                             alt={basic.character_name}
                                             fill
                                             className="object-contain"
