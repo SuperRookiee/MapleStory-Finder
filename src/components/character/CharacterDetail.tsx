@@ -352,6 +352,7 @@ console.log(basic, guild)
                                     {basic.character_name}
                                     <span className="ml-2 text-muted-foreground font-normal">
                                         {basic.character_class}
+                                        <span className="ml-2">Lv. {basic.character_level}</span>
                                     </span>
                                 </span>
                             </div>
