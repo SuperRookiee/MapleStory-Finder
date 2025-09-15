@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-type Handler<T> = (body: T) => Promise<unknown>;
+type Handler<T> = (query: T) => Promise<object | Response>;
 type ParamHandler<T> = (params: T) => Promise<unknown>;
 
 interface IErrorResponse {
@@ -37,12 +37,21 @@ export const Get =
             try {
                 const url = new URL(req.url);
                 const query = Object.fromEntries(url.searchParams.entries()) as unknown as T;
+
                 const result = await handler(query);
-                if (isErrorResponse(result)) {
+
+                // Response면 그대로 반환
+                if (result instanceof Response) {
+                    return result;
+                }
+
+                // 기존 로직 유지 (object를 JSON으로 감싸기)
+                if ("error" in result) {
                     return NextResponse.json(result, {
-                        status: result.status ?? 400,
+                        status: (result as { status?: number }).status ?? 400,
                     });
                 }
+
                 return NextResponse.json(result, {
                     status: (result as { status?: number }).status ?? 200,
                 });

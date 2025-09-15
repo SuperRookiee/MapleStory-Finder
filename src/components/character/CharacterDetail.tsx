@@ -261,7 +261,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             <ScrollArea id="character-detail-scroll" className="h-page">
                 <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
                     <div
-                        className="relative w-80 h-80 mx-auto"
+                        className="relative w-40 h-40 mx-auto"
                         style={{
                             transform: `scale(${imageScale})`,
                             opacity: imageScale,
@@ -272,11 +272,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         ) : (
                             basic.character_image && (
                                 <Image
-                                    src={basic.character_image}
+                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                     alt={basic.character_name}
                                     className="object-contain"
                                     fill
                                     priority
+                                    unoptimized
                                 />
                             )
                         )}
@@ -287,7 +288,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <div className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center">
                             {basic.character_image && (
                                 <Image
-                                    src={basic.character_image}
+                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                     alt={basic.character_name}
                                     width={32}
                                     height={32}
