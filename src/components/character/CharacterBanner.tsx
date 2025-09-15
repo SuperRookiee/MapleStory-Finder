@@ -19,6 +19,8 @@ type CharacterBannerProps = {
     imageScale: number
     /** Tailwind background color class for the banner */
     backgroundColor?: string
+    /** Optional background image shown behind the character */
+    backgroundImage?: string
 }
 
 const CharacterBanner = ({
@@ -30,13 +32,23 @@ const CharacterBanner = ({
     loading,
     imageScale,
     backgroundColor = "bg-card",
+    backgroundImage,
 }: CharacterBannerProps) => (
     <Card
         className={cn(
-            "relative h-60 sm:h-64 w-full rounded",
+            "relative h-60 sm:h-64 w-full overflow-hidden rounded",
             backgroundColor,
         )}
     >
+        {backgroundImage && (
+            <Image
+                src={backgroundImage}
+                alt="background"
+                fill
+                priority
+                className="object-cover pointer-events-none"
+            />
+        )}
         <CardContent>
         {loading || !basic ? (
             <div className="absolute inset-0 animate-pulse">
