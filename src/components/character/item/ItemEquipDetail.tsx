@@ -29,7 +29,7 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
     const star = item.item_starforce_option || {};
 
     return (
-        <div className="bg-card/90 text-card-foreground rounded-lg shadow-lg p-4 min-w-64">
+        <div className="bg-black/85 text-white rounded-lg shadow-lg p-4 min-w-64">
             <div className="flex items-center gap-3 mb-2">
                 {/* 아이템 아이콘 */}
                 <div className="relative w-10 h-10 flex-shrink-0">
