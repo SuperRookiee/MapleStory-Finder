@@ -23,6 +23,27 @@ const nextConfig: NextConfig = {
     experimental: {
         viewTransition: true,
     },
+    async headers() {
+        return [
+            {
+                source: "/api/crop",
+                headers: [
+                    {
+                        key: "Access-Control-Allow-Origin",
+                        value: "*",
+                    },
+                    {
+                        key: "Access-Control-Allow-Methods",
+                        value: "GET, OPTIONS",
+                    },
+                    {
+                        key: "Access-Control-Allow-Headers",
+                        value: "*",
+                    },
+                ],
+            },
+        ];
+    },
 };
 
 export default nextConfig;
