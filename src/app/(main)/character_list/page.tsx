@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FixedSizeList as List } from "react-window";
+import { List } from "react-window";
 import { toast } from "sonner";
 import { supabase } from "@/libs/supabaseClient";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
