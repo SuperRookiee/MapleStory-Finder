@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { findUnion, findUnionArtifact, findUnionRaider } from '@/fetchs/union.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
+import { cropCharacter } from "@/utils/image";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
@@ -48,6 +49,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const [imageScale, setImageScale] = useState(1);
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
+    const [characterImage, setCharacterImage] = useState<string | null>(null);
     const smallImageOpacity = (1 - imageScale) / 0.6;
 
     // 기본 정보 로딩
@@ -78,9 +80,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         };
 
         reset();
+        setCharacterImage(null);
         setTab("basic");
         load();
     }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility]);
+
+    useEffect(() => {
+        if (!basic?.character_image) return;
+        cropCharacter(basic.character_image)
+            .then(setCharacterImage)
+            .catch(console.error);
+    }, [basic]);
 
     // 유니온 탭 로딩
     useEffect(() => {
@@ -272,11 +282,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         ) : (
                             basic.character_image && (
                                 <Image
-                                    src={basic.character_image}
+                                    src={characterImage ?? basic.character_image}
                                     alt={basic.character_name}
                                     className="object-contain"
                                     fill
                                     priority
+                                    unoptimized
                                 />
                             )
                         )}
@@ -287,12 +298,13 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <div className="sticky top-0 z-50 bg-background/90 font-bold py-2 mt-0 -mx-4 px-4 flex items-center justify-center">
                             {basic.character_image && (
                                 <Image
-                                    src={basic.character_image}
+                                    src={characterImage ?? basic.character_image}
                                     alt={basic.character_name}
                                     width={32}
                                     height={32}
                                     className="mr-2 object-contain transition-opacity"
                                     style={{ opacity: smallImageOpacity }}
+                                    unoptimized
                                 />
                             )}
                             {basic.character_name}
