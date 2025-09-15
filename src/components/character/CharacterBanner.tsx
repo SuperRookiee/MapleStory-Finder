@@ -12,7 +12,7 @@ type CharacterBannerProps = {
 }
 
 const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBannerProps) => (
-    <div className="relative h-40 w-full max-w-xl mx-auto rounded-lg border bg-card">
+    <div className="relative h-60 sm:h-64 w-full max-w-2xl mx-auto rounded-lg border bg-card">
         {loading || !basic ? (
             <div className="absolute inset-0 animate-pulse">
                 <div className="absolute top-2 left-2">
@@ -36,7 +36,7 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
                     <Skeleton className="w-40 h-8" />
                 </div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <Skeleton className="w-24 h-24 rounded-full" />
+                    <Skeleton className="w-40 h-40 rounded-full" />
                 </div>
             </div>
         ) : (
@@ -79,8 +79,8 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
                         <Image
                             src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                             alt={basic.character_name}
-                            width={120}
-                            height={120}
+                            width={160}
+                            height={160}
                             className="object-contain"
                             priority
                             unoptimized
