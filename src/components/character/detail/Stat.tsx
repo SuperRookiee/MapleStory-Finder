@@ -9,19 +9,31 @@ interface StatProps {
 export const Stat = ({ stat, loading }: StatProps) => {
     const highlights = ["보스 몬스터 데미지", "크리티컬 확률", "크리티컬 데미지"];
 
+    const formatKoreanUnits = (value: number) => {
+        const hundred_million = 100_000_000;
+        const ten_thousand = 10_000;
+
+        const HM = Math.floor(value / hundred_million);
+        const TT = Math.floor((value % hundred_million) / ten_thousand);
+        const rest = value % ten_thousand;
+
+        console.log(`${HM ? `${HM}억 ` : ''}${TT ? `${TT}만 ` : ''}${rest ? rest : ''}`.trim())
+        return `${HM ? `${HM}억 ` : ''}${TT ? `${TT}만 ` : ''}${rest ? rest : ''}`.trim();
+    }
+
     if (loading || !stat) {
         return (
             <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 dark:bg-neutral-800">
                 <div className="bg-neutral-300 dark:bg-neutral-700 px-4 py-2">
-                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-32"/>
                 </div>
                 <div className="p-4 space-y-4">
-                    <Skeleton className="h-8 w-40" />
+                    <Skeleton className="h-8 w-40"/>
                     <div className="grid grid-cols-2 gap-4">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="space-y-2">
-                                <Skeleton className="h-4 w-10" />
-                                <Skeleton className="h-4 w-20" />
+                                <Skeleton className="h-4 w-10"/>
+                                <Skeleton className="h-4 w-20"/>
                             </div>
                         ))}
                     </div>
@@ -45,7 +57,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
             <div className="bg-neutral-200 dark:bg-neutral-700 px-4 py-4 border-b border-neutral-300 dark:border-neutral-600">
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">전투력</div>
                 <div className="text-2xl font-extrabold text-amber-600">
-                    {battlePower}
+                    {formatKoreanUnits(Number(battlePower))}
                 </div>
             </div>
             <div className="p-4 grid grid-cols-2 gap-4 text-sm">
@@ -53,7 +65,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
                     {mainKeys.map((key) => (
                         <div key={key} className="flex justify-between">
                             <span className="font-medium">{key}</span>
-                            <span>{statMap[key] ?? "-"}</span>
+                            <span>{formatKoreanUnits(Number(statMap[key] ?? 0))}</span>
                         </div>
                     ))}
                 </div>
@@ -69,7 +81,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
                             >
                                 {s.stat_name}
                             </span>
-                            <span className="font-medium">{s.stat_value}</span>
+                            <span className="font-medium">{formatKoreanUnits(Number(s.stat_value))}</span>
                         </div>
                     ))}
                 </div>
