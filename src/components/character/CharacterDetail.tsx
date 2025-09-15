@@ -29,6 +29,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
+import { findGuildBasic, findGuildId } from '@/fetchs/guild.fetch';
 import { findUnion, findUnionArtifact, findUnionRaider } from '@/fetchs/union.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
@@ -38,8 +39,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         union, unionRaider, unionArtifact,
         itemEquip, cashEquip, symbolEquip, setEffect, skill, linkSkill,
         hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat,
-        beauty, android, pet, propensity, ability,
-        setBasic, setStat, setPopularity, setHyper,
+        beauty, android, pet, propensity, ability, guild,
+        setBasic, setStat, setPopularity, setHyper, setGuild,
         setUnion, setUnionRaider, setUnionArtifact,
         setItemEquip, setCashEquip, setSymbolEquip, setSetEffect, setSkill, setLinkSkill,
         setHexaMatrix, setHexaStat, setVMatrix, setDojang, setRing, setOtherStat,
@@ -60,18 +61,32 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         const load = async () => {
             setBasicLoading(true);
             try {
-                const [basicRes, statRes, popularityRes, hyperRes, abilityRes] = await Promise.all([
+                const [basicRes, statRes, popularityRes, hyperRes, abilityRes, unionRes, dojangRes] = await Promise.all([
                     findCharacterBasic(ocid),
                     findCharacterStat(ocid),
                     findCharacterPopularity(ocid),
                     findCharacterHyperStat(ocid),
                     findCharacterAbility(ocid),
+                    findUnion(ocid),
+                    findCharacterDojang(ocid),
                 ]);
                 setBasic(basicRes.data);
                 setStat(statRes.data);
                 setPopularity(popularityRes.data);
                 setHyper(hyperRes.data);
                 setAbility(abilityRes.data);
+                setUnion(unionRes.data);
+                setDojang(dojangRes.data);
+
+                if (basicRes.data.character_guild_name) {
+                    try {
+                        const guildIdRes = await findGuildId(basicRes.data.character_guild_name);
+                        const guildRes = await findGuildBasic(guildIdRes.data.oguild);
+                        setGuild(guildRes.data);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
             } catch (e) {
                 console.error(e);
                 toast.error('캐릭터 정보 로딩 실패');
@@ -83,7 +98,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         reset();
         setTab("basic");
         load();
-    }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility]);
+    }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility, setUnion, setDojang, setGuild]);
 
     // 유니온 탭 로딩
     useEffect(() => {
@@ -266,6 +281,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     <CharacterBanner
                         basic={basic}
                         popularity={popularity}
+                        union={union}
+                        dojang={dojang}
+                        guild={guild}
                         loading={basicLoading || !basic}
                         imageScale={imageScale}
                     />

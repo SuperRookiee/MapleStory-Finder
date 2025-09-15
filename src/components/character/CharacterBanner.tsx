@@ -1,18 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ICharacterBasic, ICharacterPopularity } from "@/interface/character/ICharacter";
 import WorldIcon from "@/components/common/WorldIcon";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ICharacterBasic, ICharacterPopularity, ICharacterDojang } from "@/interface/character/ICharacter";
+import { IGuildBasic } from "@/interface/guild/IGuild";
+import { IUnion } from "@/interface/union/IUnion";
 
 type CharacterBannerProps = {
     basic: ICharacterBasic | null
     popularity: ICharacterPopularity | null
+    union: IUnion | null
+    dojang: ICharacterDojang | null
+    guild: IGuildBasic | null
     loading: boolean
     imageScale: number
 }
 
-const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBannerProps) => (
+const CharacterBanner = ({ basic, popularity, union, dojang, guild, loading, imageScale }: CharacterBannerProps) => (
     <div className="relative h-60 sm:h-64 w-full rounded-none border-0 bg-card">
         {loading || !basic ? (
             <div className="absolute inset-0 animate-pulse">
@@ -26,6 +31,8 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
                     <Skeleton className="w-16 h-6" />
                 </div>
                 <div className="absolute bottom-12 left-2 space-y-2">
+                    <Skeleton className="w-32 h-6" />
+                    <Skeleton className="w-32 h-6" />
                     <Skeleton className="w-32 h-6" />
                     <Skeleton className="w-32 h-6" />
                     <Skeleton className="w-32 h-6" />
@@ -54,16 +61,20 @@ const CharacterBanner = ({ basic, popularity, loading, imageScale }: CharacterBa
                     {basic.character_class}
                 </div>
                 <div className="absolute bottom-12 left-2 space-y-2 text-sm">
-                    <div className="bg-muted px-3 py-1 rounded-md">{basic.world_name}</div>
-                    {basic.character_guild_name && (
-                        <div className="bg-muted px-3 py-1 rounded-md">
-                            {basic.character_guild_name}
-                        </div>
+                    {union && (
+                        <div className="bg-muted px-3 py-1 rounded-md">유니온 {union.union_level}</div>
+                    )}
+                    {dojang && (
+                        <div className="bg-muted px-3 py-1 rounded-md">무릉 {dojang.dojang_best_floor}층</div>
                     )}
                     {popularity && (
-                        <div className="bg-muted px-3 py-1 rounded-md">
-                            인기도 {popularity.popularity}
-                        </div>
+                        <div className="bg-muted px-3 py-1 rounded-md">인기도 {popularity.popularity}</div>
+                    )}
+                    {basic.character_guild_name && (
+                        <div className="bg-muted px-3 py-1 rounded-md">길드 {basic.character_guild_name}</div>
+                    )}
+                    {guild?.guild_alliance_name && (
+                        <div className="bg-muted px-3 py-1 rounded-md">연합 {guild.guild_alliance_name}</div>
                     )}
                 </div>
                 <div className="absolute bottom-12 right-2 bg-muted px-3 py-1 rounded-md text-sm">
