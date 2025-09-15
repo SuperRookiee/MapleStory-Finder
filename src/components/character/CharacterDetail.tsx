@@ -293,7 +293,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-4">
                         <TabsList>
-                            <TabsTrigger value="basic">기본정보</TabsTrigger>
+                            <TabsTrigger value="basic">기본 정보</TabsTrigger>
                             <TabsTrigger value="union">유니온</TabsTrigger>
                             <TabsTrigger value="equip">장비</TabsTrigger>
                             <TabsTrigger value="skill">스킬</TabsTrigger>
@@ -301,6 +301,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             <TabsTrigger value="etc">기타</TabsTrigger>
                         </TabsList>
 
+                        {/* 기본 정보 */}
                         <TabsContent value="basic" className="space-y-4">
                             <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
                                 <div className="space-y-4">
@@ -317,10 +318,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             </div>
                         </TabsContent>
 
+                        {/* 유니온 */}
                         <TabsContent value="union" className="space-y-4">
                             <Union union={union} raider={unionRaider} artifact={unionArtifact} loading={!union || !unionRaider || !unionArtifact} />
                         </TabsContent>
 
+                        {/* 장비 */}
                         <TabsContent value="equip" className="space-y-4">
                             <ItemEquipments
                                 items={itemEquip?.item_equipment || []}
@@ -330,6 +333,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             <SetEffect setEffect={setEffect} loading={!setEffect} />
                         </TabsContent>
 
+                        {/* 스킬 */}
                         <TabsContent value="skill" className="space-y-4">
                             <Skill skill={skill} loading={!skill} />
                             <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
@@ -338,6 +342,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
                         </TabsContent>
 
+                        {/* 캐시 */}
                         <TabsContent value="cash" className="space-y-4">
                             <CashEquip equip={cashEquip} loading={!cashEquip} />
                             <Beauty beauty={beauty} loading={!beauty} />
@@ -345,6 +350,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             <Pet pet={pet} loading={!pet} />
                         </TabsContent>
 
+                        {/* 기타 */}
                         <TabsContent value="etc" className="space-y-4">
                             <Dojang dojang={dojang} loading={!dojang} />
                             <Ring ring={ring} loading={!ring} />

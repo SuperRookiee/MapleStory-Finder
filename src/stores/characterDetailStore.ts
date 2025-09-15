@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
-import { IUnion, IUnionRaider, IUnionArtifact, IUnionChampion } from "@/interface/union/IUnion";
+import { IUnion, IUnionArtifact, IUnionChampion, IUnionRaider } from "@/interface/union/IUnion";
 
 type CharacterDetailSlice = {
     // 기본 정보
-    basic: Pick<ICharacterBasic, 'character_image' | 'character_name'> | null
+    basic: Pick<ICharacterBasic, 'character_image' | 'character_name' | 'character_class'> | null
     stat: ICharacterStat | null
     popularity: ICharacterPopularity | null
     hyper: ICharacterHyperStat | null
