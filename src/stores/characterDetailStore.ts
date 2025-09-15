@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion, IUnionArtifact, IUnionChampion, IUnionRaider } from "@/interface/union/IUnion";
 
 type CharacterDetailSlice = {
@@ -9,6 +10,7 @@ type CharacterDetailSlice = {
     stat: ICharacterStat | null
     popularity: ICharacterPopularity | null
     hyper: ICharacterHyperStat | null
+    guild: IGuildBasic | null
 
     // 유니온
     union: IUnion | null
@@ -44,6 +46,7 @@ type CharacterDetailSlice = {
     setStat: (stat: CharacterDetailSlice['stat']) => void
     setPopularity: (popularity: CharacterDetailSlice['popularity']) => void
     setHyper: (hyper: CharacterDetailSlice['hyper']) => void
+    setGuild: (guild: CharacterDetailSlice['guild']) => void
     setUnion: (union: CharacterDetailSlice['union']) => void
     setUnionRaider: (unionRaider: CharacterDetailSlice['unionRaider']) => void
     setUnionArtifact: (unionArtifact: CharacterDetailSlice['unionArtifact']) => void
@@ -76,6 +79,7 @@ const initialState: Omit<
     | 'setStat'
     | 'setPopularity'
     | 'setHyper'
+    | 'setGuild'
     | 'setItemEquip'
     | 'setCashEquip'
     | 'setSymbolEquip'
@@ -103,6 +107,7 @@ const initialState: Omit<
     stat: null,
     popularity: null,
     hyper: null,
+    guild: null,
 
     union: null,
     unionRaider: null,
@@ -139,6 +144,7 @@ export const characterDetailStore = create<CharacterDetailSlice>()(
             setStat: (stat) => set({ stat }),
             setPopularity: (popularity) => set({ popularity }),
             setHyper: (hyper) => set({ hyper }),
+            setGuild: (guild) => set({ guild }),
             setUnion: (union) => set({ union }),
             setUnionRaider: (unionRaider) => set({ unionRaider }),
             setUnionArtifact: (unionArtifact) => set({ unionArtifact }),
