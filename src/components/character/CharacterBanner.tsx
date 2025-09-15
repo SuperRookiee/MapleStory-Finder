@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import WorldIcon from "@/components/common/WorldIcon";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ICharacterBasic, ICharacterPopularity, ICharacterDojang } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
 import { cn } from "@/utils/utils";
-import { Card, CardContent } from "@/components/ui/card";
 
 type CharacterBannerProps = {
     basic: ICharacterBasic | null
