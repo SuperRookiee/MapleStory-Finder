@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ICharacterBasic, ICharacterPopularity, ICharacterDojang } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
+import { cn } from "@/utils/utils";
 
 type CharacterBannerProps = {
     basic: ICharacterBasic | null
@@ -15,10 +16,26 @@ type CharacterBannerProps = {
     guild: IGuildBasic | null
     loading: boolean
     imageScale: number
+    /** Tailwind background color class for the banner */
+    backgroundColor?: string
 }
 
-const CharacterBanner = ({ basic, popularity, union, dojang, guild, loading, imageScale }: CharacterBannerProps) => (
-    <div className="relative h-60 sm:h-64 w-full rounded-none border-0 bg-card">
+const CharacterBanner = ({
+    basic,
+    popularity,
+    union,
+    dojang,
+    guild,
+    loading,
+    imageScale,
+    backgroundColor = "bg-card",
+}: CharacterBannerProps) => (
+    <div
+        className={cn(
+            "relative h-60 sm:h-64 w-full rounded-none border-0",
+            backgroundColor,
+        )}
+    >
         {loading || !basic ? (
             <div className="absolute inset-0 animate-pulse">
                 <div className="absolute top-2 left-2">
