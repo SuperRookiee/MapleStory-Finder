@@ -2,6 +2,9 @@ import sharp from "sharp";
 import { Get } from "@/utils/fetch";
 import { Failed } from "@/utils/message";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export const GET = Get(async (query: { url?: string }) => {
     if (!query.url) return Failed("url is required");
 
