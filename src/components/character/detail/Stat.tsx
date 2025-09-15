@@ -16,8 +16,6 @@ export const Stat = ({ stat, loading }: StatProps) => {
         const HM = Math.floor(value / hundred_million);
         const TT = Math.floor((value % hundred_million) / ten_thousand);
         const rest = value % ten_thousand;
-
-        console.log(`${HM ? `${HM}억 ` : ''}${TT ? `${TT}만 ` : ''}${rest ? rest : ''}`.trim())
         return `${HM ? `${HM}억 ` : ''}${TT ? `${TT}만 ` : ''}${rest ? rest : ''}`.trim();
     }
 
@@ -29,11 +27,19 @@ export const Stat = ({ stat, loading }: StatProps) => {
                 </div>
                 <div className="p-4 space-y-4">
                     <Skeleton className="h-8 w-40"/>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="space-y-2">
                                 <Skeleton className="h-4 w-10"/>
                                 <Skeleton className="h-4 w-20"/>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="space-y-2">
+                                <Skeleton className="h-4 w-24"/>
+                                <Skeleton className="h-4 w-16"/>
                             </div>
                         ))}
                     </div>
@@ -60,8 +66,8 @@ export const Stat = ({ stat, loading }: StatProps) => {
                     {formatKoreanUnits(Number(battlePower))}
                 </div>
             </div>
-            <div className="p-4 grid grid-cols-2 gap-4 text-sm">
-                <div className="space-y-2">
+            <div className="p-4 space-y-4 text-sm">
+                <div className="grid grid-cols-3 gap-4">
                     {mainKeys.map((key) => (
                         <div key={key} className="flex justify-between">
                             <span className="font-medium">{key}</span>
@@ -69,7 +75,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
                         </div>
                     ))}
                 </div>
-                <div className="space-y-2 border-l border-neutral-300 dark:border-neutral-600 pl-4">
+                <div className="grid grid-cols-2 gap-4 border-t border-neutral-300 dark:border-neutral-600 pt-4">
                     {otherStats.map((s) => (
                         <div key={s.stat_name} className="flex justify-between">
                             <span
