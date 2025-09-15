@@ -239,8 +239,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
 
             window.requestAnimationFrame(() => {
                 const top = viewport.scrollTop;
-                const progress = Math.min(top / 300, 1);
-                const scale = 1 - progress * 0.2;
+                const progress = Math.min(top / 200, 1);
+                const scale = 1 - progress * 0.6;
                 setImageScale(scale);
                 ticking = false;
             });
@@ -280,7 +280,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     {basicLoading || !basic ? (
                         <Skeleton className="h-6 w-40 mx-auto" />
                     ) : (
-                        <p className="text-center font-bold mt-2">{basic.character_name}</p>
+                        <div className="sticky top-0 z-50 bg-background/90 text-center font-bold py-2 mt-0 -mx-4 px-4">
+                            {basic.character_name}
+                            <span className="ml-2 text-muted-foreground font-normal">
+                                {basic.character_class}
+                            </span>
+                        </div>
                     )}
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-4">
