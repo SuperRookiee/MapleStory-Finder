@@ -47,7 +47,7 @@ const CharacterCard = ({
             <div className="relative w-full aspect-[4/3] mb-4">
                 {character.image && (
                     <Image
-                        src={`/api/crop?url=${encodeURIComponent(character.image)}`}
+                        src={character.image}
                         alt={character.character_name}
                         className="object-contain"
                         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
