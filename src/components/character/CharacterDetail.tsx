@@ -133,11 +133,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         const loadUnion = async () => {
             try {
                 const [unionRes, raiderRes, artifactRes] = await Promise.all([
-                    findUnion(ocid),
+                    union ? Promise.resolve(null) : findUnion(ocid),
                     findUnionRaider(ocid),
                     findUnionArtifact(ocid),
                 ]);
-                setUnion(unionRes.data);
+                if (!union && unionRes) setUnion(unionRes.data);
                 setUnionRaider(raiderRes.data);
                 setUnionArtifact(artifactRes.data);
             } catch (e) {
@@ -243,17 +243,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         const loadEtc = async () => {
             try {
                 const [
-                    dojangRes,
                     ringRes,
                     otherStatRes,
                     propensityRes,
+                    dojangRes,
                 ] = await Promise.all([
-                    findCharacterDojang(ocid),
                     findCharacterRingExchange(ocid),
                     findCharacterOtherStat(ocid),
                     findCharacterPropensity(ocid),
+                    dojang ? Promise.resolve(null) : findCharacterDojang(ocid),
                 ]);
-                setDojang(dojangRes.data);
+                if (!dojang && dojangRes) setDojang(dojangRes.data);
                 setRing(ringRes.data);
                 setOtherStat(otherStatRes.data);
                 setPropensity(propensityRes.data);
@@ -300,7 +300,6 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         viewport.addEventListener('scroll', handleScroll);
         return () => viewport.removeEventListener('scroll', handleScroll);
     }, [basicLoading]);
-console.log(basic, guild)
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
