@@ -9,6 +9,7 @@ interface HyperStatProps {
 }
 
 export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
+    console.log(hyper)
     if (loading || !hyper) {
         return (
             <Card className="w-full">
@@ -60,7 +61,7 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
                     </TabsList>
 
                     {presets.map((p) => (
-                        <TabsContent key={p.key} value={p.key}>
+                        <TabsContent key={p.key} value={p.key} className="px-2">
                             <ul className="space-y-2">
                                 {p.stats
                                     .filter((s) => s.stat_level > 0)

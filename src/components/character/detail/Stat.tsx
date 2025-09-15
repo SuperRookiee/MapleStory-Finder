@@ -16,6 +16,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
         const HM = Math.floor(value / hundred_million);
         const TT = Math.floor((value % hundred_million) / ten_thousand);
         const rest = value % ten_thousand;
+
         return `${HM ? `${HM}억 ` : ''}${TT ? `${TT}만 ` : ''}${rest ? rest : ''}`.trim();
     }
 
@@ -59,7 +60,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
 
     return (
         <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
-            <div className="bg-neutral-300 dark:bg-neutral-700 px-4 py-2 text-sm font-bold">{stat.character_class} 스탯</div>
+            <div className="bg-neutral-300 dark:bg-neutral-700 px-4 py-2 text-sm font-bold">{stat.character_class}</div>
             <div className="bg-neutral-200 dark:bg-neutral-700 px-4 py-4 border-b border-neutral-300 dark:border-neutral-600">
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">전투력</div>
                 <div className="text-2xl font-extrabold text-amber-600">
