@@ -176,7 +176,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea id="character-detail-scroll" className="h-page">
-                <div className="space-y-6 p-4 w-full max-w-xl mx-auto lg:max-w-3xl">
+                <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
                     <div
                         className="relative w-80 h-80 mx-auto"
                         style={{
@@ -204,13 +204,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <p className="text-center font-bold mt-2">{basic.character_name}</p>
                     )}
 
-                    {/* 주요 스탯 */}
-                    <Stat stat={stat} loading={basicLoading || !stat} />
-                    <Popularity
-                        popularity={popularity?.popularity}
-                        loading={basicLoading || !popularity}
-                    />
-                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
+                    <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
+                        <div className="space-y-4">
+                            <Stat stat={stat} loading={basicLoading || !stat} />
+                            <Popularity
+                                popularity={popularity?.popularity}
+                                loading={basicLoading || !popularity}
+                            />
+                            <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
+                        </div>
+                        <Ability ability={ability} loading={!ability} />
+                    </div>
 
                     {/* 장비 */}
                     <ItemEquipments
@@ -239,7 +243,6 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     <Android android={android} loading={!android} />
                     <Pet pet={pet} loading={!pet} />
                     <Propensity propensity={propensity} loading={!propensity} />
-                    <Ability ability={ability} loading={!ability} />
                 </div>
             </ScrollArea>
         </ViewTransition>
