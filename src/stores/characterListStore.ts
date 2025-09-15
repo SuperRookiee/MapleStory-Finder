@@ -27,16 +27,24 @@ export const characterListStore = create<CharacterListSlice>()(persist((set) => 
                 const sorted = basicList.sort((a, b) => b.character_level - a.character_level);
                 set({ characters: sorted, loading: false });
 
-                await Promise.all(
+                const images = await Promise.all(
                     sorted.map(async (char) => {
                         const data = await findCharacterBasic(char.ocid);
-                        set((state) => ({
-                            characters: state.characters.map((c) =>
-                                c.ocid === char.ocid ? { ...c, image: data.data.character_image } : c
-                            ),
-                        }));
+                        return { ocid: char.ocid, image: data.data.character_image };
                     })
                 );
+
+                const imageMap = new Map<string, string>(
+                    images.map(({ ocid, image }) => [ocid, image])
+                );
+
+                set((state) => ({
+                    characters: state.characters.map((c) =>
+                        imageMap.has(c.ocid)
+                            ? { ...c, image: imageMap.get(c.ocid) }
+                            : c
+                    ),
+                }));
             } catch (err) {
                 set({ loading: false });
                 throw err;
