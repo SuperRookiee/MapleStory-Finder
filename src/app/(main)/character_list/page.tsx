@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { List } from "react-window";
 import { toast } from "sonner";
 import { supabase } from "@/libs/supabaseClient";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
@@ -21,7 +20,6 @@ const CharacterList = () => {
     const [worldFilter, setWorldFilter] = useState("전체월드");
     const { favorites, setFavorites, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
     const [userId, setUserId] = useState<string | null>(null);
-    const [listSize, setListSize] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         const load = async () => {
@@ -58,15 +56,6 @@ const CharacterList = () => {
         );
         setDisplayCharacters(filtered);
     }, [characters, worldFilter]);
-
-    useEffect(() => {
-        const updateSize = () => {
-            setListSize({ width: window.innerWidth, height: window.innerHeight - 150 });
-        };
-        updateSize();
-        window.addEventListener("resize", updateSize);
-        return () => window.removeEventListener("resize", updateSize);
-    }, []);
 
     const toggleFavorite = useCallback(async (ocid: string) => {
         if (!userId) return;
@@ -111,22 +100,17 @@ const CharacterList = () => {
                     ))}
                 </div>
             ) : (
-                <div className="w-full flex-1 rounded-md border">
-                    <List
-                        style={{ height: listSize.height, width: listSize.width }}
-                        rowCount={displayCharacters.length}
-                        rowHeight={340}
-                        rowProps={{}}
-                        rowComponent={({ index, style, ariaAttributes }) => (
-                            <div style={style} {...ariaAttributes}>
-                                <CharacterCell
-                                    character={displayCharacters[index]}
-                                    favorites={favorites}
-                                    toggleFavorite={toggleFavorite}
-                                />
-                            </div>
-                        )}
-                    />
+                <div className="w-full flex-1 overflow-y-auto rounded-md border">
+                    <div className="grid grid-cols-1 gap-4 p-2 sm:grid-cols-2 md:grid-cols-3">
+                        {displayCharacters.map((character) => (
+                            <CharacterCell
+                                key={character.ocid}
+                                character={character}
+                                favorites={favorites}
+                                toggleFavorite={toggleFavorite}
+                            />
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
