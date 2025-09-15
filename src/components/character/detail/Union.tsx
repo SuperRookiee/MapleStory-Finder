@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { IUnion, IUnionArtifact, IUnionRaider } from '@/interface/union/IUnion';
 
@@ -28,26 +28,33 @@ export const Union = ({ union, raider, artifact, loading }: UnionProps) => {
             <CardHeader>
                 <CardTitle>유니온</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-                <div>레벨: {union.union_level}</div>
-                <div>등급: {union.union_grade}</div>
-                <div>아티팩트 레벨: {union.union_artifact_level}</div>
+            <CardContent className="space-y-4 text-sm">
+                <dl className="grid grid-cols-[auto,1fr] gap-2">
+                    <dt className="font-medium">레벨</dt>
+                    <dd>{union.union_level}</dd>
+                    <dt className="font-medium">등급</dt>
+                    <dd>{union.union_grade}</dd>
+                    <dt className="font-medium">아티팩트 레벨</dt>
+                    <dd>{union.union_artifact_level}</dd>
+                </dl>
                 {raider.union_raider_stat.length > 0 && (
                     <div>
-                        <div className="font-medium">공격대원 효과</div>
-                        <ul className="list-disc pl-5">
-                            {raider.union_raider_stat.map((s) => (
-                                <li key={s}>{s}</li>
+                        <div className="mb-1 font-medium">공격대원 효과</div>
+                        <ul className="list-disc space-y-1 pl-5">
+                            {raider.union_raider_stat.map((s, idx) => (
+                                <li key={`${s}-${idx}`}>{s}</li>
                             ))}
                         </ul>
                     </div>
                 )}
                 {artifact.union_artifact_effect.length > 0 && (
                     <div>
-                        <div className="font-medium">아티팩트 효과</div>
-                        <ul className="list-disc pl-5">
-                            {artifact.union_artifact_effect.map((e) => (
-                                <li key={e.name}>{e.name} Lv.{e.level}</li>
+                        <div className="mb-1 font-medium">아티팩트 효과</div>
+                        <ul className="list-disc space-y-1 pl-5">
+                            {artifact.union_artifact_effect.map((e, idx) => (
+                                <li key={`${e.name}-${e.level}-${idx}`}>
+                                    {e.name} Lv.{e.level}
+                                </li>
                             ))}
                         </ul>
                     </div>
