@@ -21,6 +21,7 @@ import { SetEffect } from "@/components/character/detail/SetEffect";
 import { Skill } from "@/components/character/detail/Skill";
 import { Stat } from "@/components/character/detail/Stat";
 import { SymbolEquip } from "@/components/character/detail/SymbolEquip";
+import { Union } from "@/components/character/detail/Union";
 import { VMatrix } from "@/components/character/detail/VMatrix";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -49,15 +50,18 @@ import {
     findCharacterSymbolEquipment,
     findCharacterVMatrix,
 } from '@/fetchs/character.fetch';
+import { findUnion, findUnionRaider, findUnionArtifact } from '@/fetchs/union.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
         basic, stat, popularity, hyper,
+        union, unionRaider, unionArtifact,
         itemEquip, cashEquip, symbolEquip, setEffect, skill, linkSkill,
         hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat,
         beauty, android, pet, propensity, ability,
         setBasic, setStat, setPopularity, setHyper,
+        setUnion, setUnionRaider, setUnionArtifact,
         setItemEquip, setCashEquip, setSymbolEquip, setSetEffect, setSkill, setLinkSkill,
         setHexaMatrix, setHexaStat, setVMatrix, setDojang, setRing, setOtherStat,
         setBeauty, setAndroid, setPet, setPropensity, setAbility,
@@ -98,6 +102,27 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         setTab("basic");
         load();
     }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility]);
+
+    // 유니온 탭 로딩
+    useEffect(() => {
+        if (tab !== "union" || (union && unionRaider && unionArtifact)) return;
+        const loadUnion = async () => {
+            try {
+                const [unionRes, raiderRes, artifactRes] = await Promise.all([
+                    findUnion(ocid),
+                    findUnionRaider(ocid),
+                    findUnionArtifact(ocid),
+                ]);
+                setUnion(unionRes.data);
+                setUnionRaider(raiderRes.data);
+                setUnionArtifact(artifactRes.data);
+            } catch (e) {
+                console.error(e);
+                toast.error('유니온 정보 로딩 실패');
+            }
+        };
+        loadUnion();
+    }, [tab, ocid, union, unionRaider, unionArtifact, setUnion, setUnionRaider, setUnionArtifact]);
 
     // 장비 탭 로딩
     useEffect(() => {
@@ -291,6 +316,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     <Tabs value={tab} onValueChange={setTab} className="space-y-4">
                         <TabsList>
                             <TabsTrigger value="basic">기본정보</TabsTrigger>
+                            <TabsTrigger value="union">유니온</TabsTrigger>
                             <TabsTrigger value="equip">장비</TabsTrigger>
                             <TabsTrigger value="skill">스킬</TabsTrigger>
                             <TabsTrigger value="cash">캐시</TabsTrigger>
@@ -311,6 +337,10 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                     <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
                                 </div>
                             </div>
+                        </TabsContent>
+
+                        <TabsContent value="union" className="space-y-4">
+                            <Union union={union} raider={unionRaider} artifact={unionArtifact} loading={!union || !unionRaider || !unionArtifact} />
                         </TabsContent>
 
                         <TabsContent value="equip" className="space-y-4">
