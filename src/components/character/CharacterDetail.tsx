@@ -30,6 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from '@/fetchs/character.fetch';
 import { findUnion, findUnionArtifact, findUnionRaider } from '@/fetchs/union.fetch';
 import { characterDetailStore } from "@/stores/characterDetailStore";
+import { chromaKeyRemove } from "@/utils";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
@@ -46,6 +47,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         reset,
     } = characterDetailStore();
     const [imageScale, setImageScale] = useState(1);
+    const [imageSrc, setImageSrc] = useState<string | null>(null);
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
 
@@ -77,9 +79,17 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         };
 
         reset();
+        setImageSrc(null);
         setTab("basic");
         load();
     }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility]);
+
+    useEffect(() => {
+        if (!basic?.character_image) return;
+        chromaKeyRemove(basic.character_image)
+            .then(setImageSrc)
+            .catch(() => setImageSrc(basic.character_image));
+    }, [basic?.character_image]);
 
     // 유니온 탭 로딩
     useEffect(() => {
@@ -271,7 +281,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         ) : (
                             basic.character_image && (
                                 <Image
-                                    src={basic.character_image}
+                                    src={imageSrc ?? basic.character_image}
                                     alt={basic.character_name}
                                     className="object-contain"
                                     fill

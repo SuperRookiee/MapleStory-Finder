@@ -33,6 +33,7 @@ const eslintConfig = [
                         { pattern: "react", group: "external", position: "before" },
                         { pattern: "@/app/api/**", group: "internal", position: "before" },
                         { pattern: "@/libs/**", group: "internal", position: "before" },
+                        { pattern: "@/utils/**", group: "internal", position: "before" },
                         { pattern: "@/actions/**", group: "internal", position: "before" },
                         { pattern: "@/hooks/**", group: "internal", position: "before" },
                         { pattern: "@/interfaces/**", group: "internal", position: "after" },

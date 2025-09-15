@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@/libs/utils';
+import { cn } from '@/utils';
 
 const Spinner = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div

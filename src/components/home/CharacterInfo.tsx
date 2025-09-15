@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { cn } from "@/libs/utils";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
 import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
+import { cn } from "@/utils";
 
 interface ICharacterInfoProps {
     ocid: string | null;
