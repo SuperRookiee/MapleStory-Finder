@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ICharacterSkill } from '@/interface/character/ICharacter';
+import SkillDetail from './SkillDetail';
 
 interface SkillProps {
     skill?: ICharacterSkill[] | null;
@@ -48,18 +50,22 @@ export const Skill = ({ skill, loading }: SkillProps) => {
                         <TabsContent key={romans[i]} value={romans[i]}>
                             <div className="grid grid-cols-4 gap-4">
                                 {g?.character_skill.map((s) => (
-                                    <div
-                                        key={s.skill_name}
-                                        className="flex flex-col items-center text-center text-xs space-y-1"
-                                    >
-                                        <Image
-                                            src={s.skill_icon}
-                                            alt={s.skill_name}
-                                            width={40}
-                                            height={40}
-                                        />
-                                        <span>{s.skill_name}</span>
-                                    </div>
+                                    <Popover key={s.skill_name}>
+                                        <PopoverTrigger asChild>
+                                            <div className="flex flex-col items-center text-center text-xs space-y-1 cursor-pointer">
+                                                <Image
+                                                    src={s.skill_icon}
+                                                    alt={s.skill_name}
+                                                    width={40}
+                                                    height={40}
+                                                />
+                                                <span>{s.skill_name}</span>
+                                            </div>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="p-0 bg-transparent border-none shadow-none">
+                                            <SkillDetail skill={s} />
+                                        </PopoverContent>
+                                    </Popover>
                                 ))}
                             </div>
                         </TabsContent>
