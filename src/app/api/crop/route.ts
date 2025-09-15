@@ -17,8 +17,10 @@ export const GET = Get(async (query: { url?: string }) => {
 
     const buffer = Buffer.from(await response.arrayBuffer());
     const cropped = await sharp(buffer).trim().png().toBuffer();
+    const uint8 = new Uint8Array(cropped);
+    const blob = new Blob([uint8], { type: "image/png" });
 
-    return new Response(cropped, {
+    return new Response(blob, {
         headers: {
             "Content-Type": "image/png",
             "Access-Control-Allow-Origin": "*",

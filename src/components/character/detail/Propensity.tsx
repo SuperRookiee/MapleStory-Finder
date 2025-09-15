@@ -43,8 +43,6 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
         { subject: '매력', value: propensity.charm_level },
     ];
 
-    const maxValue = Math.max(100, ...data.map((d) => d.value));
-
     // 커스텀 툴팁
     const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
         if (active && payload && payload.length > 0) {
