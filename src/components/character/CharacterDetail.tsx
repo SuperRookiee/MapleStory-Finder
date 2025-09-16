@@ -28,29 +28,7 @@ import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    findCharacterAbility,
-    findCharacterAndroidEquipment,
-    findCharacterBasic,
-    findCharacterBeautyEquipment,
-    findCharacterCashItemEquipment,
-    findCharacterDojang,
-    findCharacterHexaMatrix,
-    findCharacterHexaMatrixStat,
-    findCharacterHyperStat,
-    findCharacterItemEquipment,
-    findCharacterLinkSkill,
-    findCharacterOtherStat,
-    findCharacterPetEquipment,
-    findCharacterPopularity,
-    findCharacterPropensity,
-    findCharacterRingExchange,
-    findCharacterSetEffect,
-    findCharacterSkill,
-    findCharacterStat,
-    findCharacterSymbolEquipment,
-    findCharacterVMatrix,
-} from "@/fetchs/character.fetch";
+import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from "@/fetchs/character.fetch";
 import { findGuildBasic, findGuildId } from "@/fetchs/guild.fetch";
 import { findUnion, findUnionArtifact, findUnionRaider } from "@/fetchs/union.fetch";
 import { characterDetailStore } from "@/stores/characterDetailStore";
@@ -321,12 +299,10 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <div className="sticky top-0 z-50 bg-background/90 py-2 mt-0 -mx-4 px-4">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 {/* 오른쪽: 캐릭터 요약 (모바일에서는 상단) */}
-                                <div className="order-1 flex flex-col items-center gap-2 text-center font-bold sm:order-2 sm:flex-row sm:items-center sm:gap-2 sm:justify-end sm:text-left">
+                                <div className="order-1 flex flex-row items-center justify-center gap-2 text-left font-bold sm:order-2 sm:items-center sm:gap-2 sm:justify-end">
                                     {basic.character_image && (
                                         <Image
-                                            src={`/api/crop?url=${encodeURIComponent(
-                                                basic.character_image
-                                            )}`}
+                                            src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                             alt={basic.character_name}
                                             width={SMALL_IMAGE_SIZE}
                                             height={SMALL_IMAGE_SIZE}

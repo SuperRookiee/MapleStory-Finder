@@ -51,7 +51,7 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={hyper.use_preset_no}>
-                    <TabsList className="grid w-full grid-cols-3">
+                    <TabsList className="grid !w-full grid-cols-3">
                         {presets.map((p) => (
                             <TabsTrigger key={p.key} value={p.key}>
                                 {p.label}

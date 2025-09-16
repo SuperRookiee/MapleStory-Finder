@@ -53,14 +53,14 @@ const CharacterCard = ({
             </div>
 
             {/* 캐릭터 이미지 */}
-            <div className="relative w-full aspect-[4/3] mb-4">
+            <div className="relative w-full aspect-[4/3] flex items-center justify-center">
                 {character.image && (
                     <Image
-                        src={character.image}
+                        src={`/api/crop?url=${encodeURIComponent(character.image)}`}
                         alt={character.character_name}
-                        className="object-contain"
-                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                        fill
+                        className="object-contain translate-y-4"
+                        width={100}
+                        height={100}
                     />
                 )}
             </div>

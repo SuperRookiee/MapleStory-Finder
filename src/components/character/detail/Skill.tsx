@@ -39,7 +39,7 @@ export const Skill = ({ skill, loading }: SkillProps) => {
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={romans[0]} className="w-full">
-                    <TabsList className="grid w-full grid-cols-7">
+                    <TabsList className="grid !w-full grid-cols-7">
                         {grades.map((_, i) => (
                             <TabsTrigger key={romans[i]} value={romans[i]}>
                                 {romans[i]}

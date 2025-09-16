@@ -68,13 +68,13 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                                 <Skeleton className="w-64 h-64 mt-4" />
                             ) : (
                                 basic.character_image && (
-                                    <div className="relative w-64 h-64 mt-4">
+                                    <div className="w-64 h-64 mt-4 flex items-center justify-center">
                                         <Image
-                                            src={basic.character_image}
+                                            src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                             alt={basic.character_name}
-                                            fill
                                             className="object-contain"
-                                            sizes="256px"
+                                            width={100}
+                                            height={100}
                                         />
                                     </div>
                                 )

@@ -47,13 +47,13 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
     const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
         if (active && payload && payload.length > 0) {
             return (
-                <div className="rounded-lg border bg-background p-2 shadow-sm">
+                <div className="rounded-lg border bg-background p-2 shadow-sm w-20">
                     <p className="text-sm font-medium text-foreground">{label}</p>
-                    {payload.map((entry, index) => (
+                    {payload.map((entry, index) =>
                         <p key={index} className="text-sm text-muted-foreground">
                             {entry.value}
                         </p>
-                    ))}
+                    )}
                 </div>
             );
         }

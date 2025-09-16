@@ -4,7 +4,7 @@ import Image from "next/image";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ICharacterBasic, ICharacterPopularity, ICharacterDojang } from "@/interface/character/ICharacter";
+import { ICharacterBasic, ICharacterDojang, ICharacterPopularity } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
 import { cn } from "@/utils/utils";
@@ -65,8 +65,6 @@ const CharacterBanner = ({
                     <Skeleton className="w-32 h-6" />
                     <Skeleton className="w-32 h-6" />
                     <Skeleton className="w-32 h-6" />
-                    <Skeleton className="w-32 h-6" />
-                    <Skeleton className="w-32 h-6" />
                 </div>
                 <div className="absolute bottom-12 right-2">
                     <Skeleton className="w-32 h-6" />
@@ -75,7 +73,7 @@ const CharacterBanner = ({
                     <Skeleton className="w-40 h-8" />
                 </div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <Skeleton className="w-40 h-40 rounded-full" />
+                    <Skeleton className="w-25 h-30" />
                 </div>
             </div>
         ) : (
