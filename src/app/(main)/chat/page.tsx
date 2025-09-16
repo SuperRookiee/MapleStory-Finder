@@ -71,20 +71,20 @@ const ChatPage = () => {
 
     return (
         <ViewTransition enter="fade" exit="fade">
-            <div className="mx-auto flex h-full max-w-4xl flex-col">
+            <div className="mx-auto flex h-full w-full max-w-4xl flex-col">
                 <Card className="flex h-full flex-col">
-                    <CardHeader className="border-b">
-                        <div className="flex items-start justify-between gap-4">
-                            <div>
-                                <CardTitle className="text-2xl font-bold">Gemini AI 챗봇</CardTitle>
-                                <CardDescription className="mt-2 space-y-1 text-sm text-muted-foreground">
+                    <CardHeader className="border-b px-4 py-5 sm:px-6">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                            <div className="space-y-2">
+                                <CardTitle className="text-xl font-bold sm:text-2xl">Gemini AI 챗봇</CardTitle>
+                                <CardDescription className="space-y-1 text-sm text-muted-foreground">
                                     <p>메이플스토리 캐릭터, 길드, 장비 데이터를 활용해 질문에 답변합니다.</p>
                                 </CardDescription>
                             </div>
                             <Button
                                 type="button"
                                 variant="ghost"
-                                className="gap-2"
+                                className="w-full gap-2 sm:w-auto"
                                 onClick={() => {
                                     clear();
                                     setPendingContext(null);
@@ -96,11 +96,11 @@ const ChatPage = () => {
                             </Button>
                         </div>
                     </CardHeader>
-                    <CardContent className="flex min-h-0 flex-1 flex-col gap-4 py-4">
-                        <ScrollArea className="h-full pr-2">
-                            <div className="flex flex-col gap-4">
+                    <CardContent className="flex min-h-0 flex-1 flex-col gap-4 px-4 py-4 sm:px-6">
+                        <ScrollArea className="h-full pr-1 sm:pr-2">
+                            <div className="flex flex-col gap-3 sm:gap-4">
                                 {messages.length === 0 && !isLoading ? (
-                                    <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+                                    <div className="rounded-lg border border-dashed p-5 text-center text-sm text-muted-foreground sm:p-6">
                                         첫 질문을 입력하면 Gemini AI가 관련 데이터를 수집해 답변을 제공합니다.
                                     </div>
                                 ) : null}
@@ -110,14 +110,14 @@ const ChatPage = () => {
                                         <div
                                             key={message.id}
                                             className={cn(
-                                                "flex w-full gap-3",
+                                                "flex w-full gap-2 sm:gap-3",
                                                 isUser ? "justify-end" : "justify-start",
                                             )}
                                         >
                                             {!isUser && (
                                                 <div
                                                     className={cn(
-                                                        "w-10 h-10 flex items-center justify-center rounded-full bg-muted text-muted-foreground"
+                                                        "flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground sm:h-10 sm:w-10"
                                                     )}
                                                 >
                                                     <Bot className="h-4 w-4"/>
@@ -125,7 +125,7 @@ const ChatPage = () => {
                                             )}
                                             <div
                                                 className={cn(
-                                                    "max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap",
+                                                    "max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap sm:max-w-[75%]",
                                                     isUser
                                                         ? "bg-primary text-primary-foreground"
                                                         : "bg-muted text-muted-foreground",
@@ -134,7 +134,7 @@ const ChatPage = () => {
                                                 {message.content}
                                             </div>
                                             {isUser && (
-                                                <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                                <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary sm:h-9 sm:w-9">
                                                     <User className="h-4 w-4"/>
                                                 </div>
                                             )}
@@ -151,24 +151,30 @@ const ChatPage = () => {
                             </div>
                         </ScrollArea>
                         {pendingContext ? (
-                            <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">
+                            <div className="rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground sm:text-sm">
                                 <p className="font-medium text-foreground">참고 데이터 요약</p>
-                                <pre className="mt-1 whitespace-pre-wrap font-sans text-xs leading-relaxed text-muted-foreground">
+                                <pre className="mt-1 max-h-40 whitespace-pre-wrap overflow-y-auto font-sans text-xs leading-relaxed text-muted-foreground sm:max-h-48">
                                     {pendingContext}
                                 </pre>
                             </div>
                         ) : null}
                     </CardContent>
-                    <CardFooter className="border-t">
-                        <form className="flex w-full items-center gap-3" onSubmit={handleSubmit}>
+                    <CardFooter className="border-t px-4 py-4 sm:px-6">
+                        <form className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-3" onSubmit={handleSubmit}>
                             <Input
                                 placeholder="질문을 입력하세요"
                                 value={question}
                                 onChange={(event) => setQuestion(event.target.value)}
                                 autoFocus
+                                className="h-12 text-base sm:h-10"
                             />
-                            <Button type="submit" className="gap-2" disabled={isLoading || question.trim().length === 0}>
+                            <Button
+                                type="submit"
+                                className="h-12 w-full gap-2 sm:h-10 sm:w-auto"
+                                disabled={isLoading || question.trim().length === 0}
+                            >
                                 <Send className="h-4 w-4"/>
+                                <span className="sr-only sm:not-sr-only sm:inline">보내기</span>
                             </Button>
                         </form>
                     </CardFooter>
