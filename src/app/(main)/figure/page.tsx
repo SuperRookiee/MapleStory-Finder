@@ -134,7 +134,7 @@ const FigurePage = () => {
                             <div className="flex flex-col gap-8 md:grid md:grid-cols-2">
                                 {/* 원본 캐릭터 */}
                                 <div className="space-y-4 w-full">
-                                    <h2 className="text-lg font-semibold">원본 캐릭터</h2>
+                                    <h2 className="text-lg font-semibold md:h-10">원본 캐릭터</h2>
                                     <div className="rounded-lg border bg-muted/40 p-4">
                                         {/* 이미지 컨테이너 */}
                                         <div className="relative aspect-square w-3/4 max-w-xs mx-auto md:w-full md:max-w-none overflow-hidden rounded-md bg-background">
@@ -174,7 +174,7 @@ const FigurePage = () => {
 
                                 {/* 생성된 피규어 */}
                                 <div className="space-y-4 w-full">
-                                    <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between">
+                                    <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between  md:h-10">
                                         <h2 className="text-lg font-semibold">생성된 피규어</h2>
                                         <Button
                                             onClick={handleRegenerate}
