@@ -8,8 +8,10 @@ export const requestAiChat = async (payload: ChatRequestPayload): Promise<ChatSu
         const response = await axios.post<ChatSuccessResponse | ErrorType>("/api/ai/chat", payload);
         return unwrapOrThrow<ChatSuccessResponse>(response.data);
     } catch (error) {
-        if (error instanceof AxiosError<ErrorType>) {
-            const message = error.response?.data?.error?.message ?? error.message ?? "AI 응답 생성에 실패했습니다.";
+        if (error instanceof AxiosError) {
+            const message =
+                error.response?.data?.error?.message ??
+                error.message ?? "AI 응답 생성에 실패했습니다.";
             throw new Error(message);
         }
         throw error;
