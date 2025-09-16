@@ -1,6 +1,5 @@
 import { create } from "zustand";
-
-export type ChatRole = "user" | "assistant";
+import type { ChatRole } from "@/types/ai/chat";
 
 export interface ChatMessage {
     id: string;
