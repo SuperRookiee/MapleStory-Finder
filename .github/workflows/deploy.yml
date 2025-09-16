@@ -1,0 +1,48 @@
+name: MapleStory Finder
+
+on:
+  push:
+    branches: ["main"]   # main 브랜치에 push될 때마다 배포
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js (Static Export)
+        run: npm run build && npm run export
+        env:
+          NEXT_PUBLIC_NEXON_API_KEY: ${{ secrets.NEXT_PUBLIC_NEXON_API_KEY }}
+          NEXT_PUBLIC_NEXON_APP_ID: ${{ secrets.NEXT_PUBLIC_NEXON_APP_ID }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./out   # npm run export 결과물
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

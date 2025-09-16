@@ -49,7 +49,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
 
         {/* 넥슨 Analytics 스크립트 (외부 src) */}
         <Script
-            src="https://openapi.nexon.com/js/analytics.js?app_id=237067"
+            src={`https://openapi.nexon.com/js/analytics.js?app_id=${process.env.NEXT_PUBLIC_NEXON_APP_ID}`}
             strategy="afterInteractive"
         />
 
