@@ -108,7 +108,11 @@ const ChatPage = () => {
                                         )}
                                     >
                                         {!isUser && (
-                                            <div className="mt-1 rounded-full bg-muted p-2 text-muted-foreground">
+                                            <div
+                                                className={cn(
+                                                    "w-10 h-10 flex items-center justify-center rounded-full bg-muted text-muted-foreground"
+                                                )}
+                                            >
                                                 <Bot className="h-4 w-4"/>
                                             </div>
                                         )}
@@ -123,7 +127,7 @@ const ChatPage = () => {
                                             {message.content}
                                         </div>
                                         {isUser && (
-                                            <div className="mt-1 rounded-full bg-primary/10 p-2 text-primary">
+                                            <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
                                                 <User className="h-4 w-4"/>
                                             </div>
                                         )}
