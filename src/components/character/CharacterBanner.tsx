@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -34,10 +35,12 @@ const CharacterBanner = ({
     backgroundColor = "bg-card",
     backgroundImage,
 }: CharacterBannerProps) => {
+    const router = useRouter();
 
     const getFigure = () => {
-
-    }
+        if (!basic?.character_image) return;
+        router.push("/figure");
+    };
 
     return (
         <Card

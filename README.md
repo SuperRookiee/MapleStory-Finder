@@ -72,6 +72,12 @@ npm install
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 VITE_NEXON_API_KEY=your_nexon_open_api_key
+# Gemini Nano (Banana) figure generation
+BANANA_API_KEY=your_banana_api_key
+BANANA_MODEL_KEY=your_banana_model_key
+BANANA_MODEL_URL=https://app.banana.dev/your-workspace/endpoint
+# (optional) 커스텀 프롬프트를 지정하고 싶다면
+# BANANA_DEFAULT_PROMPT=Create a MapleStory figure photo...
 ```
 
 > [!TIP]
