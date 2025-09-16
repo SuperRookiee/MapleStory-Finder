@@ -139,7 +139,6 @@ export const characterDetailStore = create<CharacterDetailSlice>()(
     persist(
         (set) => ({
             ...initialState,
-
             setBasic: (basic) => set({ basic }),
             setStat: (stat) => set({ stat }),
             setPopularity: (popularity) => set({ popularity }),

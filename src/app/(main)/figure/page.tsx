@@ -50,10 +50,7 @@ const FigurePage = () => {
             setFigure(response.result);
             setMetadata(response.metadata ?? null);
         } catch (generationError) {
-            const message =
-                generationError instanceof Error
-                    ? generationError.message
-                    : "피규어 이미지를 생성하는 중 오류가 발생했습니다.";
+            const message = generationError instanceof Error ? generationError.message : "피규어 이미지를 생성하는 중 오류가 발생했습니다.";
             setError(message);
             setFigure(null);
             setMetadata(null);

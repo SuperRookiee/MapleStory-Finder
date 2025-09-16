@@ -7,7 +7,7 @@ export const requestCharacterFigure = async (
     payload: FigureRequestPayload,
 ): Promise<FigureSuccessResponse> => {
     try {
-        const response = await axios.post<FigureSuccessResponse | ErrorType>("/api/figure", payload);
+        const response = await axios.post<FigureSuccessResponse | ErrorType>("/api/ai/figure", payload);
         return unwrapOrThrow<FigureSuccessResponse>(response.data);
     } catch (error) {
         if (error instanceof AxiosError) {
