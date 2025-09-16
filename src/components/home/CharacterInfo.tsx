@@ -72,9 +72,10 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                                         <Image
                                             src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
                                             alt={basic.character_name}
-                                            className="object-contain"
+                                            className="object-contain h-auto"
                                             width={100}
                                             height={100}
+                                            priority
                                         />
                                     </div>
                                 )

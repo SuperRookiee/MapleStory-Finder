@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterPetEquipment } from '@/interface/character/ICharacter';
 
@@ -41,7 +41,7 @@ export const Pet = ({ pet, loading }: PetProps) => {
                 <div className="flex space-x-4">
                     {pets.map((p) => (
                         <div key={p.name} className="flex flex-col items-center text-xs space-y-1">
-                            {p.icon && <Image src={p.icon} alt={p.name} width={64} height={64} />}
+                            {p.icon && <Image src={p.icon} alt={p.name} width={64} height={64} className='h-auto' />}
                             <span>{p.name}</span>
                         </div>
                     ))}

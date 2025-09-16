@@ -58,6 +58,7 @@ export const Skill = ({ skill, loading }: SkillProps) => {
                                                     alt={s.skill_name}
                                                     width={40}
                                                     height={40}
+                                                    className='h-auto'
                                                 />
                                                 <span>{s.skill_name}</span>
                                             </div>

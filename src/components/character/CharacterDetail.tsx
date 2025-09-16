@@ -306,7 +306,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                             alt={basic.character_name}
                                             width={SMALL_IMAGE_SIZE}
                                             height={SMALL_IMAGE_SIZE}
-                                            className="object-contain transition-opacity"
+                                            className="object-contain transition-opacity h-auto"
                                             style={{ opacity: smallImageOpacity }}
                                         />
                                     )}
