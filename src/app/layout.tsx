@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import Script from "next/script";
 import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -31,18 +32,32 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${mapleStory.className} ${mapleStory.variable} antialiased`}>
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `(() => { try { const t = localStorage.getItem('theme'); if (t === 'dark') { document.documentElement.classList.add('dark'); } } catch (e) {} })();`,
-                    }}
-                />
-                <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
-                <Toaster />
-            </body>
+        <body className={`${mapleStory.className} ${mapleStory.variable} antialiased`}>
+        {/* 테마 스크립트 (inline) */}
+        <Script id="theme-script" strategy="beforeInteractive">
+            {`
+                (() => {
+                  try {
+                    const t = localStorage.getItem('theme');
+                    if (t === 'dark') {
+                      document.documentElement.classList.add('dark');
+                    }
+                  } catch (e) {}
+                })();
+            `}
+        </Script>
+
+        {/* 넥슨 Analytics 스크립트 (외부 src) */}
+        <Script
+            src="https://openapi.nexon.com/js/analytics.js?app_id=237067"
+            strategy="afterInteractive"
+        />
+
+        <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+        <Toaster />
+        </body>
         </html>
     );
 };
 
 export default RootLayout;
-
