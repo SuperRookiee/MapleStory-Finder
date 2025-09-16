@@ -50,6 +50,15 @@ const SideMenu = () => {
                         <Button
                             variant="ghost"
                             className="w-full"
+                            onClick={() => router.push("/chat")}
+                        >
+                            Finder Chat
+                        </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <Button
+                            variant="ghost"
+                            className="w-full"
                             onClick={() => router.push("/my_page")}
                         >
                             My Page
