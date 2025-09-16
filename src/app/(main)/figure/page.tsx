@@ -2,18 +2,12 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-    unstable_ViewTransition as ViewTransition,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import { unstable_ViewTransition as ViewTransition, useCallback, useEffect, useMemo, useRef, useState, } from "react";
 import { ArrowLeft, Loader2, RefreshCcw } from "lucide-react";
 import type { FigureGenerationMetadata, FigureResult } from "@/types/figure";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { requestCharacterFigure } from "@/fetchs/figure.fetch";
 import { characterDetailStore } from "@/stores/characterDetailStore";
 
@@ -113,114 +107,144 @@ const FigurePage = () => {
 
     return (
         <ViewTransition enter="fade" exit="fade">
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-                <div className="flex items-center justify-between gap-3">
-                    <div>
-                        <h1 className="text-2xl font-semibold">{basic.character_name} 피규어 생성</h1>
-                        <p className="text-sm text-muted-foreground">
-                            Google Gemini API를 이용해 캐릭터 이미지를 기반으로 피규어 렌더링을 생성합니다.
-                        </p>
-                    </div>
-                    <Button variant="ghost" onClick={handleBack} className="gap-2">
-                        <ArrowLeft className="h-4 w-4"/>
-                        돌아가기
-                    </Button>
-                </div>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>피규어 생성 결과</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid gap-8 md:grid-cols-2">
-                            <div className="space-y-4">
-                                <h2 className="text-lg font-semibold">원본 캐릭터</h2>
-                                <div className="rounded-lg border bg-muted/40 p-4">
-                                    <div className="relative aspect-square w-full overflow-hidden rounded-md bg-background">
-                                        {croppedPreviewUrl ? (
-                                            <Image
-                                                src={croppedPreviewUrl}
-                                                alt={basic.character_name}
-                                                fill
-                                                className="object-contain"
-                                                priority
-                                                sizes="(min-width: 768px) 40vw, 100vw"
-                                                unoptimized
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                                                캐릭터 이미지를 불러오는 중입니다.
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="mt-3 space-y-1 text-sm">
-                                        <p><span className="font-medium">직업</span>: {basic.character_class}</p>
-                                        <p><span className="font-medium">레벨</span>: {basic.character_level}</p>
-                                        {basic.world_name && (
-                                            <p><span className="font-medium">월드</span>: {basic.world_name}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between">
-                                    <h2 className="text-lg font-semibold">생성된 피규어</h2>
-                                    <Button
-                                        onClick={handleRegenerate}
-                                        disabled={isGenerating}
-                                        className="w-full gap-2 md:w-auto"
-                                    >
-                                        {isGenerating ? <Loader2 className="h-4 w-4 animate-spin"/> : <RefreshCcw className="h-4 w-4"/>}
-                                        다시 생성
-                                    </Button>
-                                </div>
-                                <div className="rounded-lg border bg-muted/40 p-4">
-                                    <div className="relative aspect-square w-full overflow-hidden rounded-md bg-background">
-                                        {figureSrc ? (
-                                            <Image
-                                                src={figureSrc}
-                                                alt={`${basic.character_name} figure`}
-                                                fill
-                                                className="object-contain"
-                                                sizes="(min-width: 768px) 40vw, 100vw"
-                                                unoptimized
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                                                {isGenerating ? (
-                                                    <span className="flex items-center gap-2">
-                                                        <Loader2 className="h-4 w-4 animate-spin"/>
-                                                        피규어 이미지를 생성 중입니다...
-                                                    </span>
-                                                ) : (
-                                                    "생성된 이미지가 여기에 표시됩니다."
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                    {error ? (
-                                        <div className="mt-3 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
-                                            {error}
-                                        </div>
-                                    ) : null}
-                                    {metadata ? (
-                                        <div className="mt-3 text-xs text-muted-foreground">
-                                            {metadata.latencyMs !== undefined && (
-                                                <p>생성 시간: {(metadata.latencyMs / 1000).toFixed(2)}초</p>
-                                            )}
-                                            {metadata.callId && (
-                                                <p>요청 ID: {metadata.callId}</p>
-                                            )}
-                                            {metadata.provider && <p>제공자: {metadata.provider}</p>}
-                                            {metadata.model && <p>모델: {metadata.model}</p>}
-                                        </div>
-                                    ) : null}
-                                </div>
-                            </div>
+            <ScrollArea className="h-page">
+                {/* 모바일에서는 max-w-md, 태블릿 이상에서는 max-w-5xl */}
+                <div className="mx-auto flex w-full max-w-md md:max-w-5xl flex-col gap-6">
+                    {/* 헤더 */}
+                    <div className="flex items-center justify-between gap-3">
+                        <div>
+                            <h1 className="text-2xl font-semibold">
+                                {basic.character_name} 피규어 생성
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                                Google Gemini API를 이용해 캐릭터 이미지를 기반으로 피규어 렌더링을
+                                생성합니다.
+                            </p>
                         </div>
-                    </CardContent>
-                </Card>
-            </div>
+                        <Button variant="ghost" onClick={handleBack} className="gap-2">
+                            <ArrowLeft className="h-4 w-4" />
+                            돌아가기
+                        </Button>
+                    </div>
+
+                    {/* 메인 카드 */}
+                    <Card className="w-full">
+                        <CardContent>
+                            {/* 모바일: flex-col, 태블릿 이상: grid-cols-2 */}
+                            <div className="flex flex-col gap-8 md:grid md:grid-cols-2">
+                                {/* 원본 캐릭터 */}
+                                <div className="space-y-4 w-full">
+                                    <h2 className="text-lg font-semibold">원본 캐릭터</h2>
+                                    <div className="rounded-lg border bg-muted/40 p-4">
+                                        {/* 이미지 컨테이너 */}
+                                        <div className="relative aspect-square w-3/4 max-w-xs mx-auto md:w-full md:max-w-none overflow-hidden rounded-md bg-background">
+                                            {croppedPreviewUrl ? (
+                                                <Image
+                                                    src={croppedPreviewUrl}
+                                                    alt={basic.character_name}
+                                                    fill
+                                                    className="object-contain p-2"
+                                                    sizes="(max-width: 768px) 70vw, 40vw"
+                                                    unoptimized
+                                                />
+                                            ) : (
+                                                <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                                                    캐릭터 이미지를 불러오는 중입니다.
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="mt-3 space-y-1 text-sm">
+                                            <p>
+                                                <span className="font-medium">직업</span>:{" "}
+                                                {basic.character_class}
+                                            </p>
+                                            <p>
+                                                <span className="font-medium">레벨</span>:{" "}
+                                                {basic.character_level}
+                                            </p>
+                                            {basic.world_name && (
+                                                <p>
+                                                    <span className="font-medium">월드</span>:{" "}
+                                                    {basic.world_name}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 생성된 피규어 */}
+                                <div className="space-y-4 w-full">
+                                    <div className="flex flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between">
+                                        <h2 className="text-lg font-semibold">생성된 피규어</h2>
+                                        <Button
+                                            onClick={handleRegenerate}
+                                            disabled={isGenerating}
+                                            className="w-full gap-2 md:w-auto"
+                                        >
+                                            {isGenerating ? (
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <RefreshCcw className="h-4 w-4" />
+                                            )}
+                                            다시 생성
+                                        </Button>
+                                    </div>
+
+                                    {/* 이미지 카드 */}
+                                    <div className="mt-3 rounded-lg border bg-muted/40 p-4">
+                                        <div className="relative aspect-square w-3/4 max-w-xs mx-auto md:w-full md:max-w-none overflow-hidden rounded-md bg-background">
+                                            {figureSrc ? (
+                                                <Image
+                                                    src={figureSrc}
+                                                    alt={`${basic.character_name} figure`}
+                                                    fill
+                                                    className="object-contain"
+                                                    sizes="(max-width: 768px) 70vw, (min-width: 768px) 40vw, 100vw"
+                                                    unoptimized
+                                                />
+                                            ) : (
+                                                <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                                                    {isGenerating ? (
+                                                        <span className="flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              피규어 이미지를 생성 중입니다...
+                            </span>
+                                                    ) : (
+                                                        "생성된 이미지가 여기에 표시됩니다."
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* 에러 및 메타데이터 */}
+                                        {error ? (
+                                            <div className="mt-3 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive max-h-40 overflow-auto whitespace-pre-wrap break-words">
+                                                {error}
+                                            </div>
+                                        ) : null}
+                                        {metadata ? (
+                                            <div className="mt-3 text-xs text-muted-foreground">
+                                                {metadata.latencyMs !== undefined && (
+                                                    <p>
+                                                        생성 시간: {(metadata.latencyMs / 1000).toFixed(2)}초
+                                                    </p>
+                                                )}
+                                                {metadata.callId && (
+                                                    <p>요청 ID: {metadata.callId}</p>
+                                                )}
+                                                {metadata.provider && (
+                                                    <p>제공자: {metadata.provider}</p>
+                                                )}
+                                                {metadata.model && <p>모델: {metadata.model}</p>}
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </ScrollArea>
         </ViewTransition>
     );
 };
