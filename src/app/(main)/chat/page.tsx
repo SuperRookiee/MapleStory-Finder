@@ -174,7 +174,6 @@ const ChatPage = () => {
                                 disabled={isLoading || question.trim().length === 0}
                             >
                                 <Send className="h-4 w-4"/>
-                                <span className="sr-only sm:not-sr-only sm:inline">보내기</span>
                             </Button>
                         </form>
                     </CardFooter>
