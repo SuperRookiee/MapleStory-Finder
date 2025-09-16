@@ -58,9 +58,10 @@ const CharacterCard = ({
                     <Image
                         src={`/api/crop?url=${encodeURIComponent(character.image)}`}
                         alt={character.character_name}
-                        className="object-contain translate-y-4"
+                        className="object-contain translate-y-4 h-auto"
                         width={100}
                         height={100}
+                        priority
                     />
                 )}
             </div>

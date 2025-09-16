@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterCashItemEquipment } from '@/interface/character/ICharacter';
 
@@ -37,7 +37,7 @@ export const CashEquip = ({ equip, loading }: CashEquipProps) => {
                 <div className="grid grid-cols-4 gap-4">
                     {items.map((item) => (
                         <div key={item.cash_item_equipment_slot} className="flex flex-col items-center text-center text-xs space-y-1">
-                            <Image src={item.cash_item_icon} alt={item.cash_item_name} width={40} height={40} />
+                            <Image src={item.cash_item_icon} alt={item.cash_item_name} width={40} height={40} className='h-auto'/>
                             <span>{item.cash_item_name}</span>
                         </div>
                     ))}

@@ -120,7 +120,7 @@ const CharacterBanner = ({
                             alt={basic.character_name}
                             width={120}
                             height={120}
-                            className="object-contain"
+                            className="object-contain h-auto"
                             priority
                             unoptimized
                         />

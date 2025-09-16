@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterSymbolEquipment } from '@/interface/character/ICharacter';
 
@@ -35,7 +35,7 @@ export const SymbolEquip = ({ symbol, loading }: SymbolEquipProps) => {
                 <div className="grid grid-cols-3 gap-4">
                     {symbol.symbol.map((s) => (
                         <div key={s.symbol_name} className="flex flex-col items-center text-center text-xs space-y-1">
-                            <Image src={s.symbol_icon} alt={s.symbol_name} width={48} height={48} />
+                            <Image src={s.symbol_icon} alt={s.symbol_name} width={48} height={48} className='h-auto' />
                             <div>{s.symbol_name}</div>
                             <div className="text-[10px]">{s.symbol_force} ({s.symbol_level})</div>
                         </div>

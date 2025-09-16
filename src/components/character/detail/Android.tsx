@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterAndroidEquipment } from '@/interface/character/ICharacter';
 
@@ -29,7 +29,7 @@ export const Android = ({ android, loading }: AndroidProps) => {
             </CardHeader>
             <CardContent className="flex items-center space-x-4">
                 {android.android_icon && (
-                    <Image src={android.android_icon} alt={android.android_name} width={64} height={64} />
+                    <Image src={android.android_icon} alt={android.android_name} width={64} height={64} className='h-auto'/>
                 )}
                 <div className="text-sm">
                     <p>{android.android_name}</p>
