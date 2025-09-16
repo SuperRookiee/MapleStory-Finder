@@ -72,6 +72,14 @@ npm install
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 VITE_NEXON_API_KEY=your_nexon_open_api_key
+# Google Gemini figure generation
+GOOGLE_API_KEY=your_gemini_api_key
+# (optional) 대신 GEMINI_API_KEY를 사용해도 됩니다.
+# GEMINI_API_KEY=your_gemini_api_key
+# (optional) 기본으로 사용할 이미지 생성 모델을 지정하고 싶다면
+# GEMINI_FIGURE_MODEL=gemini-2.5-flash-image-preview
+# (optional) 커스텀 프롬프트를 지정하고 싶다면
+# GEMINI_DEFAULT_PROMPT=Create a MapleStory figure photo...
 ```
 
 > [!TIP]
