@@ -25,7 +25,7 @@ const Page = () => {
                                 />
                                 MapleStory Finder
                             </div>
-                            <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                            <h1 className="text-balance text-4xl font-semibold leading-tight break-keep tracking-tight sm:text-5xl">
                                 MapleStory 데이터를 한눈에 정리해 보여주는 대시보드
                             </h1>
                             <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">
