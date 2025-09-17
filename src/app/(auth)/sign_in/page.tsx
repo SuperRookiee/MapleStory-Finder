@@ -66,8 +66,12 @@ const SignInPage = () => {
     const [kakaoLoading, setKakaoLoading] = useState(false);
 
     const createRedirectTo = () => {
-        const siteUrl = process.env.NEXT_PUBLIC_VERCEL_URL ?? window.location.origin;
-        return `${siteUrl}/home`;
+        const envUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL;
+        const envUrlValue = envUrl && envUrl !== 'undefined' ? envUrl : undefined;
+        const fallbackUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+        const baseUrl = envUrlValue ?? fallbackUrl;
+        const normalizedUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+        return `${normalizedUrl.replace(/\/$/, '')}/home`;
     };
 
     useEffect(() => {
