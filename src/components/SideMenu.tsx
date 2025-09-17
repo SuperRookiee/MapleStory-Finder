@@ -41,6 +41,15 @@ const SideMenu = () => {
                         <Button
                             variant="ghost"
                             className="w-full"
+                            onClick={() => router.push("/search")}
+                        >
+                            Search
+                        </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <Button
+                            variant="ghost"
+                            className="w-full"
                             onClick={() => router.push("/character_list")}
                         >
                             Character List
