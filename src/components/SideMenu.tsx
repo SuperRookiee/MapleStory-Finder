@@ -9,6 +9,7 @@ import { useAuth } from "@/providers/AuthProvider";
 const SideMenu = () => {
     const router = useRouter();
     const { status, logout } = useAuth();
+    const isGuest = status === "guest";
 
     const handleLogout = async () => {
         await logout();
@@ -28,15 +29,17 @@ const SideMenu = () => {
                     <SheetDescription>menu</SheetDescription>
                 </SheetContentHeader>
                 <div className="mt-4 space-y-2">
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={() => router.push("/")}
-                        >
-                            Home
-                        </Button>
-                    </SheetClose>
+                    {!isGuest ? (
+                        <SheetClose asChild>
+                            <Button
+                                variant="ghost"
+                                className="w-full"
+                                onClick={() => router.push("/")}
+                            >
+                                Home
+                            </Button>
+                        </SheetClose>
+                    ) : null}
                     <SheetClose asChild>
                         <Button
                             variant="ghost"
@@ -46,15 +49,17 @@ const SideMenu = () => {
                             Search
                         </Button>
                     </SheetClose>
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={() => router.push("/character_list")}
-                        >
-                            Character List
-                        </Button>
-                    </SheetClose>
+                    {!isGuest ? (
+                        <SheetClose asChild>
+                            <Button
+                                variant="ghost"
+                                className="w-full"
+                                onClick={() => router.push("/character_list")}
+                            >
+                                Character List
+                            </Button>
+                        </SheetClose>
+                    ) : null}
                     <SheetClose asChild>
                         <Button
                             variant="ghost"
@@ -64,15 +69,17 @@ const SideMenu = () => {
                             Finder Chat
                         </Button>
                     </SheetClose>
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={() => router.push("/my_page")}
-                        >
-                            My Page
-                        </Button>
-                    </SheetClose>
+                    {!isGuest ? (
+                        <SheetClose asChild>
+                            <Button
+                                variant="ghost"
+                                className="w-full"
+                                onClick={() => router.push("/my_page")}
+                            >
+                                My Page
+                            </Button>
+                        </SheetClose>
+                    ) : null}
                     {status !== "unauthenticated" ? (
                         <SheetClose asChild>
                             <Button
