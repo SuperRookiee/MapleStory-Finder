@@ -1,11 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import {
-    ArrowRight,
-    BarChart3,
-    Search,
-    ShieldCheck,
-    Sparkles,
-} from "lucide-react";
+import { ArrowRight, BarChart3, Search, ShieldCheck, Sparkles, } from "lucide-react";
 
 const HIGHLIGHTS = [
     {
@@ -46,7 +41,7 @@ const Page = () => {
             <div className="relative z-10">
                 <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6 sm:px-8 lg:px-12">
                     <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2 backdrop-blur">
-                        <Sparkles className="h-5 w-5 text-sky-300" strokeWidth={1.5} />
+                        <Image src="/Reheln.png" alt="Finder" width={24} height={24} priority />
                         <span className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-100/80">
                             MapleStory Finder
                         </span>
@@ -91,57 +86,6 @@ const Page = () => {
                             </Link>
                         </div>
                     </div>
-                    <div className="relative mx-auto mt-16 w-full max-w-4xl">
-                        <div className="absolute -left-20 -top-16 hidden h-32 w-32 rounded-full border border-sky-400/40 md:block" />
-                        <div className="absolute -right-14 -bottom-12 hidden h-24 w-24 rounded-full border border-fuchsia-500/40 md:block" />
-                        <div className="grid gap-6 rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 shadow-[0_30px_120px_-60px_rgba(59,130,246,0.8)] backdrop-blur">
-                            <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
-                                <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/60 to-slate-900/20 p-6 text-left">
-                                    <p className="text-sm font-medium text-sky-200">실시간 인사이트</p>
-                                    <h3 className="mt-3 text-xl font-semibold text-white">
-                                        보스 클리어 로그를 분석해 가장 많이 쓰인 스킬 사이클을 추천해요.
-                                    </h3>
-                                    <p className="mt-4 text-sm text-slate-300">
-                                        상위 1% 모험가들의 전투 기록을 기반으로 당신의 세팅에 맞는 딜 로테이션을 생성합니다.
-                                    </p>
-                                </div>
-                                <div className="flex flex-col justify-between gap-4 rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/40 to-slate-900/10 p-6 text-left">
-                                    <div>
-                                        <p className="text-sm font-medium text-emerald-200">성장 내비게이션</p>
-                                        <p className="mt-2 text-sm text-slate-300">
-                                            유저별 경험치 효율을 계산해 다음 사냥터를 제안합니다.
-                                        </p>
-                                    </div>
-                                    <div className="rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
-                                        오늘 추천: 소멸의 여로 / 심포니
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="grid gap-6 md:grid-cols-3">
-                                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 text-left">
-                                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">보스 DPS</p>
-                                    <p className="mt-3 text-3xl font-semibold text-white">+28%</p>
-                                    <p className="mt-2 text-xs text-slate-400">
-                                        최적화된 스킬 리포트 적용 후 평균 상승 폭
-                                    </p>
-                                </div>
-                                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 text-left">
-                                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">추천 세팅</p>
-                                    <p className="mt-3 text-lg font-semibold text-sky-200">매주 갱신되는 장비 트렌드</p>
-                                    <p className="mt-2 text-xs text-slate-400">
-                                        잠재 능력, 아케인 포스, 코어 강화 조합을 자동으로 계산합니다.
-                                    </p>
-                                </div>
-                                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-6 text-left">
-                                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">팀 빌딩</p>
-                                    <p className="mt-3 text-lg font-semibold text-fuchsia-200">길드 협공 시너지 분석</p>
-                                    <p className="mt-2 text-xs text-slate-400">
-                                        파티 구성을 시뮬레이션하여 최적의 시너지를 추천해요.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div className="mx-auto mt-20 grid max-w-5xl gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">
                         {HIGHLIGHTS.map(({ Icon, title, description }) => (
                             <div
@@ -152,17 +96,6 @@ const Page = () => {
                                 <Icon className="h-10 w-10 text-sky-300" strokeWidth={1.6} />
                                 <h3 className="mt-6 text-xl font-semibold text-white">{title}</h3>
                                 <p className="mt-3 text-sm text-slate-300">{description}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="mx-auto mt-16 flex max-w-4xl flex-wrap items-center justify-center gap-6 text-center">
-                        {STATS.map(({ label, value }) => (
-                            <div
-                                key={label}
-                                className="flex min-w-[12rem] flex-col rounded-2xl border border-white/10 bg-white/[0.05] px-6 py-5"
-                            >
-                                <span className="text-3xl font-semibold text-white">{value}</span>
-                                <span className="mt-2 text-sm text-slate-400">{label}</span>
                             </div>
                         ))}
                     </div>
