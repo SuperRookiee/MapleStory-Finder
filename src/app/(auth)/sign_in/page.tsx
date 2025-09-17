@@ -58,12 +58,14 @@ const SignInPage = () => {
 
     const handleGoogle = async () => {
         setGoogleLoading(true);
-        const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin}/home`;
 
+        const siteUrl = process.env.NEXT_PUBLIC_VERCEL_URL ?? window.location.origin;
+        const redirectTo = `${siteUrl}/home`;
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: { redirectTo },
         });
+
         if (error) {
             toast.error(error.message);
             setGoogleLoading(false);
