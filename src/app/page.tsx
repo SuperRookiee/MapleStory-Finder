@@ -27,7 +27,7 @@ const Page = () => {
                                 MapleStory Finder
                             </div>
                             <h1 className="text-balance text-4xl font-semibold leading-tight break-keep tracking-tight sm:text-5xl">
-                                내 캐릭터를 한눈에 정리해 보여주는 Finder
+                                내 캐릭터를 한눈에 정리해 보여주는 『Finder』
                             </h1>
                             <p className="max-w-2xl text-base text-muted-foreground sm:text-lg mb-10">
                                 실시간 캐릭터 검색부터 스탯 요약, AI 챗봇, 피규어 생성까지 MapleStory Finder에서 모두 이용해 보세요. 다른 페이지와 어우러지는 깔끔한 레이아웃으로 주요 기능을 빠르게 확인할 수 있습니다.
