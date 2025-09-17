@@ -4,20 +4,21 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
-import { supabase } from "@/libs/supabaseClient";
 import { userStore } from "@/stores/userStore";
+import { supabase } from "@/libs/supabaseClient";
 
 const GUEST_STORAGE_KEY = "finder_guest";
 
 export type AuthStatus = "loading" | "authenticated" | "unauthenticated" | "guest";
 
-const isPublicPath = (pathname: string) => pathname === "/sign_in" || pathname === "/sign_up";
+const isPublicPath = (pathname: string) =>
+    pathname === "/" || pathname === "/sign_in" || pathname === "/sign_up";
 
 export const isGuestAccessiblePath = (pathname: string) =>
-    pathname === "/search" || pathname === "/chat" || pathname.startsWith("/character/");
+    pathname === "/" || pathname === "/search" || pathname === "/chat" || pathname.startsWith("/character/");
 
 export const isUnauthenticatedAccessiblePath = (pathname: string) =>
-    pathname === "/search" || pathname.startsWith("/character/");
+    pathname === "/" || pathname === "/search" || pathname.startsWith("/character/");
 
 type AuthContextValue = {
     status: AuthStatus;
