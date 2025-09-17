@@ -12,7 +12,7 @@ const Header = () => {
   const { status, isGuest } = useAuth();
   if (pathname === '/sign_in' || pathname === '/sign_up') return null;
 
-  const logoHref = isGuest || status === 'unauthenticated' ? '/search' : '/';
+  const logoHref = isGuest || status === 'unauthenticated' ? '/search' : '/home';
 
   return (
     <header className="sticky top-0 z-50 flex h-[var(--header-height)] items-center justify-between border-b bg-background/90 px-4">

@@ -28,7 +28,7 @@ const SignInPage = () => {
             if (session) {
                 const key = session.user.user_metadata?.nexon_api_key;
                 if (key) setApiKey(key);
-                router.replace('/');
+                router.replace('/home');
             }
         };
         loadSession();
@@ -51,7 +51,7 @@ const SignInPage = () => {
             setApiKey(apiKey);
         }
         toast.success('로그인 성공');
-        router.push('/');
+        router.push('/home');
         setLoading(false);
     };
 
