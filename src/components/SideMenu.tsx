@@ -34,7 +34,7 @@ const SideMenu = () => {
                             <Button
                                 variant="ghost"
                                 className="w-full"
-                                onClick={() => router.push("/")}
+                                onClick={() => router.push("/home")}
                             >
                                 Home
                             </Button>
