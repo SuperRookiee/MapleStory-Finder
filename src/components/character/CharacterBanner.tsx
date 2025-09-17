@@ -116,11 +116,11 @@ const CharacterBanner = ({
                             {guild?.guild_name && (
                                 <div className="bg-muted px-2 py-1 rounded-md">길드 {guild.guild_name}</div>
                             )}
-                            <div className="bg-muted px-2 py-1 rounded-md flex gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
+                            <div className="bg-muted px-2 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <div
-                                            className="bg-muted px-2 py-1 rounded-md flex gap-1 hover:cursor-pointer"
+                                            className=" bg-muted rounded-md flex items-center gap-2 hover:cursor-pointer"
                                             onClick={() => getFigure()}
                                         >
                                             피규어 <SquareArrowOutUpRight size={14}/>

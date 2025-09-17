@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterHexaMatrix } from '@/interface/character/ICharacter';
 
@@ -32,8 +32,8 @@ export const HexaMatrix = ({ hexaMatrix, loading }: HexaMatrixProps) => {
             </CardHeader>
             <CardContent>
                 <div className="space-y-2 text-sm">
-                    {hexaMatrix.character_hexa_core_equipment.map((core) => (
-                        <div key={core.hexa_core_name} className="flex justify-between">
+                    {hexaMatrix.character_hexa_core_equipment.map((core, idx) => (
+                        <div key={`${core.hexa_core_name}-${idx}`} className="flex justify-between">
                             <span>{core.hexa_core_name}</span>
                             <span className="text-muted-foreground">Lv.{core.hexa_core_level}</span>
                         </div>
