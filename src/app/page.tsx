@@ -35,10 +35,10 @@ const Page = () => {
                             Next-Gen Maple Data
                         </span>
                         <h1 className="mt-8 text-balance text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                            <span className="bg-gradient-to-r from-sky-200 via-fuchsia-300 to-emerald-200 bg-clip-text text-transparent">
+                            <p className="bg-gradient-to-r from-sky-200 via-fuchsia-300 to-emerald-200 bg-clip-text text-transparent">
                                 내 캐릭터 정보를 한눈에 확인하는 순간
-                            </span>
-                            , MapleStory Finder
+                            </p>
+                            <p>MapleStory Finder</p>
                         </h1>
                         <p className="mt-6 max-w-3xl text-balance text-lg text-slate-300 sm:text-xl">
                             메이플스토리 캐릭터를 검색하고 주요 스탯과 착용 아이템을 손쉽게 확인하세요.
