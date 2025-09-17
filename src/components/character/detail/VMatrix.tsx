@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterVMatrix } from '@/interface/character/ICharacter';
 
@@ -17,7 +17,7 @@ export const VMatrix = ({ vMatrix, loading }: VMatrixProps) => {
                 <CardContent>
                     <div className="space-y-2">
                         {Array.from({ length: 3 }).map((_, i) => (
-                            <Skeleton key={i} className="h-6 w-full" />
+                            <Skeleton key={i} className="h-6 w-full"/>
                         ))}
                     </div>
                 </CardContent>
@@ -32,8 +32,8 @@ export const VMatrix = ({ vMatrix, loading }: VMatrixProps) => {
             </CardHeader>
             <CardContent>
                 <div className="space-y-2 text-sm">
-                    {vMatrix.character_v_core_equipment.map((core) => (
-                        <div key={core.v_core_name} className="flex justify-between">
+                    {vMatrix.character_v_core_equipment.map((core, idx) => (
+                        <div key={`${core.v_core_name}-${idx}`} className="flex justify-between">
                             <span>{core.v_core_name}</span>
                             <span className="text-muted-foreground">Lv.{core.v_core_level}</span>
                         </div>

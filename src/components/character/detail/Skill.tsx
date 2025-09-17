@@ -49,9 +49,9 @@ export const Skill = ({ skill, loading }: SkillProps) => {
                     {grades.map((g, i) => (
                         <TabsContent key={romans[i]} value={romans[i]}>
                             <div className="grid grid-cols-4 gap-4">
-                                {g?.character_skill.map((s) => (
-                                    <Popover key={s.skill_name}>
-                                        <PopoverTrigger asChild>
+                                {g?.character_skill.map((s, index) => (
+                                    <Popover key={`${romans[i]}-${s.skill_name}-${index}`}>
+                                    <PopoverTrigger asChild>
                                             <div className="flex flex-col items-center text-center text-xs space-y-1 cursor-pointer">
                                                 <Image
                                                     src={s.skill_icon}

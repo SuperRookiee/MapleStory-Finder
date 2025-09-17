@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterLinkSkill } from '@/interface/character/ICharacter';
 
@@ -33,8 +33,8 @@ export const LinkSkill = ({ linkSkill, loading }: LinkSkillProps) => {
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-4 gap-4">
-                    {linkSkill.character_link_skill.map((s) => (
-                        <div key={s.skill_name} className="flex flex-col items-center text-center text-xs space-y-1">
+                    {linkSkill.character_link_skill.map((s, idx) => (
+                        <div key={`${s.skill_name}-${idx}`} className="flex flex-col items-center text-center text-xs space-y-1">
                             <Image src={s.skill_icon} alt={s.skill_name} width={40} height={40} />
                             <span>{s.skill_name}</span>
                         </div>

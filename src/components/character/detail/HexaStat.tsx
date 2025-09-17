@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterHexaMatrixStat, IHexaStatCore } from '@/interface/character/ICharacter';
 
@@ -35,8 +35,8 @@ export const HexaStat = ({ hexaStat, loading }: HexaStatProps) => {
                 <CardTitle>헥사 스탯</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-                {cores.map((core) => (
-                    <div key={core.slot_id} className="flex justify-between">
+                {cores.map((core, idx) => (
+                    <div key={`${core.slot_id}-${idx}`} className="flex justify-between">
                         <span className="font-medium">
                             {core.main_stat_name} Lv.{core.main_stat_level}
                         </span>
