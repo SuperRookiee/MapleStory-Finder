@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { SquareArrowOutUpRight } from "lucide-react";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger, } from "@/components/ui/tooltip"
 import { ICharacterBasic, ICharacterDojang, ICharacterPopularity } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
@@ -25,16 +27,16 @@ type CharacterBannerProps = {
 }
 
 const CharacterBanner = ({
-    basic,
-    popularity,
-    union,
-    dojang,
-    guild,
-    loading,
-    imageScale,
-    backgroundColor = "bg-card",
-    backgroundImage,
-}: CharacterBannerProps) => {
+                             basic,
+                             popularity,
+                             union,
+                             dojang,
+                             guild,
+                             loading,
+                             imageScale,
+                             backgroundColor = "bg-card",
+                             backgroundImage,
+                         }: CharacterBannerProps) => {
     const router = useRouter();
 
     const getFigure = () => {
@@ -88,33 +90,47 @@ const CharacterBanner = ({
                     </div>
                 ) : (
                     <>
-                        <div className="absolute top-2 left-2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
+                        <div className="absolute top-2 left-2 bg-muted px-2 py-1 rounded-md text-sm font-medium">
                             <div className="flex gap-1.5">
                                 <WorldIcon name={basic.world_name}/> {basic.world_name}
                             </div>
                         </div>
-                        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-2 py-1 rounded-md text-sm font-medium">
                             Lv. {basic.character_level}
                         </div>
-                        <div className="absolute top-2 right-2 bg-muted px-3 py-1 rounded-md text-sm font-medium">
+                        <div className="absolute top-2 right-2 bg-muted px-2 py-1 rounded-md text-sm font-medium">
                             {basic.character_class}
                         </div>
                         <div className="absolute bottom-12 left-2 space-y-2 text-sm">
                             {union && (
-                                <div className="bg-muted px-3 py-1 rounded-md">유니온 {union.union_level}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">유니온 {union.union_level}</div>
                             )}
                             {dojang && (
-                                <div className="bg-muted px-3 py-1 rounded-md">무릉 {dojang.dojang_best_floor}층</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">무릉 {dojang.dojang_best_floor}층</div>
                             )}
                             {popularity && (
-                                <div className="bg-muted px-3 py-1 rounded-md">인기도 {popularity.popularity}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">인기도 {popularity.popularity}</div>
                             )}
                         </div>
                         <div className="absolute bottom-12 right-2 space-y-2 text-sm ">
                             {guild?.guild_name && (
-                                <div className="bg-muted px-3 py-1 rounded-md">길드 {guild.guild_name}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">길드 {guild.guild_name}</div>
                             )}
-                            <div className="bg-muted px-3 py-1 rounded-md" onClick={() => getFigure()}>피규어</div>
+                            <div className="bg-muted px-2 py-1 rounded-md flex gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div
+                                            className="bg-muted px-2 py-1 rounded-md flex gap-1 hover:cursor-pointer"
+                                            onClick={() => getFigure()}
+                                        >
+                                            피규어 <SquareArrowOutUpRight size={14}/>
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        아직 미완성 기능입니다
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
                         </div>
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
                             <div className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">

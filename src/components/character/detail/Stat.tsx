@@ -7,7 +7,7 @@ interface StatProps {
 }
 
 export const Stat = ({ stat, loading }: StatProps) => {
-    const highlights = ["보스 몬스터 데미지", "크리티컬 확률", "크리티컬 데미지"];
+    const highlights = ["보스 몬스터 데미지", "최종 데미지", "크리티컬 데미지", "방어율 무시", "재사용 대기시간 감소 (초)"];
 
     const formatKoreanUnits = (value: number) => {
         const hundred_million = 100_000_000;
@@ -52,7 +52,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
     const statMap: Record<string, string> = Object.fromEntries(
         stat.final_stat.map((s) => [s.stat_name, s.stat_value])
     );
-    const mainKeys = ["HP", "MP", "STR", "DEX", "INT", "LUK"];
+    const mainKeys = ["STR", "DEX", "INT", "LUK", "HP", "MP"];
     const battlePower = statMap["전투력"];
     const otherStats = stat.final_stat.filter(
         (s) => !mainKeys.includes(s.stat_name) && s.stat_name !== "전투력"
@@ -78,13 +78,7 @@ export const Stat = ({ stat, loading }: StatProps) => {
                 <div className="grid grid-cols-2 gap-4 border-t border-neutral-300 dark:border-neutral-600 pt-4">
                     {otherStats.map((s) => (
                         <div key={s.stat_name} className="flex justify-between">
-                            <span
-                                className={
-                                    highlights.includes(s.stat_name)
-                                        ? "text-amber-600 font-semibold"
-                                        : undefined
-                                }
-                            >
+                            <span className={highlights.includes(s.stat_name) ? "text-amber-600 font-semibold" : undefined}>
                                 {s.stat_name}
                             </span>
                             <span className="font-medium">{formatKoreanUnits(Number(s.stat_value))}</span>

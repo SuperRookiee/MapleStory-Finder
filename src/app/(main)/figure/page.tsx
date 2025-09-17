@@ -206,9 +206,9 @@ const FigurePage = () => {
                                                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                                                     {isGenerating ? (
                                                         <span className="flex items-center gap-2">
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                              피규어 이미지를 생성 중입니다...
-                            </span>
+                                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                                            피규어 이미지를 생성 중입니다...
+                                                        </span>
                                                     ) : (
                                                         "생성된 이미지가 여기에 표시됩니다."
                                                     )}

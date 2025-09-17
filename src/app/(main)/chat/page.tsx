@@ -1,12 +1,6 @@
 "use client";
 
-import {
-    FormEvent,
-    unstable_ViewTransition as ViewTransition,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { FormEvent, unstable_ViewTransition as ViewTransition, useEffect, useRef, useState, } from "react";
 import { Bot, Loader2, Send, Trash2, User } from "lucide-react";
 import { buildPromptContext } from "@/libs/promptContext";
 import type { ChatHistoryMessage } from "@/types/ai/chat";
