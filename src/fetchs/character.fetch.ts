@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
 import pLimit from "p-limit";
+import { userStore } from "@/stores/userStore";
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
-import { userStore } from "@/stores/userStore";
 
 const getApiKeyInfo = () => {
     const { apiKey, isGuest } = userStore.getState().user;
