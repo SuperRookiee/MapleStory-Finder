@@ -1,92 +1,23 @@
-import axios, { AxiosError } from "axios";
-import pLimit from "p-limit";
-import { userStore } from "@/stores/userStore";
+import { createApiCaller, createRequestRunner, type ApiParams } from "@/fetchs/apiClient";
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
-const getApiKeyInfo = () => {
-    const { apiKey, isGuest } = userStore.getState().user;
-    const fallback = process.env.NEXT_PUBLIC_NEXON_API_KEY ?? "";
-    return {
-        key: apiKey ?? fallback,
-        isGuest: Boolean(isGuest),
-    };
-};
+const limitRunner = createRequestRunner({ concurrency: 5 });
+const callCharacterApiBase = createApiCaller({ basePath: "character", runner: limitRunner });
+const callGeneralApiBase = createApiCaller({ runner: limitRunner });
 
-const limit = pLimit(5);
-
-export const findCharacterList = async () => {
-    const { key, isGuest } = getApiKeyInfo();
-    try {
-        const response = await axios.get<ICharacterResponse<{ characters: ICharacterSummary[] }>>(
-            `/api/character/list`,
-            {
-                headers: { "x-nxopen-api-key": key },
-            }
-        );
-        return response.data;
-    } catch (err) {
-        if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
-            if (!isGuest && typeof window !== "undefined") {
-                window.location.href = "/my_page?missingApiKey=1";
-            }
-        }
-        throw err;
-    }
-};
-
-const callCharacterApi = async <T>(
+const callCharacterApi = <T>(
     endpoint: string,
-    params: Record<string, string | number | undefined> = {},
-): Promise<ICharacterResponse<T>> => {
-    const { key, isGuest } = getApiKeyInfo();
+    params: ApiParams = {},
+): Promise<ICharacterResponse<T>> =>
+    callCharacterApiBase<ICharacterResponse<T>>(endpoint, params);
 
-    return limit(async () => {
-        try {
-            const response = await axios.get<ICharacterResponse<T>>(`/api/character/${endpoint}`, {
-                headers: { "x-nxopen-api-key": key },
-                params: Object.fromEntries(
-                    Object.entries(params).filter(([, v]) => v !== undefined),
-                ),
-            });
-            return response.data;
-        } catch (err) {
-            if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
-                if (!isGuest && typeof window !== "undefined") {
-                    window.location.href = "/my_page?missingApiKey=1";
-                }
-            }
-            throw err;
-        }
-    });
-};
+const callApi = <T>(endpoint: string, params: ApiParams = {}): Promise<ICharacterResponse<T>> =>
+    callGeneralApiBase<ICharacterResponse<T>>(endpoint, params);
 
-const callApi = async <T>(
-    endpoint: string,
-    params: Record<string, string | number | undefined> = {},
-): Promise<ICharacterResponse<T>> => {
-    const { key, isGuest } = getApiKeyInfo();
-
-    return limit(async () => {
-        try {
-            const response = await axios.get(`/api/${endpoint}`, {
-                headers: { "x-nxopen-api-key": key },
-                params: Object.fromEntries(
-                    Object.entries(params).filter(([, v]) => v !== undefined),
-                ),
-            });
-            return response.data;
-        } catch (err) {
-            if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
-                if (!isGuest && typeof window !== "undefined") {
-                    window.location.href = "/my_page?missingApiKey=1";
-                }
-            }
-            throw err;
-        }
-    });
-};
+export const findCharacterList = () =>
+    callCharacterApi<{ characters: ICharacterSummary[] }>("list");
 
 /* ---------------- 기본 API ---------------- */
 export const findCharacterBasic = (ocid: string, date?: string) =>
