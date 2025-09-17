@@ -54,10 +54,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const smallImageOpacity = (1 - imageScale) / 0.6;
     const SMALL_IMAGE_SIZE = 40;
     const SCROLL_HIDE_THRESHOLD = SMALL_IMAGE_SIZE * 6.25;
-    const { ocid: previewOcid, basic: previewBasic } = useCharacterPreviewStore((state) => ({
-        ocid: state.ocid,
-        basic: state.basic,
-    }));
+    const previewOcid = useCharacterPreviewStore((state) => state.ocid);
+    const previewBasic = useCharacterPreviewStore((state) => state.basic);
     const matchedPreviewBasic = previewOcid === ocid ? previewBasic : null;
     const characterImageSrc = useMemo(() => {
         const source = basic?.character_image ?? matchedPreviewBasic?.character_image;

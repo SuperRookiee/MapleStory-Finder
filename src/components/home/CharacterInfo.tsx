@@ -22,10 +22,8 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
     const [basic, setBasic] = useState<ICharacterBasic | null>(null);
     const [items, setItems] = useState<IItemEquipment[]>([]);
     const [loading, setLoading] = useState(false);
-    const { setPreview, clear } = useCharacterPreviewStore((state) => ({
-        setPreview: state.setPreview,
-        clear: state.clear,
-    }));
+    const setPreview = useCharacterPreviewStore((state) => state.setPreview);
+    const clearPreview = useCharacterPreviewStore((state) => state.clear);
 
     const imageTransitionName = useMemo(() => {
         if (!ocid) return undefined;
@@ -38,7 +36,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
             setBasic(null);
             setItems([]);
             setLoading(false);
-            clear();
+            clearPreview();
             return;
         }
         let cancelled = false;
@@ -63,7 +61,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
         return () => {
             cancelled = true;
         };
-    }, [ocid, clear, setPreview]);
+    }, [ocid, clearPreview, setPreview]);
 
     const characterImageSrc = useMemo(() => {
         if (!basic?.character_image) return null;
