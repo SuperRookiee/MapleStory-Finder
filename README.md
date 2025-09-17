@@ -5,7 +5,10 @@
 </p>
 
 <p align="center">
-  Next.js 15과 React 19로 구현된 MapleStory 캐릭터 탐색 대시보드입니다. 원하는 캐릭터를 검색하고 즐겨찾기로 관리하며, 스탯과 장비를 한눈에 살펴보세요.
+  Next.js 15과 React 19로 구현된 MapleStory 캐릭터 탐색 대시보드입니다.
+</p>
+<p align="center">
+  원하는 캐릭터를 검색하고 즐겨찾기로 관리하며, 스탯과 장비를 한눈에 살펴보세요.
 </p>
 
 <p align="center">
@@ -13,7 +16,6 @@
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=fff" alt="TypeScript" /></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwindcss&logoColor=fff" alt="Tailwind" /></a>
   <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=000" alt="Supabase" /></a>
-  <img src="https://img.shields.io/badge/PRs-welcome-ff69b4.svg" alt="PRs welcome" />
 </p>
 
 ---
@@ -25,7 +27,6 @@
 - [빠르게 시작하기](#-getting-started)
 - [환경 변수 설정](#-environment-variables)
 - [가용 스크립트](#-available-scripts)
-- [기여 가이드](#-contributing)
 
 ---
 
@@ -40,21 +41,13 @@ MapleStory Finder는 Nexon Open API를 통해 전 세계 MapleStory 캐릭터 �
 - **반응형 & 다크 모드**: Tailwind CSS 4와 Radix UI를 기반으로 모바일부터 데스크톱까지 일관된 UI를 제공합니다.
 
 ## 🧰 Tech Stack
-| 레이어 | 사용 기술 |
-| --- | --- |
-| 앱 프레임워크 | Next.js 15 (App Router), React 19 |
-| 언어 | TypeScript |
-| UI & 스타일 | Tailwind CSS 4, Radix UI, shadcn/ui |
-| 데이터 & 인증 | Supabase, Nexon Open API |
-| 상태 & 유틸 | Zustand, React Query, Recharts, React Window |
-
-> 추가로, UI 구성은 Server Components와 Suspense를 적극 활용해 로딩 경험을 개선했습니다.
-
-## 🖼 Preview
-<p align="center">
-  <em>실제 UI는 지속적으로 개선되고 있습니다.</em><br/>
-  <img src="./public/Reheln.png" width="240" alt="MapleStory Finder mascot" />
-</p>
+| 레이어 | 사용 기술                                   |
+| --- |-----------------------------------------|
+| 앱 프레임워크 | Next.js 15 (App Router), React 19       |
+| 언어 | TypeScript                              |
+| UI & 스타일 | Tailwind, Radix UI, shadcn/ui           |
+| 데이터 & 인증 | Vercel, Supabase, Nexon Open API        |
+| 상태 & 유틸 | Zustand, Recharts, React Window, pLimit |
 
 ## ⚙️ Getting Started
 다음 순서로 개발 환경을 구성하세요.
@@ -66,7 +59,7 @@ MapleStory Finder는 Nexon Open API를 통해 전 세계 MapleStory 캐릭터 �
 ### 2. Installation
 ```bash
 # 저장소 클론
-git clone <repo-url>
+git clone https://github.com/SuperRookiee/MapleStory-Finder.git
 cd MapleStory-Finder
 
 # 의존성 설치
@@ -112,16 +105,8 @@ GOOGLE_API_KEY=your_gemini_api_key
 | `npm run start` | 빌드된 앱을 프로덕션 모드로 실행 |
 | `npm run lint` | ESLint 검사 및 자동 수정 |
 
-## 🧑‍💻 Contributing
-기여를 환영합니다! 다음 가이드를 따라 주세요.
-
-1. 이슈를 확인하거나 새로운 개선 아이디어를 제안합니다.
-2. 작업용 브랜치를 생성하고 코드 또는 문서를 수정합니다.
-3. `npm run lint` 등 필요한 검사를 수행해 품질을 확인합니다.
-4. Pull Request에서 변경 사항과 테스트 결과를 공유합니다.
-
 ## 🙏 Acknowledgements
-- Nexon Open API를 제공해 주는 Nexon에 감사드립니다.
+- Nexon Open API를 사용하고 있습니다.
 - MapleStory 및 MapleStory 로고는 Nexon의 등록 상표입니다.
 
 ---
