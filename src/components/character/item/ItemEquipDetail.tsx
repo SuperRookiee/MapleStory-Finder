@@ -8,7 +8,6 @@ interface ItemEquipDetailProps {
 }
 
 const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
-    console.log(item)
     const mainOptions: [string, string, string | undefined][] = [
         ["STR", "str", item.item_total_option?.str],
         ["DEX", "dex", item.item_total_option?.dex],

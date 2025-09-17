@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { AxiosError } from 'axios';
 import { Loader2, Search as SearchIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -40,9 +39,7 @@ const SearchPage = () => {
             router.push(`/character/${ocid}`);
         } catch (error) {
             let message = '캐릭터를 찾을 수 없습니다. 이름을 확인해주세요.';
-            if (error instanceof AxiosError<ApiErrorResponse>) {
-                message = error.response?.data?.error?.message ?? message;
-            } else if (error instanceof Error) {
+             if (error instanceof Error) {
                 message = error.message;
             }
             toast.error(message);
@@ -58,7 +55,7 @@ const SearchPage = () => {
                     <Image src="/Reheln.png" alt="Finder" width={96} height={96} priority />
                     <h1 className="text-3xl font-semibold tracking-tight">Search</h1>
                     <p className="max-w-lg text-balance text-sm text-muted-foreground">
-                        원하는 캐릭터 이름을 입력하면 메이플스토리 전체 유저 중에서 캐릭터를 찾아 상세 정보를 확인할 수 있습니다.
+                        원하는 캐릭터를 찾아 상세 정보를 확인할 수 있습니다.
                     </p>
                 </div>
                 <form onSubmit={handleSearch} className="w-full space-y-6">

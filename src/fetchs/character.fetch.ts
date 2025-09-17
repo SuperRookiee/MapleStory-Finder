@@ -1,33 +1,10 @@
 import axios, { AxiosError } from "axios";
 import pLimit from "p-limit";
-import {
-    ICharacterAbility,
-    ICharacterAndroidEquipment,
-    ICharacterBasic,
-    ICharacterBeautyEquipment,
-    ICharacterCashItemEquipment,
-    ICharacterDojang,
-    ICharacterHexaMatrix,
-    ICharacterHexaMatrixStat,
-    ICharacterHyperStat,
-    ICharacterItemEquipment,
-    ICharacterLinkSkill,
-    ICharacterOtherStat,
-    ICharacterPetEquipment,
-    ICharacterPopularity,
-    ICharacterPropensity,
-    ICharacterSetEffect,
-    ICharacterSkill,
-    ICharacterStat,
-    ICharacterSymbolEquipment,
-    ICharacterVMatrix,
-    IRingExchangeSkillEquipment,
-} from "@/interface/character/ICharacter";
+import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { userStore } from "@/stores/userStore";
 
-// Allow up to five concurrent API calls.
 const limit = pLimit(5);
 
 export const findCharacterList = async () => {
@@ -59,6 +36,32 @@ const callCharacterApi = async <T>(
     return limit(async () => {
         try {
             const response = await axios.get<ICharacterResponse<T>>(`/api/character/${endpoint}`, {
+                headers: { "x-nxopen-api-key": apiKey ?? "" },
+                params: Object.fromEntries(
+                    Object.entries(params).filter(([, v]) => v !== undefined),
+                ),
+            });
+            return response.data;
+        } catch (err) {
+            if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
+                if (typeof window !== "undefined") {
+                    window.location.href = "/my_page?missingApiKey=1";
+                }
+            }
+            throw err;
+        }
+    });
+};
+
+const callApi = async <T>(
+    endpoint: string,
+    params: Record<string, string | number | undefined> = {},
+): Promise<ICharacterResponse<T>> => {
+    const apiKey = userStore.getState().user.apiKey;
+
+    return limit(async () => {
+        try {
+            const response = await axios.get(`/api/${endpoint}`, {
                 headers: { "x-nxopen-api-key": apiKey ?? "" },
                 params: Object.fromEntries(
                     Object.entries(params).filter(([, v]) => v !== undefined),
@@ -143,4 +146,4 @@ export const findCharacterRingExchange = (ocid: string, date?: string) =>
     callCharacterApi<IRingExchangeSkillEquipment>("ring-exchange-skill-equipment", { ocid, date });
 
 export const findCharacterId = (character_name: string) =>
-    callCharacterApi<{ ocid: string }>("id", { character_name });
+    callApi<{ ocid: string }>("id", { character_name });
