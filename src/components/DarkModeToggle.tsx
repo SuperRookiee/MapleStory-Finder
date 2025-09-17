@@ -3,10 +3,49 @@
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+type DocumentWithViewTransition = Document & {
+  startViewTransition?: (callback: () => void | Promise<void>) => void;
+};
+
+let removeTransitionTimeout: number | undefined;
+
 const DarkModeToggle = () => {
   const toggleTheme = () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const root = document.documentElement;
+    const nextIsDark = !root.classList.contains('dark');
+
+    const applyTheme = () => {
+      root.classList.toggle('dark', nextIsDark);
+      localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
+    };
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      applyTheme();
+      return;
+    }
+
+    const doc = document as DocumentWithViewTransition;
+
+    if (typeof doc.startViewTransition === 'function') {
+      doc.startViewTransition(() => {
+        applyTheme();
+      });
+      return;
+    }
+
+    root.classList.add('dark-theme-transition');
+    applyTheme();
+
+    if (removeTransitionTimeout !== undefined) {
+      window.clearTimeout(removeTransitionTimeout);
+    }
+
+    removeTransitionTimeout = window.setTimeout(() => {
+      root.classList.remove('dark-theme-transition');
+      removeTransitionTimeout = undefined;
+    }, 320);
   };
 
   return (

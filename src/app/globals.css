@@ -126,9 +126,34 @@
     }
 }
 
+html.dark-theme-transition,
+html.dark-theme-transition body {
+    transition-property: background-color, color;
+    transition-duration: 0.32s;
+    transition-timing-function: ease-in-out;
+}
+
+html.dark-theme-transition * {
+    transition-property: background-color, color, border-color, fill, stroke;
+    transition-duration: 0.32s;
+    transition-timing-function: ease-in-out;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
     animation: fade 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.dark-theme-transition,
+    html.dark-theme-transition * {
+        transition: none !important;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none !important;
+    }
 }
 
 @keyframes fade {
