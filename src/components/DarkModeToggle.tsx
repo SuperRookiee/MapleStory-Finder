@@ -29,9 +29,20 @@ const DarkModeToggle = () => {
     const doc = document as DocumentWithViewTransition;
 
     if (typeof doc.startViewTransition === 'function') {
-      doc.startViewTransition(() => {
+      try {
+        doc.startViewTransition(() => {
+          applyTheme();
+        });
+      } catch (error) {
+        const isInvalidStateError =
+          error instanceof DOMException && error.name === 'InvalidStateError';
+
+        if (!isInvalidStateError) {
+          console.warn('Failed to start view transition', error);
+        }
+
         applyTheme();
-      });
+      }
       return;
     }
 
