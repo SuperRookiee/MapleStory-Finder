@@ -126,14 +126,42 @@
     }
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation: fade 0.3s;
+html.dark-theme-transition,
+html.dark-theme-transition body {
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-@keyframes fade {
+html.dark-theme-transition * {
+    transition:
+            background-color 0.5s ease,
+            color 0.5s ease,
+            border-color 0.5s ease,
+            fill 0.5s ease,
+            stroke 0.5s ease;
+}
+
+/* 뷰 트랜지션에서 opacity 대신 subtle blur/fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: soft-fade 0.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.dark-theme-transition,
+    html.dark-theme-transition * {
+        transition: none !important;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none !important;
+    }
+}
+
+/* 더 자연스러운 페이드  */
+@keyframes soft-fade {
     from {
-        opacity: 0;
+        opacity: 0.3;
     }
     to {
         opacity: 1;
