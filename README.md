@@ -71,7 +71,7 @@ npm install
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_NEXON_API_KEY=your_nexon_open_api_key
+NEXT_PUBLIC_NEXON_API_KEY=your_nexon_open_api_key
 # Google Gemini figure generation
 GOOGLE_API_KEY=your_gemini_api_key
 # (optional) 대신 GEMINI_API_KEY를 사용해도 됩니다.

@@ -9,14 +9,17 @@ import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/providers/AuthProvider';
 import { userStore } from '@/stores/userStore';
 
 const SignInPage = () => {
     const router = useRouter();
     const setApiKey = userStore((s) => s.setApiKey);
+    const { loginAsGuest } = useAuth();
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [googleLoading, setGoogleLoading] = useState(false);
+    const [guestLoading, setGuestLoading] = useState(false);
 
     useEffect(() => {
         const loadSession = async () => {
@@ -69,6 +72,17 @@ const SignInPage = () => {
         }
     };
 
+    const handleGuestLogin = () => {
+        setGuestLoading(true);
+        try {
+            loginAsGuest();
+            toast.success('게스트로 입장했습니다.');
+            router.push('/search');
+        } finally {
+            setGuestLoading(false);
+        }
+    };
+
     return (
         <div className="flex min-h-screen">
             <div className="relative hidden w-1/2 md:block">
@@ -116,6 +130,18 @@ const SignInPage = () => {
                         disabled={googleLoading}
                     >
                         {googleLoading ? 'Sign in with Google...' : 'Sign in with Google'}
+                    </Button>
+                    <div className="text-center text-xs font-semibold tracking-wide text-muted-foreground">
+                        ----or----
+                    </div>
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        className="w-full"
+                        onClick={handleGuestLogin}
+                        disabled={guestLoading}
+                    >
+                        {guestLoading ? '게스트로 이동 중...' : '게스트로 둘러보기'}
                     </Button>
                     <p className="text-sm text-center">
                         Don&apos;t have an account?{' '}

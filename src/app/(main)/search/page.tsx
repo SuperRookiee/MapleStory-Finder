@@ -9,12 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { findCharacterId } from '@/fetchs/character.fetch';
 
-type ApiErrorResponse = {
-    error?: {
-        message?: string;
-    };
-};
-
 const SearchPage = () => {
     const router = useRouter();
     const [query, setQuery] = useState('');

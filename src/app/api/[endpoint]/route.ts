@@ -8,7 +8,7 @@ export const GET = async (
     context: { params: Promise<{ endpoint: string }> }
 ) => {
     const apiKey =
-        req.headers.get("x-nxopen-api-key") || process.env.VITE_NEXON_API_KEY;
+        req.headers.get("x-nxopen-api-key") || process.env.NEXT_PUBLIC_NEXON_API_KEY;
 
     const handler = GetWithParams<
         { endpoint: string } & Record<string, string>

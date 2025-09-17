@@ -5,15 +5,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import DarkModeToggle from '@/components/DarkModeToggle';
 import SideMenu from '@/components/SideMenu';
+import { useAuth } from '@/providers/AuthProvider';
 
 const Header = () => {
   const pathname = usePathname();
+  const { status, isGuest } = useAuth();
   if (pathname === '/sign_in' || pathname === '/sign_up') return null;
+
+  const logoHref = isGuest || status === 'unauthenticated' ? '/search' : '/';
 
   return (
     <header className="sticky top-0 z-50 flex h-[var(--header-height)] items-center justify-between border-b bg-background/90 px-4">
       {/* 로고 */}
-      <Link href="/" className="flex items-center">
+      <Link href={logoHref} className="flex items-center">
         <Image src="/Reheln.png" alt="Finder" width={40} height={40} priority />
       </Link>
       {/* 오른쪽 메뉴 */}
