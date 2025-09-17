@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { unstable_ViewTransition as ViewTransition, useCallback, useEffect, useMemo, useRef, useState, } from "react";
 import { ArrowLeft, Loader2, RefreshCcw } from "lucide-react";
+import { characterDetailStore } from "@/stores/characterDetailStore";
 import type { FigureGenerationMetadata, FigureResult } from "@/types/figure";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { requestCharacterFigure } from "@/fetchs/figure.fetch";
-import { characterDetailStore } from "@/stores/characterDetailStore";
 
 const FigurePage = () => {
     const router = useRouter();

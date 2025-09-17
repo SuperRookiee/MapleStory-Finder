@@ -3,12 +3,12 @@
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, Suspense, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { userStore } from '@/stores/userStore';
 import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import { userStore } from '@/stores/userStore';
 
 const FormSkeleton = () => (
   <div className="flex justify-center p-4">

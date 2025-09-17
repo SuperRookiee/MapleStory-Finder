@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
+import { favoriteStore } from "@/stores/favoriteStore";
 import { supabase } from "@/libs/supabaseClient";
 import CharacterInfo from "@/components/home/CharacterInfo";
 import FavoriteList from "@/components/home/FavoriteList";
@@ -9,7 +10,6 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
-import { favoriteStore } from "@/stores/favoriteStore";
 
 const Home = () => {
     const router = useRouter();

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
+import { userStore } from "@/stores/userStore";
 import { IGuildBasic, IGuildId } from "@/interface/guild/IGuild";
 import { IGuildResponse } from "@/interface/guild/IGuildResponse";
-import { userStore } from "@/stores/userStore";
 
 const getApiKeyInfo = () => {
     const { apiKey, isGuest } = userStore.getState().user;

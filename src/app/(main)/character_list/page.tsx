@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { characterListStore } from "@/stores/characterListStore";
+import { favoriteStore } from "@/stores/favoriteStore";
+import { userStore } from "@/stores/userStore";
 import { supabase } from "@/libs/supabaseClient";
 import CharacterCardSkeleton from "@/components/character/CharacterCardSkeleton";
 import CharacterCell from "@/components/character/CharacterCell";
@@ -10,9 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
-import { characterListStore } from "@/stores/characterListStore";
-import { favoriteStore } from "@/stores/favoriteStore";
-import { userStore } from "@/stores/userStore";
 
 const CharacterList = () => {
     const setApiKey = userStore((s) => s.setApiKey);

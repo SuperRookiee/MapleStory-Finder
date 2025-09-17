@@ -2,6 +2,7 @@
 
 import { FormEvent, unstable_ViewTransition as ViewTransition, useEffect, useRef, useState, } from "react";
 import { Bot, Loader2, Send, Trash2, User } from "lucide-react";
+import { chatStore } from "@/stores/chatStore";
 import { buildPromptContext } from "@/libs/promptContext";
 import type { ChatHistoryMessage } from "@/types/ai/chat";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { requestAiChat } from "@/fetchs/ai/chat.fetch";
-import { chatStore } from "@/stores/chatStore";
 import { cn } from "@/utils/utils";
 
 const ChatPage = () => {
