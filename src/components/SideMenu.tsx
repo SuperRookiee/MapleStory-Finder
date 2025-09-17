@@ -13,7 +13,7 @@ const SideMenu = () => {
 
     const handleLogout = async () => {
         await logout();
-        router.push("/sign_in");
+        router.push("/");
     };
 
     return (
