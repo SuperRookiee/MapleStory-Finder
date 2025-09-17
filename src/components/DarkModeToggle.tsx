@@ -4,73 +4,77 @@ import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type DocumentWithViewTransition = Document & {
-  startViewTransition?: (callback: () => void | Promise<void>) => void;
+    startViewTransition?: (callback: () => void | Promise<void>) => void;
 };
 
 let removeTransitionTimeout: number | undefined;
 
-const DarkModeToggle = () => {
-  const toggleTheme = () => {
-    const root = document.documentElement;
-    const nextIsDark = !root.classList.contains('dark');
+interface IDarkModeToggle {
+    className?: string;
+}
 
-    const applyTheme = () => {
-      root.classList.toggle('dark', nextIsDark);
-      localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
-    };
+const DarkModeToggle = ({ className }: IDarkModeToggle) => {
+    const toggleTheme = () => {
+        const root = document.documentElement;
+        const nextIsDark = !root.classList.contains('dark');
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const applyTheme = () => {
+            root.classList.toggle('dark', nextIsDark);
+            localStorage.setItem('theme', nextIsDark ? 'dark' : 'light');
+        };
 
-    if (prefersReducedMotion) {
-      applyTheme();
-      return;
-    }
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const doc = document as DocumentWithViewTransition;
-
-    if (typeof doc.startViewTransition === 'function') {
-      try {
-        doc.startViewTransition(() => {
-          applyTheme();
-        });
-      } catch (error) {
-        const isInvalidStateError =
-          error instanceof DOMException && error.name === 'InvalidStateError';
-
-        if (!isInvalidStateError) {
-          console.warn('Failed to start view transition', error);
+        if (prefersReducedMotion) {
+            applyTheme();
+            return;
         }
 
+        const doc = document as DocumentWithViewTransition;
+
+        if (typeof doc.startViewTransition === 'function') {
+            try {
+                doc.startViewTransition(() => {
+                    applyTheme();
+                });
+            } catch (error) {
+                const isInvalidStateError =
+                    error instanceof DOMException && error.name === 'InvalidStateError';
+
+                if (!isInvalidStateError) {
+                    console.warn('Failed to start view transition', error);
+                }
+
+                applyTheme();
+            }
+            return;
+        }
+
+        root.classList.add('dark-theme-transition');
         applyTheme();
-      }
-      return;
-    }
 
-    root.classList.add('dark-theme-transition');
-    applyTheme();
+        if (removeTransitionTimeout !== undefined) {
+            window.clearTimeout(removeTransitionTimeout);
+        }
 
-    if (removeTransitionTimeout !== undefined) {
-      window.clearTimeout(removeTransitionTimeout);
-    }
+        removeTransitionTimeout = window.setTimeout(() => {
+            root.classList.remove('dark-theme-transition');
+            removeTransitionTimeout = undefined;
+        }, 320);
+    };
 
-    removeTransitionTimeout = window.setTimeout(() => {
-      root.classList.remove('dark-theme-transition');
-      removeTransitionTimeout = undefined;
-    }, 320);
-  };
-
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={toggleTheme}
-      aria-label="Toggle dark mode"
-      className="hover:bg-transparent"
-    >
-      <Sun className="h-5 w-5 text-foreground hidden dark:block" />
-      <Moon className="h-5 w-5 text-foreground block dark:hidden" />
-    </Button>
-  );
+    return (
+        <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className={`hover:bg-transparent ${className}`}
+        >
+            <Sun className="h-5 w-5 text-foreground hidden dark:block"/>
+            <Moon className="h-5 w-5 text-foreground block dark:hidden"/>
+        </Button>
+    );
 };
 
 export default DarkModeToggle;

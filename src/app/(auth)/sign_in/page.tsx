@@ -83,9 +83,7 @@ const SignInPage = () => {
 
     return (
         <div className="flex min-h-screen">
-            <div className='absolute top-1 right-1'>
-                <DarkModeToggle />
-            </div>
+            <DarkModeToggle className='absolute top-1 left-full'/>
             <div className="relative hidden w-1/2 md:block">
                 <Image
                     src="/images/artwork_117.jpg"

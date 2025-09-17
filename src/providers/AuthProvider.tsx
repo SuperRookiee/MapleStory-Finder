@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (status === "guest" && pathname && !isGuestAccessiblePath(pathname)) {
             if (redirectToastPathRef.current !== pathname) {
                 if (!skipGuestGuardToastRef.current) {
-                    toast.error("로그인이 필요한 서비스입니다");
+                    toast.info("로그인이 필요한 서비스입니다");
                 }
                 redirectToastPathRef.current = pathname;
             }
@@ -123,6 +123,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 redirectToastPathRef.current = null;
                 return;
             }
+            toast.info("로그인이 필요한 서비스입니다");
             router.replace("/sign_in");
             return;
         }

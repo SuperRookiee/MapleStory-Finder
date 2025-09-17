@@ -1,28 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { unstable_ViewTransition as ViewTransition } from "react";
-import {
-    ArrowRight,
-    BarChart3,
-    Bot,
-    Search,
-    ShieldCheck,
-    Sparkles,
-    Wand2,
-    type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, BarChart3, Bot, type LucideIcon, Search, ShieldCheck, Sparkles, Wand2, } from "lucide-react";
+import DarkModeToggle from "@/components/DarkModeToggle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Page = () => {
     return (
         <ViewTransition enter="fade" exit="fade">
+            <DarkModeToggle className='absolute top-1 right-1 z-10'/>
             <main className="bg-background text-foreground">
                 <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-16 px-4 pb-16 pt-12 sm:px-6 lg:px-8">
                     <section className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-center">
                         <div className="space-y-6">
                             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/70 px-4 py-1 text-xs font-medium uppercase tracking-[0.32em] text-muted-foreground">
-                                <Sparkles className="h-4 w-4 text-primary" />
+                                <Image
+                                    src="/Reheln.png"
+                                    alt="MapleStory Finder"
+                                    className="object-contain"
+                                    width={20}
+                                    height={20}
+                                    priority
+                                />
                                 MapleStory Finder
                             </div>
                             <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
@@ -48,18 +48,28 @@ const Page = () => {
                         </div>
                         <Card className="h-full border-border/70 bg-card/90 shadow-sm">
                             <CardHeader>
-                                <CardTitle className="text-lg font-semibold">Finder 미리보기</CardTitle>
+                                <CardTitle className="text-lg font-semibold flex gap-2 items-baseline">
+                                    <Sparkles className="h-4 w-4 text-primary mb-0.5" /> Finder 미리보기
+                                </CardTitle>
                                 <CardDescription>
-                                    친숙한 UI와 함께 홈에서 바로 주요 기능으로 이동할 수 있어요.
+                                    Finder에서 내 캐릭터를 검색해보세요.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="flex flex-col gap-6 pb-8">
                                 <div className="relative mx-auto aspect-square w-40 overflow-hidden rounded-2xl bg-muted sm:w-56">
                                     <Image
-                                        src="/Reheln.png"
+                                        src="/images/preview/character_detail.png"
                                         alt="MapleStory Finder"
                                         fill
-                                        className="object-contain p-6"
+                                        className="object-contain px-2 block dark:hidden"
+                                        sizes="(max-width: 768px) 10rem, 14rem"
+                                        priority
+                                    />
+                                    <Image
+                                        src="/images/preview/character_detail_dark.png"
+                                        alt="MapleStory Finder"
+                                        fill
+                                        className="object-contain px-2 hidden dark:block"
                                         sizes="(max-width: 768px) 10rem, 14rem"
                                         priority
                                     />

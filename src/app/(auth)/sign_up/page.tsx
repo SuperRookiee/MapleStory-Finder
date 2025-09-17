@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { userStore } from '@/stores/userStore';
 import { supabase } from '@/libs/supabaseClient';
+import DarkModeToggle from "@/components/DarkModeToggle";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -41,6 +42,7 @@ const SignUpPage = () => {
 
     return (
         <div className="flex min-h-screen">
+            <DarkModeToggle className='absolute top-1 right-1'/>
             <div className="relative hidden w-1/2 md:block">
                 <Image
                     src="/images/artwork_14.jpg"
