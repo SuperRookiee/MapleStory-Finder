@@ -103,6 +103,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         skipUnauthenticatedToastRef.current = true;
         applyAuthState(null, false, setStatus, setIsLoading);
+        toast.success("로그아웃되었습니다.");
     }, [applyAuthState, status]);
 
     useEffect(() => {
@@ -129,7 +130,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (!skipUnauthenticatedToastRef.current) {
                 toast.info("로그인이 필요한 서비스입니다");
             }
-            skipUnauthenticatedToastRef.current = false;
             router.replace("/sign_in");
             return;
         }

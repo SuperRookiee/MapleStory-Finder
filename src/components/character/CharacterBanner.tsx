@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, } from "@/components/ui/toolti
 import { ICharacterBasic, ICharacterDojang, ICharacterPopularity } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
+import { useAuth } from "@/providers/AuthProvider";
 import { cn } from "@/utils/utils";
 
 type CharacterBannerProps = {
@@ -27,17 +28,18 @@ type CharacterBannerProps = {
 }
 
 const CharacterBanner = ({
-                             basic,
-                             popularity,
-                             union,
-                             dojang,
-                             guild,
-                             loading,
-                             imageScale,
-                             backgroundColor = "bg-card",
-                             backgroundImage,
-                         }: CharacterBannerProps) => {
+    basic,
+    popularity,
+    union,
+    dojang,
+    guild,
+    loading,
+    imageScale,
+    backgroundColor = "bg-card",
+    backgroundImage,
+}: CharacterBannerProps) => {
     const router = useRouter();
+    const { status } = useAuth();
 
     const getFigure = () => {
         if (!basic?.character_image) return;
@@ -116,21 +118,23 @@ const CharacterBanner = ({
                             {guild?.guild_name && (
                                 <div className="bg-muted px-2 py-1 rounded-md">길드 {guild.guild_name}</div>
                             )}
-                            <div className="bg-muted px-2 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <div
-                                            className=" bg-muted rounded-md flex items-center gap-2 hover:cursor-pointer"
-                                            onClick={() => getFigure()}
-                                        >
-                                            피규어 <SquareArrowOutUpRight size={14}/>
-                                        </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        아직 미완성 기능입니다
-                                    </TooltipContent>
-                                </Tooltip>
-                            </div>
+                            {status !== 'guest' &&
+                                <div className="bg-muted px-2 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <div
+                                                className=" bg-muted rounded-md flex items-center gap-2 hover:cursor-pointer"
+                                                onClick={() => getFigure()}
+                                            >
+                                                피규어 <SquareArrowOutUpRight size={14}/>
+                                            </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            아직 미완성 기능입니다
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
+                            }
                         </div>
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
                             <div className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">
