@@ -70,7 +70,7 @@ type CharacterDetailSlice = {
     setAbility: (ability: CharacterDetailSlice['ability']) => void
 
     // util
-    reset: () => void
+    reset: (state?: Partial<CharacterDetailState>) => void
 }
 
 const initialState: Omit<
@@ -135,6 +135,8 @@ const initialState: Omit<
     ability: null,
 };
 
+type CharacterDetailState = typeof initialState;
+
 export const characterDetailStore = create<CharacterDetailSlice>()(
     persist(
         (set) => ({
@@ -166,7 +168,7 @@ export const characterDetailStore = create<CharacterDetailSlice>()(
             setPet: (pet) => set({ pet }),
             setPropensity: (propensity) => set({ propensity }),
             setAbility: (ability) => set({ ability }),
-            reset: () => set(initialState),
+            reset: (state) => set({ ...initialState, ...state }),
         }),
         {
             name: "characterDetailStore",

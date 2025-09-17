@@ -1,7 +1,8 @@
 'use client'
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useCharacterPreviewStore } from "@/stores/characterPreviewStore";
 import ItemEquipments from "@/components/character/item/ItemEquipments";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
@@ -21,9 +22,26 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
     const [basic, setBasic] = useState<ICharacterBasic | null>(null);
     const [items, setItems] = useState<IItemEquipment[]>([]);
     const [loading, setLoading] = useState(false);
+    const { setPreview, clear } = useCharacterPreviewStore((state) => ({
+        setPreview: state.setPreview,
+        clear: state.clear,
+    }));
+
+    const imageTransitionName = useMemo(() => {
+        if (!ocid) return undefined;
+        const sanitized = ocid.replace(/[^a-zA-Z0-9_-]/g, "-");
+        return `character-image-${sanitized}`;
+    }, [ocid]);
 
     useEffect(() => {
-        if (!ocid) return;
+        if (!ocid) {
+            setBasic(null);
+            setItems([]);
+            setLoading(false);
+            clear();
+            return;
+        }
+        let cancelled = false;
         const load = async () => {
             setLoading(true);
             try {
@@ -31,14 +49,26 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                     findCharacterBasic(ocid),
                     findCharacterItemEquipment(ocid),
                 ]);
+                if (cancelled) return;
                 setBasic(basicRes.data);
                 setItems(itemRes.data.item_equipment);
+                setPreview(ocid, basicRes.data);
             } finally {
-                setLoading(false);
+                if (!cancelled) {
+                    setLoading(false);
+                }
             }
         };
         load();
-    }, [ocid]);
+        return () => {
+            cancelled = true;
+        };
+    }, [ocid, clear, setPreview]);
+
+    const characterImageSrc = useMemo(() => {
+        if (!basic?.character_image) return null;
+        return `/api/crop?url=${encodeURIComponent(basic.character_image)}`;
+    }, [basic?.character_image]);
 
     return (
         <ScrollArea className={cn("hidden md:flex flex-1", className)}>
@@ -50,7 +80,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                 <div className="p-4 max-w-6xl mx-auto">
                     <div className="flex flex-col lg:flex-row gap-10">
                         <section className="lg:flex-[0.4] flex flex-col items-center max-w-[300px] mx-auto">
-                        <div className="self-start flex items-center gap-2 text-xl">
+                            <div className="self-start flex items-center gap-2 text-xl">
                                 {loading || !basic ? (
                                     <>
                                         <Skeleton className="w-6 h-6 rounded-full" />
@@ -67,10 +97,13 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                             {loading || !basic ? (
                                 <Skeleton className="w-64 h-64 mt-4" />
                             ) : (
-                                basic.character_image && (
-                                    <div className="w-64 h-64 mt-4 flex items-center justify-center">
+                                characterImageSrc && (
+                                    <div
+                                        className="w-64 h-64 mt-4 flex items-center justify-center"
+                                        style={imageTransitionName ? { viewTransitionName: imageTransitionName } : undefined}
+                                    >
                                         <Image
-                                            src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
+                                            src={characterImageSrc}
                                             alt={basic.character_name}
                                             className="object-contain h-auto"
                                             width={100}

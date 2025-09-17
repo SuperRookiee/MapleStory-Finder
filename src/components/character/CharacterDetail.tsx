@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { unstable_ViewTransition as ViewTransition, useEffect, useState } from "react";
+import { unstable_ViewTransition as ViewTransition, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { characterDetailStore } from "@/stores/characterDetailStore";
+import { useCharacterPreviewStore } from "@/stores/characterPreviewStore";
 import CharacterBanner from "@/components/character/CharacterBanner";
 import { Ability } from "@/components/character/detail/Ability";
 import { Android } from "@/components/character/detail/Android";
@@ -53,16 +54,32 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const smallImageOpacity = (1 - imageScale) / 0.6;
     const SMALL_IMAGE_SIZE = 40;
     const SCROLL_HIDE_THRESHOLD = SMALL_IMAGE_SIZE * 6.25;
+    const { ocid: previewOcid, basic: previewBasic } = useCharacterPreviewStore((state) => ({
+        ocid: state.ocid,
+        basic: state.basic,
+    }));
+    const matchedPreviewBasic = previewOcid === ocid ? previewBasic : null;
+    const characterImageSrc = useMemo(() => {
+        const source = basic?.character_image ?? matchedPreviewBasic?.character_image;
+        if (!source) return null;
+        return `/api/crop?url=${encodeURIComponent(source)}`;
+    }, [basic?.character_image, matchedPreviewBasic?.character_image]);
+    const imageTransitionName = useMemo(() => {
+        const sanitized = ocid.replace(/[^a-zA-Z0-9_-]/g, "-");
+        return `character-image-${sanitized}`;
+    }, [ocid]);
 
     // 기본 정보 로딩
     useEffect(() => {
         if (!ocid) return;
 
+        let cancelled = false;
         const load = async () => {
-            setBasicLoading(true);
+            const shouldFetchBasic = !matchedPreviewBasic;
+            setBasicLoading(shouldFetchBasic);
             try {
                 const [basicRes, statRes, popularityRes, hyperRes, abilityRes, unionRes, dojangRes] = await Promise.all([
-                    findCharacterBasic(ocid),
+                    shouldFetchBasic ? findCharacterBasic(ocid) : Promise.resolve(null),
                     findCharacterStat(ocid),
                     findCharacterPopularity(ocid),
                     findCharacterHyperStat(ocid),
@@ -70,7 +87,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     findUnion(ocid),
                     findCharacterDojang(ocid),
                 ]);
-                setBasic(basicRes.data);
+                if (cancelled) return;
+                const basicData = shouldFetchBasic ? basicRes?.data ?? null : matchedPreviewBasic;
+                if (shouldFetchBasic && basicData) {
+                    setBasic(basicData);
+                }
                 setStat(statRes.data);
                 setPopularity(popularityRes.data);
                 setHyper(hyperRes.data);
@@ -78,11 +99,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setUnion(unionRes.data);
                 setDojang(dojangRes.data);
 
-                if (basicRes.data.character_guild_name) {
+                if (basicData?.character_guild_name) {
                     try {
                         const guildIdRes = await findGuildId(
-                            basicRes.data.character_guild_name,
-                            basicRes.data.world_name,
+                            basicData.character_guild_name,
+                            basicData.world_name,
                         );
                         const guildRes = await findGuildBasic(
                             guildIdRes.data.oguild_id,
@@ -93,17 +114,36 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     }
                 }
             } catch (e) {
-                console.error(e);
-                toast.error('캐릭터 정보 로딩 실패');
+                if (!cancelled) {
+                    console.error(e);
+                    toast.error('캐릭터 정보 로딩 실패');
+                }
             } finally {
-                setBasicLoading(false);
+                if (!cancelled) {
+                    setBasicLoading(false);
+                }
             }
         };
 
-        reset();
+        reset(matchedPreviewBasic ? { basic: matchedPreviewBasic } : undefined);
         setTab("basic");
         load();
-    }, [ocid, reset, setBasic, setStat, setPopularity, setHyper, setAbility, setUnion, setDojang, setGuild]);
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        ocid,
+        matchedPreviewBasic,
+        reset,
+        setBasic,
+        setStat,
+        setPopularity,
+        setHyper,
+        setAbility,
+        setUnion,
+        setDojang,
+        setGuild,
+    ]);
 
     // 유니온 탭 로딩
     useEffect(() => {
@@ -291,6 +331,8 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         guild={guild}
                         loading={basicLoading || !basic}
                         imageScale={imageScale}
+                        imageSrc={characterImageSrc ?? undefined}
+                        imageTransitionName={imageTransitionName}
                     />
 
                     {basicLoading || !basic ? (
@@ -300,9 +342,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 {/* 오른쪽: 캐릭터 요약 (모바일에서는 상단) */}
                                 <div className="order-1 flex flex-row items-center justify-center gap-2 text-left font-bold sm:order-2 sm:items-center sm:gap-2 sm:justify-end">
-                                    {basic.character_image && (
+                                    {characterImageSrc && (
                                         <Image
-                                            src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
+                                            src={characterImageSrc}
                                             alt={basic.character_name}
                                             width={SMALL_IMAGE_SIZE}
                                             height={SMALL_IMAGE_SIZE}
