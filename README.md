@@ -109,4 +109,4 @@ GOOGLE_API_KEY=your_gemini_api_key
 
 ---
 
-*본 프로젝트는 Nexon과 공식적인 제휴 관계가 없습니다.*
+*본 프로젝트는 Nexon Open API를 사용하고 있습니다.*
