@@ -15,24 +15,18 @@ import { useAuth } from '@/providers/AuthProvider';
 const SignInPage = () => {
     const router = useRouter();
     const setApiKey = userStore((s) => s.setApiKey);
-    const { loginAsGuest } = useAuth();
+    const { loginAsGuest, status, isLoading } = useAuth();
     const [form, setForm] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [googleLoading, setGoogleLoading] = useState(false);
     const [guestLoading, setGuestLoading] = useState(false);
 
     useEffect(() => {
-        const loadSession = async () => {
-            const { data } = await supabase.auth.getSession();
-            const session = data.session;
-            if (session) {
-                const key = session.user.user_metadata?.nexon_api_key;
-                if (key) setApiKey(key);
-                router.replace('/');
-            }
-        };
-        loadSession();
-    }, [router, setApiKey]);
+        if (isLoading) return;
+        if (status === 'authenticated') {
+            router.replace('/search');
+        }
+    }, [isLoading, router, status]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

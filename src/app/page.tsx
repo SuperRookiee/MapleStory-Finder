@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Search, ShieldCheck, Sparkles, } from "lucide-react";
+import GetStartedButton from "@/components/home/GetStartedButton";
 
 const HIGHLIGHTS = [
     {
@@ -21,12 +22,6 @@ const HIGHLIGHTS = [
             "공식 API와 인증을 통해 수집된 데이터를 암호화하여 저장하고, 개인 정보 보호를 보장합니다.",
         Icon: ShieldCheck,
     },
-];
-
-const STATS = [
-    { label: "분석된 캐릭터", value: "128K+" },
-    { label: "보스 전투 로그", value: "2.4M+" },
-    { label: "추천된 사냥 루트", value: "86K+" },
 ];
 
 const Page = () => {
@@ -71,13 +66,7 @@ const Page = () => {
                             AI가 추천하는 다음 플레이를 만나보세요.
                         </p>
                         <div className="mt-10 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
-                            <Link
-                                href="/sign_in"
-                                className="group inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-base font-semibold text-slate-950 shadow-[0_18px_45px_-20px_rgba(56,189,248,0.8)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_65px_-25px_rgba(14,165,233,0.9)]"
-                            >
-                                지금 시작하기
-                                <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
-                            </Link>
+                            <GetStartedButton />
                             <Link
                                 href="/search"
                                 className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/[0.08] px-8 py-3 text-base font-semibold text-slate-100 backdrop-blur transition hover:-translate-y-0.5 hover:border-sky-300/60 hover:bg-slate-900/60"
