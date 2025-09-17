@@ -25,6 +25,10 @@ type CharacterBannerProps = {
     backgroundColor?: string
     /** Optional background image shown behind the character */
     backgroundImage?: string
+    /** Preloaded image url shared from the summary panel */
+    imageSrc?: string
+    /** Shared element transition name */
+    imageTransitionName?: string
 }
 
 const CharacterBanner = ({
@@ -37,9 +41,15 @@ const CharacterBanner = ({
     imageScale,
     backgroundColor = "bg-card",
     backgroundImage,
+    imageSrc,
+    imageTransitionName,
 }: CharacterBannerProps) => {
     const router = useRouter();
     const { status } = useAuth();
+    const bannerImageSrc = imageSrc ?? (basic?.character_image
+        ? `/api/crop?url=${encodeURIComponent(basic.character_image)}`
+        : null
+    );
 
     const getFigure = () => {
         if (!basic?.character_image) return;
@@ -141,14 +151,20 @@ const CharacterBanner = ({
                                 {basic.character_name}
                             </div>
                         </div>
-                        {basic.character_image && (
+                        {bannerImageSrc && (
                             <div
                                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                                style={{ transform: `scale(${imageScale})`, opacity: imageScale }}
+                                style={{
+                                    transform: `scale(${imageScale})`,
+                                    opacity: imageScale,
+                                    ...(imageTransitionName
+                                        ? { viewTransitionName: imageTransitionName }
+                                        : {}),
+                                }}
                             >
                                 <Image
-                                    src={`/api/crop?url=${encodeURIComponent(basic.character_image)}`}
-                                    alt={basic.character_name}
+                                    src={bannerImageSrc}
+                                    alt={basic?.character_name ?? "character"}
                                     width={120}
                                     height={120}
                                     className="object-contain h-auto"

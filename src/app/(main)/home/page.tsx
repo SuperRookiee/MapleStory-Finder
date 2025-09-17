@@ -96,7 +96,15 @@ const Home = () => {
     };
 
     const goToDetailPage = () => {
-        router.push(`/character/${selected}`);
+        if (!selected) return;
+        const target = selected;
+        const navigate = () => router.push(`/character/${target}`);
+        if (typeof document !== "undefined" && "startViewTransition" in document) {
+            // @ts-expect-error: startViewTransition is not yet in the DOM typings
+            document.startViewTransition(navigate);
+        } else {
+            navigate();
+        }
     };
 
     return (
