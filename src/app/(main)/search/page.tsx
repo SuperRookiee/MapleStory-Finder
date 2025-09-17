@@ -43,7 +43,7 @@ const SearchPage = () => {
     };
 
     return (
-        <div className="flex h-full flex-col items-center justify-center px-4">
+        <div className="flex h-5/6 flex-col items-center justify-center px-4">
             <div className="flex w-full max-w-2xl flex-col items-center gap-8">
                 <div className="flex flex-col items-center gap-3 text-center">
                     <Image src="/Reheln.png" alt="Finder" width={96} height={96} priority />
