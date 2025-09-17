@@ -131,17 +131,19 @@ const SignInPage = () => {
                     >
                         {googleLoading ? 'Sign in with Google...' : 'Sign in with Google'}
                     </Button>
-                    <div className="text-center text-xs font-semibold tracking-wide text-muted-foreground">
-                        ----or----
+                    <div className="relative flex items-center">
+                        <div className="flex-grow border-t border-gray-300" />
+                        <span className="mx-4 flex-shrink text-xs font-semibold tracking-wide text-muted-foreground">OR</span>
+                        <div className="flex-grow border-t border-gray-300" />
                     </div>
                     <Button
                         type="button"
-                        variant="secondary"
+                        variant="outline"
                         className="w-full"
                         onClick={handleGuestLogin}
                         disabled={guestLoading}
                     >
-                        {guestLoading ? '게스트로 이동 중...' : '게스트로 둘러보기'}
+                        {guestLoading ? '게스트로 입장 중...' : '게스트로 둘러보기'}
                     </Button>
                     <p className="text-sm text-center">
                         Don&apos;t have an account?{' '}

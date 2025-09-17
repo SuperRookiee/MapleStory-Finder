@@ -66,7 +66,7 @@ npm install
 ```
 
 ### Environment Variables
-프로젝트 루트에 `.env.local` 파일을 생성하고 아래 값을 입력하세요.
+프로젝트 루트에 `.env` 파일을 생성하고 아래 값을 입력하세요.
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
