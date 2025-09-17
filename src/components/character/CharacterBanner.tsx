@@ -90,18 +90,18 @@ const CharacterBanner = ({
                     </div>
                 ) : (
                     <>
-                        <div className="absolute top-2 left-2 bg-muted px-2 py-1 rounded-md text-sm font-medium">
+                        <div className="absolute top-2 left-2 bg-muted px-2 py-1 rounded-md text-sm font-medium z-10">
                             <div className="flex gap-1.5">
                                 <WorldIcon name={basic.world_name}/> {basic.world_name}
                             </div>
                         </div>
-                        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-2 py-1 rounded-md text-sm font-medium">
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-2 py-1 rounded-md text-sm font-medium z-10">
                             Lv. {basic.character_level}
                         </div>
-                        <div className="absolute top-2 right-2 bg-muted px-2 py-1 rounded-md text-sm font-medium">
+                        <div className="absolute top-2 right-2 bg-muted px-2 py-1 rounded-md text-sm font-medium z-10">
                             {basic.character_class}
                         </div>
-                        <div className="absolute bottom-12 left-2 space-y-2 text-sm">
+                        <div className="absolute bottom-12 left-2 space-y-2 text-sm z-10">
                             {union && (
                                 <div className="bg-muted px-2 py-1 rounded-md">유니온 {union.union_level}</div>
                             )}
@@ -109,10 +109,10 @@ const CharacterBanner = ({
                                 <div className="bg-muted px-2 py-1 rounded-md">무릉 {dojang.dojang_best_floor}층</div>
                             )}
                             {popularity && (
-                                <div className="bg-muted px-2 py-1 rounded-md">인기도 {popularity.popularity}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md ">인기도 {popularity.popularity}</div>
                             )}
                         </div>
-                        <div className="absolute bottom-12 right-2 space-y-2 text-sm ">
+                        <div className="absolute bottom-12 right-2 space-y-2 text-sm z-10">
                             {guild?.guild_name && (
                                 <div className="bg-muted px-2 py-1 rounded-md">길드 {guild.guild_name}</div>
                             )}
@@ -132,7 +132,7 @@ const CharacterBanner = ({
                                 </Tooltip>
                             </div>
                         </div>
-                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
                             <div className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">
                                 {basic.character_name}
                             </div>
