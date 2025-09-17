@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
     const applyAuthState = useApplyAuthState();
     const redirectToastPathRef = useRef<string | null>(null);
+    const skipGuestGuardToastRef = useRef(false);
 
     const syncSession = useCallback(async () => {
         setIsLoading(true);
@@ -86,6 +87,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const loginAsGuest = useCallback(() => {
         if (typeof window === "undefined") return;
+        skipGuestGuardToastRef.current = true;
         localStorage.setItem(GUEST_STORAGE_KEY, "true");
         applyAuthState(null, true, setStatus, setIsLoading);
     }, [applyAuthState]);
@@ -105,9 +107,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (status === "guest" && pathname && !isGuestAccessiblePath(pathname)) {
             if (redirectToastPathRef.current !== pathname) {
-                toast.error("로그인이 필요한 서비스입니다");
+                if (!skipGuestGuardToastRef.current) {
+                    toast.error("로그인이 필요한 서비스입니다");
+                }
                 redirectToastPathRef.current = pathname;
             }
+            skipGuestGuardToastRef.current = false;
             router.replace("/search");
             return;
         }
@@ -122,6 +127,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         redirectToastPathRef.current = null;
+        skipGuestGuardToastRef.current = false;
     }, [isLoading, pathname, router, status]);
 
     const value = useMemo<AuthContextValue>(
