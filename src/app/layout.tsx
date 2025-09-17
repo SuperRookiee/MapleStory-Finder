@@ -9,12 +9,12 @@ import { AuthProvider } from "@/providers/AuthProvider";
 const mapleStory = localFont({
     src: [
         {
-            path: "../../public/font/NEXON_Maplestory/TTF/Maplestory Light.ttf",
+            path: "../../public/fonts/NEXON_Maplestory/TTF/Maplestory Light.ttf",
             weight: "400",
             style: "normal",
         },
         {
-            path: "../../public/font/NEXON_Maplestory/TTF/Maplestory Bold.ttf",
+            path: "../../public/fonts/NEXON_Maplestory/TTF/Maplestory Bold.ttf",
             weight: "700",
             style: "normal",
         },

@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { userStore } from '@/stores/userStore';
 import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { userStore } from '@/stores/userStore';
 
 const SignUpPage = () => {
     const router = useRouter();
@@ -43,7 +43,7 @@ const SignUpPage = () => {
         <div className="flex min-h-screen">
             <div className="relative hidden w-1/2 md:block">
                 <Image
-                    src="https://ssl.nexon.com/s2/game/maplestory/renewal/common/media/artwork/artwork_14.jpg"
+                    src="/images/artwork_14.jpg"
                     alt="Cover"
                     className="absolute inset-0 h-full w-full object-cover"
                     fill

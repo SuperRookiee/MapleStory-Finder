@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { userStore } from '@/stores/userStore';
 import { supabase } from '@/libs/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/providers/AuthProvider';
-import { userStore } from '@/stores/userStore';
 
 const SignInPage = () => {
     const router = useRouter();
@@ -87,7 +87,7 @@ const SignInPage = () => {
         <div className="flex min-h-screen">
             <div className="relative hidden w-1/2 md:block">
                 <Image
-                    src="https://lwi.nexon.com/maplestory/common/media/artwork/artwork_117.jpg"
+                    src="/images/artwork_117.jpg"
                     alt="Cover"
                     className="absolute inset-0 h-full w-full object-cover"
                     fill
