@@ -5,21 +5,30 @@ import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { userStore } from "@/stores/userStore";
 
+const getApiKeyInfo = () => {
+    const { apiKey, isGuest } = userStore.getState().user;
+    const fallback = process.env.NEXT_PUBLIC_NEXON_API_KEY ?? "";
+    return {
+        key: apiKey ?? fallback,
+        isGuest: Boolean(isGuest),
+    };
+};
+
 const limit = pLimit(5);
 
 export const findCharacterList = async () => {
-    const apiKey = userStore.getState().user.apiKey;
+    const { key, isGuest } = getApiKeyInfo();
     try {
         const response = await axios.get<ICharacterResponse<{ characters: ICharacterSummary[] }>>(
             `/api/character/list`,
             {
-                headers: { "x-nxopen-api-key": apiKey ?? "" },
+                headers: { "x-nxopen-api-key": key },
             }
         );
         return response.data;
     } catch (err) {
         if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
-            if (typeof window !== "undefined") {
+            if (!isGuest && typeof window !== "undefined") {
                 window.location.href = "/my_page?missingApiKey=1";
             }
         }
@@ -31,12 +40,12 @@ const callCharacterApi = async <T>(
     endpoint: string,
     params: Record<string, string | number | undefined> = {},
 ): Promise<ICharacterResponse<T>> => {
-    const apiKey = userStore.getState().user.apiKey;
+    const { key, isGuest } = getApiKeyInfo();
 
     return limit(async () => {
         try {
             const response = await axios.get<ICharacterResponse<T>>(`/api/character/${endpoint}`, {
-                headers: { "x-nxopen-api-key": apiKey ?? "" },
+                headers: { "x-nxopen-api-key": key },
                 params: Object.fromEntries(
                     Object.entries(params).filter(([, v]) => v !== undefined),
                 ),
@@ -44,7 +53,7 @@ const callCharacterApi = async <T>(
             return response.data;
         } catch (err) {
             if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
-                if (typeof window !== "undefined") {
+                if (!isGuest && typeof window !== "undefined") {
                     window.location.href = "/my_page?missingApiKey=1";
                 }
             }
@@ -57,12 +66,12 @@ const callApi = async <T>(
     endpoint: string,
     params: Record<string, string | number | undefined> = {},
 ): Promise<ICharacterResponse<T>> => {
-    const apiKey = userStore.getState().user.apiKey;
+    const { key, isGuest } = getApiKeyInfo();
 
     return limit(async () => {
         try {
             const response = await axios.get(`/api/${endpoint}`, {
-                headers: { "x-nxopen-api-key": apiKey ?? "" },
+                headers: { "x-nxopen-api-key": key },
                 params: Object.fromEntries(
                     Object.entries(params).filter(([, v]) => v !== undefined),
                 ),
@@ -70,7 +79,7 @@ const callApi = async <T>(
             return response.data;
         } catch (err) {
             if (err instanceof AxiosError && err.response?.data?.error?.message === "Missing API Key") {
-                if (typeof window !== "undefined") {
+                if (!isGuest && typeof window !== "undefined") {
                     window.location.href = "/my_page?missingApiKey=1";
                 }
             }

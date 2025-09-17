@@ -1,17 +1,17 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
-import { supabase } from "@/libs/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader as SheetContentHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { userStore } from "@/stores/userStore";
+import { useAuth } from "@/providers/AuthProvider";
 
 const SideMenu = () => {
     const router = useRouter();
-    const setUser = userStore((s) => s.setUser);
+    const { status, logout } = useAuth();
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
-        setUser({ apiKey: null });
+        await logout();
         router.push("/sign_in");
     };
 
@@ -73,15 +73,17 @@ const SideMenu = () => {
                             My Page
                         </Button>
                     </SheetClose>
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </Button>
-                    </SheetClose>
+                    {status !== "unauthenticated" ? (
+                        <SheetClose asChild>
+                            <Button
+                                variant="ghost"
+                                className="w-full"
+                                onClick={handleLogout}
+                            >
+                                {status === "guest" ? "Exit Guest" : "Logout"}
+                            </Button>
+                        </SheetClose>
+                    ) : null}
                 </div>
             </SheetContent>
         </Sheet>

@@ -4,6 +4,7 @@ import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 const mapleStory = localFont({
     src: [
@@ -53,8 +54,10 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
             strategy="afterInteractive"
         />
 
-        <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
-        <Toaster />
+        <AuthProvider>
+            <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+            <Toaster />
+        </AuthProvider>
         </body>
         </html>
     );
