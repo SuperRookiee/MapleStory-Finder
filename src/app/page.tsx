@@ -2,33 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Search, ShieldCheck, Sparkles, } from "lucide-react";
 
-const HIGHLIGHTS = [
-    {
-        title: "AI 기반 빌드 인사이트",
-        description:
-            "클래스별 상위 랭커의 스펙을 학습해 당신에게 딱 맞는 장비와 스킬 세팅을 추천합니다.",
-        Icon: BarChart3,
-    },
-    {
-        title: "정밀한 검색 경험",
-        description:
-            "닉네임, 직업, 길드, 서버까지 원하는 조건으로 빠르게 필터링하고 즉시 비교하세요.",
-        Icon: Search,
-    },
-    {
-        title: "안전한 데이터 연동",
-        description:
-            "공식 API와 인증을 통해 수집된 데이터를 암호화하여 저장하고, 개인 정보 보호를 보장합니다.",
-        Icon: ShieldCheck,
-    },
-];
-
-const STATS = [
-    { label: "분석된 캐릭터", value: "128K+" },
-    { label: "보스 전투 로그", value: "2.4M+" },
-    { label: "추천된 사냥 루트", value: "86K+" },
-];
-
+// DashBoard
 const Page = () => {
     return (
         <main className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-50">
@@ -104,5 +78,26 @@ const Page = () => {
         </main>
     );
 };
+
+const HIGHLIGHTS = [
+    {
+        title: "AI 기반 빌드 인사이트",
+        description:
+            "클래스별 상위 랭커의 스펙을 학습해 당신에게 딱 맞는 장비와 스킬 세팅을 추천합니다.",
+        Icon: BarChart3,
+    },
+    {
+        title: "정밀한 검색 경험",
+        description:
+            "닉네임, 직업, 길드, 서버까지 원하는 조건으로 빠르게 필터링하고 즉시 비교하세요.",
+        Icon: Search,
+    },
+    {
+        title: "안전한 데이터 연동",
+        description:
+            "공식 API와 인증을 통해 수집된 데이터를 암호화하여 저장하고, 개인 정보 보호를 보장합니다.",
+        Icon: ShieldCheck,
+    },
+];
 
 export default Page;
