@@ -1,7 +1,7 @@
 # MapleStory Finder
 
 <p align="center">
-  <img src="./public/Reheln.png" width="140" alt="Finder logo" />
+  <img src="./public/Reheln.png" width="144" alt="Finder logo" />
 </p>
 
 <p align="center">
