@@ -36,13 +36,13 @@ const Page = () => {
                         </span>
                         <h1 className="mt-8 text-balance text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
                             <span className="bg-gradient-to-r from-sky-200 via-fuchsia-300 to-emerald-200 bg-clip-text text-transparent">
-                                당신의 전투 로그가 전략이 되는 순간
+                                내 캐릭터 정보를 한눈에 확인하는 순간
                             </span>
                             , MapleStory Finder
                         </h1>
                         <p className="mt-6 max-w-3xl text-balance text-lg text-slate-300 sm:text-xl">
-                            복잡한 메이플스토리 데이터를 한눈에. 캐릭터 성장 동선부터 보스 공략까지,
-                            AI가 추천하는 다음 플레이를 만나보세요.
+                            메이플스토리 캐릭터를 검색하고 주요 스탯과 착용 아이템을 손쉽게 확인하세요.
+                            필요한 정보만 깔끔하게 정리해 드립니다.
                         </p>
                         <div className="mt-10 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
                             <Link
@@ -56,7 +56,7 @@ const Page = () => {
                                 href="/search"
                                 className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/[0.08] px-8 py-3 text-base font-semibold text-slate-100 backdrop-blur transition hover:-translate-y-0.5 hover:border-sky-300/60 hover:bg-slate-900/60"
                             >
-                                고급 검색 살펴보기
+                                캐릭터 검색 둘러보기
                             </Link>
                         </div>
                     </div>
@@ -81,21 +81,21 @@ const Page = () => {
 
 const HIGHLIGHTS = [
     {
-        title: "AI 기반 빌드 인사이트",
+        title: "실시간 캐릭터 검색",
         description:
-            "클래스별 상위 랭커의 스펙을 학습해 당신에게 딱 맞는 장비와 스킬 세팅을 추천합니다.",
-        Icon: BarChart3,
-    },
-    {
-        title: "정밀한 검색 경험",
-        description:
-            "닉네임, 직업, 길드, 서버까지 원하는 조건으로 빠르게 필터링하고 즉시 비교하세요.",
+            "닉네임과 월드만 입력하면 원하는 캐릭터를 빠르게 찾아볼 수 있습니다.",
         Icon: Search,
     },
     {
-        title: "안전한 데이터 연동",
+        title: "한눈에 보는 스탯 리포트",
         description:
-            "공식 API와 인증을 통해 수집된 데이터를 암호화하여 저장하고, 개인 정보 보호를 보장합니다.",
+            "공격력, 보스 대미지, 크리티컬 등 핵심 스탯을 자동으로 정리해 보여드립니다.",
+        Icon: BarChart3,
+    },
+    {
+        title: "장비와 아이템 체크",
+        description:
+            "현재 착용 중인 장비와 주요 옵션을 상세하게 확인할 수 있습니다.",
         Icon: ShieldCheck,
     },
 ];
