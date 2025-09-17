@@ -1,102 +1,182 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BarChart3, Search, ShieldCheck, Sparkles, } from "lucide-react";
+import { unstable_ViewTransition as ViewTransition } from "react";
+import {
+    ArrowRight,
+    BarChart3,
+    Bot,
+    Search,
+    ShieldCheck,
+    Sparkles,
+    Wand2,
+    type LucideIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-// DashBoard
 const Page = () => {
     return (
-        <main className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-50">
-            <div className="pointer-events-none absolute inset-0 -z-10">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_60%)]" />
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.06)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-                <div className="absolute -top-48 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-gradient-to-r from-sky-400/30 via-fuchsia-500/25 to-emerald-400/30 blur-3xl" />
-                <div className="absolute bottom-[-12rem] right-[-10rem] h-[28rem] w-[28rem] rounded-full bg-gradient-to-br from-purple-500/20 via-sky-400/25 to-pink-500/20 blur-[140px]" />
-            </div>
-            <div className="relative z-10">
-                <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6 sm:px-8 lg:px-12">
-                    <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2 backdrop-blur">
-                        <Image src="/Reheln.png" alt="Finder" width={24} height={24} priority />
-                        <span className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-100/80">
-                            MapleStory Finder
-                        </span>
-                    </div>
-                    <Link
-                        href="/search"
-                        className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm font-semibold text-slate-100 transition hover:-translate-y-0.5 hover:border-sky-400/60 hover:bg-slate-900/60"
-                    >
-                        실시간 검색 둘러보기
-                        <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                    </Link>
-                </header>
-                <section className="px-6 pb-20 pt-6 sm:px-8 sm:pt-10 lg:px-12">
-                    <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
-                        <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-4 py-1 text-xs font-medium uppercase tracking-[0.3em] text-slate-100/80 backdrop-blur">
-                            <Sparkles className="h-4 w-4 text-sky-300" />
-                            Next-Gen Maple Data
-                        </span>
-                        <h1 className="mt-8 text-balance text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                            <p className="bg-gradient-to-r from-sky-200 via-fuchsia-300 to-emerald-200 bg-clip-text text-transparent">
-                                내 캐릭터 정보를 한눈에 확인하는 순간
-                            </p>
-                            <p>MapleStory Finder</p>
-                        </h1>
-                        <p className="mt-6 max-w-3xl text-balance text-lg text-slate-300 sm:text-xl">
-                            메이플스토리 캐릭터를 검색하고 주요 스탯과 착용 아이템을 손쉽게 확인하세요.
-                            필요한 정보만 깔끔하게 정리해 드립니다.
-                        </p>
-                        <div className="mt-10 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
-                            <Link
-                                href="/sign_in"
-                                className="group inline-flex items-center justify-center rounded-full bg-white px-8 py-3 text-base font-semibold text-slate-950 shadow-[0_18px_45px_-20px_rgba(56,189,248,0.8)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_65px_-25px_rgba(14,165,233,0.9)]"
-                            >
-                                지금 시작하기
-                                <ArrowRight className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
-                            </Link>
-                            <Link
-                                href="/search"
-                                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/[0.08] px-8 py-3 text-base font-semibold text-slate-100 backdrop-blur transition hover:-translate-y-0.5 hover:border-sky-300/60 hover:bg-slate-900/60"
-                            >
-                                캐릭터 검색 둘러보기
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="mx-auto mt-20 grid max-w-5xl gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">
-                        {HIGHLIGHTS.map(({ Icon, title, description }) => (
-                            <div
-                                key={title}
-                                className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur"
-                            >
-                                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-sky-500/20 to-fuchsia-500/20 blur-2xl" />
-                                <Icon className="h-10 w-10 text-sky-300" strokeWidth={1.6} />
-                                <h3 className="mt-6 text-xl font-semibold text-white">{title}</h3>
-                                <p className="mt-3 text-sm text-slate-300">{description}</p>
+        <ViewTransition enter="fade" exit="fade">
+            <main className="bg-background text-foreground">
+                <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-16 px-4 pb-16 pt-12 sm:px-6 lg:px-8">
+                    <section className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:items-center">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/70 px-4 py-1 text-xs font-medium uppercase tracking-[0.32em] text-muted-foreground">
+                                <Sparkles className="h-4 w-4 text-primary" />
+                                MapleStory Finder
                             </div>
+                            <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+                                MapleStory 데이터를 한눈에 정리해 보여주는 대시보드
+                            </h1>
+                            <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">
+                                실시간 캐릭터 검색부터 스탯 요약, AI 챗봇, 피규어 생성까지 MapleStory Finder에서 모두 이용해 보세요. 다른 페이지와 어우러지는 깔끔한 레이아웃으로 주요 기능을 빠르게 확인할 수 있습니다.
+                            </p>
+                            <div className="flex flex-col gap-3 sm:flex-row">
+                                <Button asChild className="gap-2">
+                                    <Link href="/sign_in">
+                                        지금 시작하기
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+                                <Button asChild variant="outline" className="gap-2">
+                                    <Link href="/search">
+                                        캐릭터 검색
+                                        <Search className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                        <Card className="h-full border-border/70 bg-card/90 shadow-sm">
+                            <CardHeader>
+                                <CardTitle className="text-lg font-semibold">Finder 미리보기</CardTitle>
+                                <CardDescription>
+                                    친숙한 UI와 함께 홈에서 바로 주요 기능으로 이동할 수 있어요.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex flex-col gap-6 pb-8">
+                                <div className="relative mx-auto aspect-square w-40 overflow-hidden rounded-2xl bg-muted sm:w-56">
+                                    <Image
+                                        src="/Reheln.png"
+                                        alt="MapleStory Finder"
+                                        fill
+                                        className="object-contain p-6"
+                                        sizes="(max-width: 768px) 10rem, 14rem"
+                                        priority
+                                    />
+                                </div>
+                                <div className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
+                                    <div className="rounded-lg border border-dashed border-border/70 bg-background/70 p-4">
+                                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground/80">
+                                            캐릭터
+                                        </p>
+                                        <p className="mt-1 text-base font-semibold text-foreground">실시간 검색</p>
+                                        <p className="mt-1 text-xs text-muted-foreground">
+                                            닉네임과 월드만 입력하면 기본 정보와 스탯을 즉시 확인할 수 있습니다.
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-dashed border-border/70 bg-background/70 p-4">
+                                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground/80">
+                                            인사이트
+                                        </p>
+                                        <p className="mt-1 text-base font-semibold text-foreground">AI 도우미</p>
+                                        <p className="mt-1 text-xs text-muted-foreground">
+                                            Gemini AI가 전투력, 장비 구성 등 궁금한 내용을 대화로 안내합니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </section>
+
+                    <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {HIGHLIGHTS.map(({ Icon, title, description }) => (
+                            <Card key={title} className="border-border/70">
+                                <CardContent className="flex flex-col gap-4 py-6">
+                                    <Icon className="h-10 w-10 text-primary" strokeWidth={1.6} />
+                                    <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+                                    <p className="text-sm text-muted-foreground">{description}</p>
+                                </CardContent>
+                            </Card>
                         ))}
-                    </div>
-                </section>
-            </div>
-        </main>
+                    </section>
+
+                    <section className="grid gap-4 md:grid-cols-2">
+                        {QUICK_LINKS.map(({ title, description, href, cta, Icon }) => (
+                            <Card key={title} className="border-border/70 bg-muted/40">
+                                <CardContent className="flex h-full flex-col gap-4 py-6">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="space-y-1">
+                                            <p className="text-sm font-semibold text-foreground">{title}</p>
+                                            <p className="text-sm text-muted-foreground">{description}</p>
+                                        </div>
+                                        <Icon className="h-5 w-5 text-primary" strokeWidth={1.6} />
+                                    </div>
+                                    <Button
+                                        asChild
+                                        variant="ghost"
+                                        className="w-fit gap-2 px-0 text-sm font-semibold text-primary hover:bg-transparent hover:text-primary"
+                                    >
+                                        <Link href={href}>
+                                            {cta}
+                                            <ArrowRight className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </section>
+                </div>
+            </main>
+        </ViewTransition>
     );
 };
 
-const HIGHLIGHTS = [
+type Feature = {
+    title: string;
+    description: string;
+    Icon: LucideIcon;
+};
+
+type QuickLink = {
+    title: string;
+    description: string;
+    href: string;
+    cta: string;
+    Icon: LucideIcon;
+};
+
+const HIGHLIGHTS: Feature[] = [
     {
         title: "실시간 캐릭터 검색",
-        description:
-            "닉네임과 월드만 입력하면 원하는 캐릭터를 빠르게 찾아볼 수 있습니다.",
+        description: "닉네임과 월드만 입력하면 원하는 캐릭터를 빠르게 찾아 주요 정보를 확인할 수 있습니다.",
         Icon: Search,
     },
     {
         title: "한눈에 보는 스탯 리포트",
-        description:
-            "공격력, 보스 대미지, 크리티컬 등 핵심 스탯을 자동으로 정리해 보여드립니다.",
+        description: "공격력, 보스 대미지, 크리티컬 등 핵심 스탯을 자동으로 정리해 제공합니다.",
         Icon: BarChart3,
     },
     {
         title: "장비와 아이템 체크",
-        description:
-            "현재 착용 중인 장비와 주요 옵션을 상세하게 확인할 수 있습니다.",
+        description: "현재 착용 중인 장비와 주요 옵션을 깔끔한 카드 형식으로 살펴볼 수 있습니다.",
         Icon: ShieldCheck,
+    },
+];
+
+const QUICK_LINKS: QuickLink[] = [
+    {
+        title: "Gemini AI 챗봇",
+        description: "메이플스토리 데이터를 기반으로 질문에 답하는 대화형 인터페이스를 사용해 보세요.",
+        href: "/chat",
+        cta: "챗봇 열기",
+        Icon: Bot,
+    },
+    {
+        title: "캐릭터 피규어 생성",
+        description: "AI가 캐릭터 이미지를 바탕으로 3D 피규어 렌더를 생성해 드립니다. 캐릭터 상세에서 바로 이동하세요.",
+        href: "/figure",
+        cta: "피규어 페이지로",
+        Icon: Wand2,
     },
 ];
 
