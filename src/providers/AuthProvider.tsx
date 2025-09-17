@@ -66,6 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const applyAuthState = useApplyAuthState();
     const redirectToastPathRef = useRef<string | null>(null);
     const skipGuestGuardToastRef = useRef(false);
+    const skipUnauthenticatedToastRef = useRef(false);
 
     const syncSession = useCallback(async () => {
         setIsLoading(true);
@@ -100,6 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (typeof window !== "undefined") {
             localStorage.removeItem(GUEST_STORAGE_KEY);
         }
+        skipUnauthenticatedToastRef.current = true;
         applyAuthState(null, false, setStatus, setIsLoading);
     }, [applyAuthState, status]);
 
@@ -121,9 +123,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (status === "unauthenticated" && pathname) {
             if (isPublicPath(pathname) || isUnauthenticatedAccessiblePath(pathname)) {
                 redirectToastPathRef.current = null;
+                skipUnauthenticatedToastRef.current = false;
                 return;
             }
-            toast.info("로그인이 필요한 서비스입니다");
+            if (!skipUnauthenticatedToastRef.current) {
+                toast.info("로그인이 필요한 서비스입니다");
+            }
+            skipUnauthenticatedToastRef.current = false;
             router.replace("/sign_in");
             return;
         }

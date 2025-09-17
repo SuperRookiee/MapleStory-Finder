@@ -13,6 +13,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/providers/AuthProvider';
 
+const getSiteUrl = () => {
+    const envUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ??
+        (process.env.NEXT_PUBLIC_VERCEL_URL
+            ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+            : undefined);
+
+    if (envUrl) {
+        return envUrl.replace(/\/+$/, "");
+    }
+
+    if (typeof window !== 'undefined') {
+        return window.location.origin;
+    }
+
+    return 'http://localhost:3000';
+};
+
 const SignInPage = () => {
     const router = useRouter();
     const setApiKey = userStore((s) => s.setApiKey);
@@ -58,7 +76,7 @@ const SignInPage = () => {
 
     const handleGoogle = async () => {
         setGoogleLoading(true);
-        const redirectTo = `${window.location.origin}/home`;
+        const redirectTo = `${getSiteUrl()}/sign_in`;
 
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
