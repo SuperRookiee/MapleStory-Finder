@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { findCharacterBasic, findCharacterList } from "@/fetchs/character.fetch";
-import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
+import { findCharacterBasic } from "@/fetchs/character.fetch";
+import { findUserCharacterList } from "@/fetchs/user.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { IUserCharacterList } from "@/interface/user/IUserCharacterList";
+import { IUserResponse } from "@/interface/user/IUserResponse";
 
 type CharacterListSlice = {
     characters: ICharacterSummary[];
@@ -16,7 +18,7 @@ export const characterListStore = create<CharacterListSlice>()(persist((set) => 
         fetchCharacters: async () => {
             set({ loading: true });
             try {
-                const res: ICharacterResponse<{ characters: ICharacterSummary[] }> = await findCharacterList();
+                const res: IUserResponse<IUserCharacterList> = await findUserCharacterList();
                 const basicList = (res.data.characters ?? []).map((c) => ({
                     ocid: c.ocid,
                     character_name: c.character_name,

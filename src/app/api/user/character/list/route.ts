@@ -1,13 +1,10 @@
 import axios, { AxiosError } from "axios";
-import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { IUserAccountCharacterList } from "@/interface/user/IUserCharacterList";
 import { Get } from "@/utils/fetch";
 import { Failed, Success } from "@/utils/message";
 
 interface ICharacterListApiResponse {
-    account_list: {
-        account_id: string;
-        character_list: ICharacterSummary[];
-    }[];
+    account_list: IUserAccountCharacterList[];
 }
 
 export const GET = async (req: Request) => {
@@ -25,12 +22,16 @@ export const GET = async (req: Request) => {
                 }
             );
 
-            const characters = res.data.account_list.flatMap(
-                (account) => account.character_list
+            const accountList = res.data.account_list ?? [];
+            const characters = accountList.flatMap(
+                (account) => account.character_list ?? []
             );
 
             return Success("캐릭터 목록 조회 성공", 200, {
-                data: { characters },
+                data: {
+                    account_list: accountList,
+                    characters,
+                },
             });
         } catch (err: unknown) {
             if (err instanceof AxiosError) {
@@ -45,4 +46,3 @@ export const GET = async (req: Request) => {
 
     return handler(req);
 };
-
