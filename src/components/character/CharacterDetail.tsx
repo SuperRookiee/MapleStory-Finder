@@ -33,6 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from "@/fetchs/character.fetch";
 import { findGuildBasic, findGuildId } from "@/fetchs/guild.fetch";
 import { findUnion, findUnionArtifact, findUnionRaider } from "@/fetchs/union.fetch";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
@@ -48,6 +49,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         setBeauty, setAndroid, setPet, setPropensity, setAbility,
         reset,
     } = characterDetailStore();
+    const t = useTranslations();
     const [imageScale, setImageScale] = useState(1);
     const [basicLoading, setBasicLoading] = useState(true);
     const [tab, setTab] = useState("basic");
@@ -114,7 +116,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             } catch (e) {
                 if (!cancelled) {
                     console.error(e);
-                    toast.error('캐릭터 정보 로딩 실패');
+                    toast.error(t('character.detail.toast.loadCharacter'));
                 }
             } finally {
                 if (!cancelled) {
@@ -158,7 +160,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setUnionArtifact(artifactRes.data);
             } catch (e) {
                 console.error(e);
-                toast.error('유니온 정보 로딩 실패');
+                toast.error(t('character.detail.toast.loadUnion'));
             }
         };
         loadUnion();
@@ -179,7 +181,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setSetEffect(setEffectRes.data);
             } catch (e) {
                 console.error(e);
-                toast.error('장비 정보 로딩 실패');
+                toast.error(t('character.detail.toast.loadEquip'));
             }
         };
         loadEquip();
@@ -211,7 +213,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setVMatrix(vMatrixRes.data);
             } catch (e) {
                 console.error(e);
-                toast.error('스킬 정보 로딩 실패');
+                toast.error(t('character.detail.toast.loadSkill'));
             }
         };
         loadSkill();
@@ -247,7 +249,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setPet(petRes.data);
             } catch (e) {
                 console.error(e);
-                toast.error('캐시 정보 로딩 실패');
+                toast.error(t('character.detail.toast.loadCash'));
             }
         };
         loadCash();
@@ -275,7 +277,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setPropensity(propensityRes.data);
             } catch (e) {
                 console.error(e);
-                toast.error('기타 정보 로딩 실패');
+                toast.error(t('character.detail.toast.loadEtc'));
             }
         };
         loadEtc();
@@ -369,12 +371,12 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                     className="order-2 w-full sm:order-1 sm:flex-1"
                                 >
                                     <TabsList className="flex flex-wrap gap-2 sm:flex-nowrap sm:gap-0 sm:space-x-2">
-                                        <TabsTrigger value="basic">기본 정보</TabsTrigger>
-                                        <TabsTrigger value="union">유니온</TabsTrigger>
-                                        <TabsTrigger value="equip">장비</TabsTrigger>
-                                        <TabsTrigger value="skill">스킬</TabsTrigger>
-                                        <TabsTrigger value="cash">캐시</TabsTrigger>
-                                        <TabsTrigger value="etc">기타</TabsTrigger>
+                                        <TabsTrigger value="basic">{t('character.detail.tabs.basic')}</TabsTrigger>
+                                        <TabsTrigger value="union">{t('character.detail.tabs.union')}</TabsTrigger>
+                                        <TabsTrigger value="equip">{t('character.detail.tabs.equip')}</TabsTrigger>
+                                        <TabsTrigger value="skill">{t('character.detail.tabs.skill')}</TabsTrigger>
+                                        <TabsTrigger value="cash">{t('character.detail.tabs.cash')}</TabsTrigger>
+                                        <TabsTrigger value="etc">{t('character.detail.tabs.etc')}</TabsTrigger>
                                     </TabsList>
                                 </Tabs>
                             </div>

@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { findCharacterBasic, findCharacterItemEquipment } from "@/fetchs/character.fetch";
 import { ICharacterBasic, IItemEquipment } from "@/interface/character/ICharacter";
+import { useTranslations } from "@/providers/LanguageProvider";
 import { cn } from "@/utils/utils";
 
 interface ICharacterInfoProps {
@@ -21,6 +22,7 @@ interface ICharacterInfoProps {
 const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps) => {
     const [basic, setBasic] = useState<ICharacterBasic | null>(null);
     const [items, setItems] = useState<IItemEquipment[]>([]);
+    const t = useTranslations();
     const [loading, setLoading] = useState(false);
     const setPreview = useCharacterPreviewStore((state) => state.setPreview);
     const clearPreview = useCharacterPreviewStore((state) => state.clear);
@@ -72,7 +74,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
         <ScrollArea className={cn("hidden md:flex flex-1", className)}>
             {!ocid ? (
                 <div className="flex justify-center items-center w-full h-page animate-pulse">
-                    Please choose your character
+                    {t('home.characterInfo.emptyState')}
                 </div>
             ) : (
                 <div className="p-4 max-w-6xl mx-auto">
@@ -140,7 +142,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
                                 {loading || !basic ? (
                                     <Skeleton className="h-10 w-20" />
                                 ) : (
-                                    <Button onClick={goToDetailPage}>Detail</Button>
+                                    <Button onClick={goToDetailPage}>{t('home.characterInfo.detailButton')}</Button>
                                 )}
                             </div>
                         </section>

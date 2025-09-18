@@ -8,17 +8,19 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { findCharacterId } from '@/fetchs/character.fetch';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 const SearchPage = () => {
     const router = useRouter();
     const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
+    const t = useTranslations();
 
     const handleSearch = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const trimmed = query.trim();
         if (!trimmed) {
-            toast.error('캐릭터 이름을 입력해주세요.');
+            toast.error(t('search.errors.empty'));
             return;
         }
 
@@ -27,14 +29,19 @@ const SearchPage = () => {
             const response = await findCharacterId(trimmed);
             const ocid = response.data.ocid;
             if (!ocid) {
-                toast.error('캐릭터를 찾을 수 없습니다. 이름을 확인해주세요.');
+                toast.error(t('search.errors.notFound'));
                 return;
             }
             router.push(`/character/${ocid}`);
         } catch (error) {
-            let message = '캐릭터를 찾을 수 없습니다. 이름을 확인해주세요.';
-             if (error instanceof Error) {
-                message = error.message;
+            const defaultMessage = t('search.errors.notFound');
+            let message = defaultMessage;
+            if (error instanceof Error && error.message) {
+                if (error.message === '캐릭터를 찾을 수 없습니다. 이름을 확인해주세요.') {
+                    message = defaultMessage;
+                } else {
+                    message = error.message;
+                }
             }
             toast.error(message);
         } finally {
@@ -47,9 +54,9 @@ const SearchPage = () => {
             <div className="flex w-full max-w-2xl flex-col items-center gap-8">
                 <div className="flex flex-col items-center gap-3 text-center">
                     <Image src="/Reheln.png" alt="Finder" width={96} height={96} priority />
-                    <h1 className="text-3xl font-semibold tracking-tight">Search</h1>
+                    <h1 className="text-3xl font-semibold tracking-tight">{t('search.heading')}</h1>
                     <p className="max-w-lg text-balance text-sm text-muted-foreground">
-                        원하는 캐릭터를 찾아 상세 정보를 확인할 수 있습니다.
+                        {t('search.description')}
                     </p>
                 </div>
                 <form onSubmit={handleSearch} className="w-full space-y-6">
@@ -58,7 +65,7 @@ const SearchPage = () => {
                         <Input
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
-                            placeholder="캐릭터 이름을 검색하세요"
+                            placeholder={t('search.placeholder')}
                             autoComplete="off"
                             autoFocus
                             className="flex-1 border-0 bg-transparent p-0 text-lg shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -73,10 +80,10 @@ const SearchPage = () => {
                             {loading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                                    검색 중...
+                                    {t('search.loading')}
                                 </>
                             ) : (
-                                'Search'
+                                t('search.button')
                             )}
                         </Button>
                     </div>

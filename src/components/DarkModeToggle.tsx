@@ -2,6 +2,8 @@
 
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from '@/providers/LanguageProvider';
+import { cn } from '@/utils/utils';
 
 type DocumentWithViewTransition = Document & {
     startViewTransition?: (callback: () => void | Promise<void>) => void;
@@ -14,6 +16,7 @@ interface IDarkModeToggle {
 }
 
 const DarkModeToggle = ({ className }: IDarkModeToggle) => {
+    const t = useTranslations();
     const toggleTheme = () => {
         const root = document.documentElement;
         const nextIsDark = !root.classList.contains('dark');
@@ -68,8 +71,8 @@ const DarkModeToggle = ({ className }: IDarkModeToggle) => {
             variant="ghost"
             size="sm"
             onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className={`hover:bg-transparent ${className}`}
+            aria-label={t('common.darkModeToggle.ariaLabel')}
+            className={cn('hover:bg-transparent', className)}
         >
             <Sun className="h-5 w-5 text-foreground hidden dark:block"/>
             <Moon className="h-5 w-5 text-foreground block dark:hidden"/>

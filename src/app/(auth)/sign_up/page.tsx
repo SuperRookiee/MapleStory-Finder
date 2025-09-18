@@ -8,15 +8,18 @@ import { toast } from 'sonner';
 import { userStore } from '@/stores/userStore';
 import { supabase } from '@/libs/supabaseClient';
 import DarkModeToggle from "@/components/DarkModeToggle";
+import LanguageToggle from "@/components/LanguageToggle";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 const SignUpPage = () => {
     const router = useRouter();
     const setApiKey = userStore((s) => s.setApiKey);
     const [form, setForm] = useState({ email: '', password: '', apiKey: '' });
     const [loading, setLoading] = useState(false);
+    const t = useTranslations();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,14 +38,17 @@ const SignUpPage = () => {
         if (apiKey) {
             setApiKey(apiKey);
         }
-        toast.success(`${form.email}로 인증 메일이 발송되었습니다. 확인해 주세요.`);
+        toast.success(t('auth.signUp.toast.verificationSent', { email: form.email }));
         router.push('/home');
         setLoading(false);
     };
 
     return (
         <div className="flex min-h-screen">
-            <DarkModeToggle className='absolute top-1 right-1'/>
+            <div className='absolute top-1 right-1 flex gap-1.5'>
+                <LanguageToggle />
+                <DarkModeToggle />
+            </div>
             <div className="relative hidden w-1/2 md:block">
                 <Image
                     src="/images/artwork_14.jpg"
@@ -55,10 +61,10 @@ const SignUpPage = () => {
             <div className="flex flex-1 items-center justify-center p-4">
                 <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
                     <div className="space-y-2 text-center">
-                        <h1 className="text-2xl font-bold">Sign Up</h1>
+                        <h1 className="text-2xl font-bold">{t('auth.signUp.title')}</h1>
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t('auth.signUp.emailLabel')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -68,7 +74,7 @@ const SignUpPage = () => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">{t('auth.signUp.passwordLabel')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -78,7 +84,7 @@ const SignUpPage = () => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="apiKey">Nexon API Key</Label>
+                        <Label htmlFor="apiKey">{t('auth.signUp.apiKeyLabel')}</Label>
                         <Input
                             id="apiKey"
                             value={form.apiKey}
@@ -87,12 +93,12 @@ const SignUpPage = () => {
                         />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? 'Create account...' : 'Create account'}
+                        {loading ? t('auth.signUp.submitting') : t('auth.signUp.submit')}
                     </Button>
                     <p className="text-sm text-center">
-                        Already have an account?{' '}
+                        {t('auth.signUp.alreadyHave')} {' '}
                         <Link href="/sign_in" className="underline">
-                            Sign in
+                            {t('auth.signUp.signInCta')}
                         </Link>
                     </p>
                 </form>
