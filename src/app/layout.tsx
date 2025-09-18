@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { LanguageProvider } from "@/providers/LanguageProvider";
 
 const mapleStory = localFont({
     src: [
@@ -54,10 +55,12 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
             strategy="afterInteractive"
         />
 
-        <AuthProvider>
-            <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
-            <Toaster />
-        </AuthProvider>
+        <LanguageProvider>
+            <AuthProvider>
+                <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+                <Toaster />
+            </AuthProvider>
+        </LanguageProvider>
         </body>
         </html>
     );

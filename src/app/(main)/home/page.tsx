@@ -10,9 +10,11 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 const Home = () => {
     const router = useRouter();
+    const t = useTranslations();
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
     const [favorites, setFavorites] = useState<ICharacterSummary[]>([]);
     const { setFavorites: setFavoriteOcids, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
@@ -123,7 +125,7 @@ const Home = () => {
                             rounded-2xl bg-background p-0 shadow-lg
                         "
                     >
-                        <DialogTitle className="px-4 pt-4">Info</DialogTitle>
+                        <DialogTitle className="px-4 pt-4">{t('home.dialog.title')}</DialogTitle>
                         <CharacterInfo
                             ocid={selected}
                             goToDetailPage={goToDetailPage}

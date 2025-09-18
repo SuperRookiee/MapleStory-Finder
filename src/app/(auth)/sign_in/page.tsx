@@ -8,10 +8,12 @@ import { toast } from 'sonner';
 import { userStore } from '@/stores/userStore';
 import { supabase } from '@/libs/supabaseClient';
 import DarkModeToggle from "@/components/DarkModeToggle";
+import LanguageToggle from "@/components/LanguageToggle";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/providers/AuthProvider';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
@@ -64,6 +66,7 @@ const SignInPage = () => {
     const [googleLoading, setGoogleLoading] = useState(false);
     const [guestLoading, setGuestLoading] = useState(false);
     const [kakaoLoading, setKakaoLoading] = useState(false);
+    const t = useTranslations();
 
     const createRedirectTo = () => {
         const envUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL;
@@ -103,7 +106,7 @@ const SignInPage = () => {
         if (apiKey) {
             setApiKey(apiKey);
         }
-        toast.success('로그인 성공');
+        toast.success(t('auth.signIn.toast.success'));
         router.push('/home');
         setLoading(false);
     };
@@ -121,7 +124,7 @@ const SignInPage = () => {
                 setGoogleLoading(false);
             }
         } catch {
-            toast.error('구글 로그인 중 문제가 발생했습니다.');
+            toast.error(t('auth.signIn.toast.googleError'));
             setGoogleLoading(false);
         }
     };
@@ -139,7 +142,7 @@ const SignInPage = () => {
                 setKakaoLoading(false);
             }
         } catch {
-            toast.error('카카오 로그인 중 문제가 발생했습니다.');
+            toast.error(t('auth.signIn.toast.kakaoError'));
             setKakaoLoading(false);
         }
     };
@@ -148,7 +151,7 @@ const SignInPage = () => {
         setGuestLoading(true);
         try {
             loginAsGuest();
-            toast.success('게스트로 입장했습니다.');
+            toast.success(t('auth.signIn.toast.guestSuccess'));
             router.push('/search');
         } finally {
             setGuestLoading(false);
@@ -157,7 +160,10 @@ const SignInPage = () => {
 
     return (
         <div className="flex min-h-screen">
-            <DarkModeToggle className='absolute top-1 left-full'/>
+            <div className='absolute top-1 left-full flex translate-x-2 flex-col gap-1.5 sm:flex-row sm:translate-x-0'>
+                <LanguageToggle />
+                <DarkModeToggle />
+            </div>
             <div className="relative hidden w-1/2 md:block">
                 <Image
                     src="/images/artwork_117.jpg"
@@ -170,10 +176,10 @@ const SignInPage = () => {
             <div className="flex flex-1 items-center justify-center p-4">
                 <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
                     <div className="space-y-2 text-center">
-                        <h1 className="text-2xl font-bold">Sign In</h1>
+                        <h1 className="text-2xl font-bold">{t('auth.signIn.title')}</h1>
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t('auth.signIn.emailLabel')}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -183,7 +189,7 @@ const SignInPage = () => {
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">{t('auth.signIn.passwordLabel')}</Label>
                         <Input
                             id="password"
                             type="password"
@@ -193,7 +199,7 @@ const SignInPage = () => {
                         />
                     </div>
                     <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? 'Sign In...' : 'Sign In'}
+                        {loading ? t('auth.signIn.submitting') : t('auth.signIn.submit')}
                     </Button>
                     <Button
                         type="button"
@@ -203,7 +209,7 @@ const SignInPage = () => {
                         disabled={googleLoading || kakaoLoading}
                     >
                         <GoogleIcon className="h-5 w-5" />
-                        {googleLoading ? '구글로 로그인 중...' : '구글로 로그인'}
+                        {googleLoading ? t('auth.signIn.google.loading') : t('auth.signIn.google.start')}
                     </Button>
                     <Button
                         type="button"
@@ -213,11 +219,13 @@ const SignInPage = () => {
                         disabled={kakaoLoading || googleLoading}
                     >
                         <KakaoIcon className="h-5 w-5" />
-                        {kakaoLoading ? '카카오로 로그인 중...' : '카카오로 로그인'}
+                        {kakaoLoading ? t('auth.signIn.kakao.loading') : t('auth.signIn.kakao.start')}
                     </Button>
                     <div className="relative flex items-center">
                         <div className="flex-grow border-t border-gray-300" />
-                        <span className="mx-4 flex-shrink text-xs font-semibold tracking-wide text-muted-foreground">OR</span>
+                        <span className="mx-4 flex-shrink text-xs font-semibold tracking-wide text-muted-foreground">
+                            {t('common.or')}
+                        </span>
                         <div className="flex-grow border-t border-gray-300" />
                     </div>
                     <Button
@@ -227,12 +235,12 @@ const SignInPage = () => {
                         onClick={handleGuestLogin}
                         disabled={guestLoading}
                     >
-                        {guestLoading ? '게스트로 입장 중...' : '게스트로 둘러보기'}
+                        {guestLoading ? t('auth.signIn.guest.loading') : t('auth.signIn.guest.start')}
                     </Button>
                     <p className="text-sm text-center">
-                        Don&apos;t have an account?{' '}
+                        {t('auth.signIn.noAccount')} {' '}
                         <Link href="/sign_up" className="underline">
-                            Sign up
+                            {t('auth.signIn.signUpCta')}
                         </Link>
                     </p>
                 </form>

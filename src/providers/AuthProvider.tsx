@@ -6,6 +6,7 @@ import type { Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { userStore } from "@/stores/userStore";
 import { supabase } from "@/libs/supabaseClient";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 const GUEST_STORAGE_KEY = "finder_guest";
 
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const redirectToastPathRef = useRef<string | null>(null);
     const skipGuestGuardToastRef = useRef(false);
     const skipUnauthenticatedToastRef = useRef(false);
+    const t = useTranslations();
 
     const syncSession = useCallback(async () => {
         setIsLoading(true);
@@ -103,7 +105,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         skipUnauthenticatedToastRef.current = true;
         applyAuthState(null, false, setStatus, setIsLoading);
-        toast.success("로그아웃되었습니다.");
+        toast.success(t("authProvider.toast.logout"));
     }, [applyAuthState, status]);
 
     useEffect(() => {
@@ -112,7 +114,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (status === "guest" && pathname && !isGuestAccessiblePath(pathname)) {
             if (redirectToastPathRef.current !== pathname) {
                 if (!skipGuestGuardToastRef.current) {
-                    toast.info("로그인이 필요한 서비스입니다");
+                    toast.info(t("authProvider.toast.loginRequired"));
                 }
                 redirectToastPathRef.current = pathname;
             }
@@ -128,7 +130,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 return;
             }
             if (!skipUnauthenticatedToastRef.current) {
-                toast.info("로그인이 필요한 서비스입니다");
+                toast.info(t("authProvider.toast.loginRequired"));
             }
             router.replace("/sign_in");
             return;

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import DarkModeToggle from '@/components/DarkModeToggle';
+import LanguageToggle from '@/components/LanguageToggle';
 import SideMenu from '@/components/SideMenu';
 import { useAuth } from '@/providers/AuthProvider';
 
@@ -21,7 +22,8 @@ const Header = () => {
         <Image src="/Reheln.png" alt="Finder" width={40} height={40} priority />
       </Link>
       {/* 오른쪽 메뉴 */}
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-1.5">
+        <LanguageToggle />
         <DarkModeToggle />
         <SideMenu />
       </div>

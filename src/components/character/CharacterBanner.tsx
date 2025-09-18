@@ -11,6 +11,7 @@ import { ICharacterBasic, ICharacterDojang, ICharacterPopularity } from "@/inter
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IUnion } from "@/interface/union/IUnion";
 import { useAuth } from "@/providers/AuthProvider";
+import { useTranslations } from "@/providers/LanguageProvider";
 import { cn } from "@/utils/utils";
 
 type CharacterBannerProps = {
@@ -46,6 +47,7 @@ const CharacterBanner = ({
 }: CharacterBannerProps) => {
     const router = useRouter();
     const { status } = useAuth();
+    const t = useTranslations();
     const bannerImageSrc = imageSrc ?? (basic?.character_image
         ? `/api/crop?url=${encodeURIComponent(basic.character_image)}`
         : null
@@ -108,25 +110,33 @@ const CharacterBanner = ({
                             </div>
                         </div>
                         <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-muted px-2 py-1 rounded-md text-sm font-medium z-10">
-                            Lv. {basic.character_level}
+                            {t('common.level', { value: basic.character_level })}
                         </div>
                         <div className="absolute top-2 right-2 bg-muted px-2 py-1 rounded-md text-sm font-medium z-10">
                             {basic.character_class}
                         </div>
                         <div className="absolute bottom-12 left-2 space-y-2 text-sm z-10">
                             {union && (
-                                <div className="bg-muted px-2 py-1 rounded-md">유니온 {union.union_level}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">
+                                    {t('character.banner.union', { level: union.union_level })}
+                                </div>
                             )}
                             {dojang && (
-                                <div className="bg-muted px-2 py-1 rounded-md">무릉 {dojang.dojang_best_floor}층</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">
+                                    {t('character.banner.dojang', { floor: dojang.dojang_best_floor })}
+                                </div>
                             )}
                             {popularity && (
-                                <div className="bg-muted px-2 py-1 rounded-md ">인기도 {popularity.popularity}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md ">
+                                    {t('character.banner.popularity', { value: popularity.popularity })}
+                                </div>
                             )}
                         </div>
                         <div className="absolute bottom-12 right-2 space-y-2 text-sm z-10">
                             {guild?.guild_name && (
-                                <div className="bg-muted px-2 py-1 rounded-md">길드 {guild.guild_name}</div>
+                                <div className="bg-muted px-2 py-1 rounded-md">
+                                    {t('character.banner.guild', { name: guild.guild_name })}
+                                </div>
                             )}
                             {status !== 'guest' &&
                                 <div className="bg-muted px-2 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
@@ -136,11 +146,11 @@ const CharacterBanner = ({
                                                 className=" bg-muted rounded-md flex items-center gap-2 hover:cursor-pointer"
                                                 onClick={() => getFigure()}
                                             >
-                                                피규어 <SquareArrowOutUpRight size={14}/>
+                                                {t('character.banner.figure')} <SquareArrowOutUpRight size={14}/>
                                             </div>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            아직 미완성 기능입니다
+                                            {t('character.banner.figureTooltip')}
                                         </TooltipContent>
                                     </Tooltip>
                                 </div>
