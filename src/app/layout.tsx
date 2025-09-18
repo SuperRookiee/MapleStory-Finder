@@ -27,10 +27,28 @@ const mapleStory = localFont({
 export const metadata: Metadata = {
     title: "Finder",
     description: "MapleStory Finder",
+    applicationName: "MapleStory Finder",
+    manifest: "/manifest.webmanifest",
+    themeColor: "#38bdf8",
     icons: {
-        icon: "/Reheln.ico",
+        icon: [
+            {
+                url: "/Reheln.ico",
+            },
+            {
+                url: "/Reheln.png",
+                type: "image/png",
+                sizes: "512x512",
+            },
+        ],
+        apple: {
+            url: "/Reheln.png",
+            sizes: "180x180",
+        },
     },
 };
+
+const isProduction = process.env.NODE_ENV === "production";
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
@@ -55,6 +73,20 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
             src={`https://openapi.nexon.com/js/analytics.js?app_id=${process.env.NEXT_PUBLIC_NEXON_APP_ID}`}
             strategy="afterInteractive"
         />
+
+        {isProduction ? (
+            <Script id="pwa-service-worker" strategy="afterInteractive">
+                {`
+                    if ('serviceWorker' in navigator) {
+                      window.addEventListener('load', () => {
+                        navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+                          console.error('Service worker registration failed:', error);
+                        });
+                      });
+                    }
+                `}
+            </Script>
+        ) : null}
 
         <LanguageProvider>
             <AuthProvider>
