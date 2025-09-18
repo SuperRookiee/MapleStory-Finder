@@ -24,11 +24,6 @@ export interface ICharacterStat {
     remain_ap: number
 }
 
-export interface ICharacterPopularity {
-    date: string
-    popularity: number
-}
-
 export interface IHyperStatInfo {
     stat_type: string
     stat_point: number

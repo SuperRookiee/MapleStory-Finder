@@ -17,8 +17,8 @@ import { HyperStat } from "@/components/character/detail/HyperStat";
 import { LinkSkill } from "@/components/character/detail/LinkSkill";
 import { OtherStat } from "@/components/character/detail/OtherStat";
 import { Pet } from "@/components/character/detail/Pet";
-import { Popularity } from "@/components/character/detail/Popularity";
 import { Propensity } from "@/components/character/detail/Propensity";
+import { Ranking } from "@/components/character/detail/Ranking";
 import { Ring } from "@/components/character/detail/Ring";
 import { SetEffect } from "@/components/character/detail/SetEffect";
 import { Skill } from "@/components/character/detail/Skill";
@@ -30,19 +30,28 @@ import ItemEquipments from "@/components/character/item/ItemEquipments";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPopularity, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from "@/fetchs/character.fetch";
+import { findCharacterAbility, findCharacterAndroidEquipment, findCharacterBasic, findCharacterBeautyEquipment, findCharacterCashItemEquipment, findCharacterDojang, findCharacterHexaMatrix, findCharacterHexaMatrixStat, findCharacterHyperStat, findCharacterItemEquipment, findCharacterLinkSkill, findCharacterOtherStat, findCharacterPetEquipment, findCharacterPropensity, findCharacterRingExchange, findCharacterSetEffect, findCharacterSkill, findCharacterStat, findCharacterSymbolEquipment, findCharacterVMatrix, } from "@/fetchs/character.fetch";
 import { findGuildBasic, findGuildId } from "@/fetchs/guild.fetch";
+import { findAchievementRanking, findDojangRanking, findOverallRanking, findTheSeedRanking, findUnionRanking, } from "@/fetchs/ranking.fetch";
 import { findUnion, findUnionArtifact, findUnionRaider } from "@/fetchs/union.fetch";
+import { IRankingResponse } from "@/interface/ranking/IRankingResponse";
 import { useTranslations } from "@/providers/LanguageProvider";
+
+const getTodayKstDate = () => {
+    const now = new Date();
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 60_000;
+    const kst = new Date(utcTime + 9 * 60 * 60_000);
+    return kst.toISOString().slice(0, 10);
+};
 
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
-        basic, stat, popularity, hyper,
+        basic, stat, rankings, hyper,
         union, unionRaider, unionArtifact,
         itemEquip, cashEquip, symbolEquip, setEffect, skill, linkSkill,
         hexaMatrix, hexaStat, vMatrix, dojang, ring, otherStat,
         beauty, android, pet, propensity, ability, guild,
-        setBasic, setStat, setPopularity, setHyper, setGuild,
+        setBasic, setStat, setRankings, setHyper, setGuild,
         setUnion, setUnionRaider, setUnionArtifact,
         setItemEquip, setCashEquip, setSymbolEquip, setSetEffect, setSkill, setLinkSkill,
         setHexaMatrix, setHexaStat, setVMatrix, setDojang, setRing, setOtherStat,
@@ -78,15 +87,24 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             const shouldFetchBasic = !matchedPreviewBasic;
             setBasicLoading(shouldFetchBasic);
             try {
-                const [basicRes, statRes, popularityRes, hyperRes, abilityRes, unionRes, dojangRes] = await Promise.all([
-                    shouldFetchBasic ? findCharacterBasic(ocid) : Promise.resolve(null),
-                    findCharacterStat(ocid),
-                    findCharacterPopularity(ocid),
-                    findCharacterHyperStat(ocid),
-                    findCharacterAbility(ocid),
-                    findUnion(ocid),
-                    findCharacterDojang(ocid),
-                ]);
+                const safeRankingFetch = async <T,>(promise: Promise<IRankingResponse<T>>) => {
+                    try {
+                        return await promise;
+                    } catch (error) {
+                        console.error(error);
+                        return null;
+                    }
+                };
+
+                const [basicRes, statRes, hyperRes, abilityRes, unionRes, dojangRes] =
+                    await Promise.all([
+                        shouldFetchBasic ? findCharacterBasic(ocid) : Promise.resolve(null),
+                        findCharacterStat(ocid),
+                        findCharacterHyperStat(ocid),
+                        findCharacterAbility(ocid),
+                        findUnion(ocid),
+                        findCharacterDojang(ocid),
+                    ]);
                 if (cancelled) return;
                 const basicData = shouldFetchBasic ? basicRes?.data ?? null : matchedPreviewBasic;
                 if (shouldFetchBasic && basicData) {
@@ -94,11 +112,70 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 }
                 console.log(abilityRes)
                 setStat(statRes.data);
-                setPopularity(popularityRes.data);
                 setHyper(hyperRes.data);
                 setAbility(abilityRes.data);
                 setUnion(unionRes.data);
                 setDojang(dojangRes.data);
+
+                const worldNameForRanking = basicData?.world_name ?? matchedPreviewBasic?.world_name;
+                if (worldNameForRanking) {
+                    const requestDate = getTodayKstDate();
+                    const [
+                        overallRankingRes,
+                        unionRankingRes,
+                        dojangRankingRes,
+                        theseedRankingRes,
+                        achievementRankingRes,
+                    ] = await Promise.all([
+                        safeRankingFetch(
+                            findOverallRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findUnionRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findDojangRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                                difficulty: 0,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findTheSeedRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findAchievementRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                    ]);
+
+                    const rankingData = {
+                        overall: overallRankingRes?.data.ranking?.[0] ?? null,
+                        union: unionRankingRes?.data.ranking?.[0] ?? null,
+                        dojang: dojangRankingRes?.data.ranking?.[0] ?? null,
+                        theseed: theseedRankingRes?.data.ranking?.[0] ?? null,
+                        achievement: achievementRankingRes?.data.ranking?.[0] ?? null,
+                    };
+
+                    const hasRankingData = Object.values(rankingData).some(
+                        (entry) => entry !== null,
+                    );
+
+                    setRankings(hasRankingData ? rankingData : null);
+                } else {
+                    setRankings(null);
+                }
 
                 if (basicData?.character_guild_name) {
                     try {
@@ -290,7 +367,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 <div className="space-y-6 p-4 w-full max-w-5xl mx-auto">
                     <CharacterBanner
                         basic={basic}
-                        popularity={popularity}
+                        overallRanking={rankings?.overall ?? null}
                         union={union}
                         dojang={dojang}
                         guild={guild}
@@ -362,10 +439,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 <div className="space-y-4">
                                     <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
                                     <Ability ability={ability} loading={basicLoading || !ability} />
-                                    <Popularity
-                                        popularity={popularity?.popularity}
-                                        loading={basicLoading || !popularity}
-                                    />
+                                    <Ranking ranking={rankings} loading={basicLoading} />
                                 </div>
                             </div>
                         </TabsContent>
