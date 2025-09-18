@@ -6,12 +6,14 @@ import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { cn } from "@/utils/utils";
 
 interface ICharacterCardProps {
     character: ICharacterSummary;
     isFavorite?: boolean;
     onToggleFavorite?: () => void;
     onSelect?: () => void;
+    className?: string;
 }
 
 const CharacterCard = ({
@@ -19,12 +21,24 @@ const CharacterCard = ({
     isFavorite,
     onToggleFavorite,
     onSelect,
+    className,
 }: ICharacterCardProps) => {
     return (
         <Card
-            className={`p-4 flex flex-col relative w-full ${onSelect ? "cursor-pointer" : ""}`}
+            className={cn(
+                "favorite-card group relative w-full overflow-hidden rounded-2xl p-4 transition-all duration-300",
+                onSelect ? "cursor-pointer" : "",
+                className,
+            )}
             onClick={onSelect}
         >
+            <div
+                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                    background:
+                        "linear-gradient(135deg, color-mix(in srgb, var(--primary) 18%, transparent) 0%, color-mix(in srgb, var(--primary) 6%, transparent) 45%, transparent 90%)",
+                }}
+            />
             {/* 서버 정보 */}
             <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
                 <WorldIcon name={character.world_name} />

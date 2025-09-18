@@ -170,6 +170,26 @@ export const translations = {
             },
         },
         home: {
+            dashboard: {
+                label: "Dashboard",
+                title: "Favorite dashboard",
+                subtitle: "Curate and explore your MapleStory heroes with live previews.",
+                stats: {
+                    saved: "Saved heroes",
+                    savedHelper: "Characters pinned for quick access",
+                    average: "Average level",
+                    averageHelper: "Level overview across saved characters",
+                    focus: "Current focus",
+                    focusHelper: "Select a character to preview their gear",
+                    focusEmpty: "No character selected",
+                },
+                list: {
+                    title: "Favorite lineup",
+                    description: "Tap a card to preview gear or toggle the star to manage your lineup.",
+                    totalLabel: "Total saved",
+                    empty: "Save characters to build your personal dashboard.",
+                },
+            },
             characterInfo: {
                 emptyState: "Please choose your character",
                 detailButton: "Detail",
@@ -378,6 +398,26 @@ export const translations = {
             },
         },
         home: {
+            dashboard: {
+                label: "대시보드",
+                title: "즐겨찾기 대시보드",
+                subtitle: "자주 보는 메이플 캐릭터를 한눈에 정리하고 실시간으로 확인해 보세요.",
+                stats: {
+                    saved: "저장된 캐릭터",
+                    savedHelper: "빠르게 확인할 수 있도록 고정한 캐릭터 수",
+                    average: "평균 레벨",
+                    averageHelper: "즐겨찾기 캐릭터의 평균 레벨",
+                    focus: "현재 미리보기",
+                    focusHelper: "캐릭터를 선택하면 장비와 정보를 미리 볼 수 있어요",
+                    focusEmpty: "선택된 캐릭터가 없습니다",
+                },
+                list: {
+                    title: "즐겨찾기 목록",
+                    description: "카드를 눌러 미리보고 별 아이콘으로 즐겨찾기를 관리하세요.",
+                    totalLabel: "총 즐겨찾기",
+                    empty: "자주 보는 캐릭터를 저장하면 나만의 대시보드가 완성됩니다.",
+                },
+            },
             characterInfo: {
                 emptyState: "캐릭터를 선택해주세요",
                 detailButton: "상세 보기",
