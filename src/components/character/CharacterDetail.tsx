@@ -352,7 +352,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         <TabsContent value="basic" className="space-y-4">
                             <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
                                 <div className="space-y-4">
-                                    <Stat stat={stat} loading={basicLoading || !stat} />
+                                    <Stat
+                                        stat={stat}
+                                        characterClass={basic?.character_class ?? stat?.character_class}
+                                        loading={basicLoading || !stat}
+                                    />
                                 </div>
                                 <div className="space-y-4">
                                     <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
