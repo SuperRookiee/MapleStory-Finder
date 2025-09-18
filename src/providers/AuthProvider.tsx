@@ -16,10 +16,19 @@ const isPublicPath = (pathname: string) =>
     pathname === "/" || pathname === "/sign_in" || pathname === "/sign_up";
 
 export const isGuestAccessiblePath = (pathname: string) =>
-    pathname === "/" || pathname === "/search" || pathname === "/chat" || pathname.startsWith("/character/");
+    pathname === "/" ||
+    pathname === "/search" ||
+    pathname === "/chat" ||
+    pathname === "/starforce" ||
+    pathname === "/cube" ||
+    pathname.startsWith("/character/");
 
 export const isUnauthenticatedAccessiblePath = (pathname: string) =>
-    pathname === "/" || pathname === "/search" || pathname.startsWith("/character/");
+    pathname === "/" ||
+    pathname === "/search" ||
+    pathname === "/starforce" ||
+    pathname === "/cube" ||
+    pathname.startsWith("/character/");
 
 type AuthContextValue = {
     status: AuthStatus;
