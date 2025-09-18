@@ -25,6 +25,12 @@ export const translations = {
             characterSearch: "Character Search",
             findCharacter: "Search characters",
             guest: "Guest",
+            maintenanceDialog: {
+                title: "Maintenance notice",
+                description:
+                    "The MapleStory API is currently undergoing maintenance. Please try again in a little while.",
+                confirm: "OK",
+            },
         },
         search: {
             heading: "Search",
@@ -233,6 +239,11 @@ export const translations = {
             characterSearch: "캐릭터 검색",
             findCharacter: "캐릭터를 검색",
             guest: "게스트",
+            maintenanceDialog: {
+                title: "점검 안내",
+                description: "현재 메이플스토리 API가 점검 중입니다. 잠시 후 다시 시도해 주세요.",
+                confirm: "확인",
+            },
         },
         search: {
             heading: "검색",

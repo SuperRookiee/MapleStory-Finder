@@ -19,7 +19,6 @@ const redirectToMissingApiKey = (isGuest: boolean) => {
 };
 
 const MAINTENANCE_ERROR_MESSAGE = "Please wait until the game maintenance is finished";
-const MAINTENANCE_ALERT_MESSAGE = "API 점검 중입니다.";
 
 const isMaintenanceError = (error: AxiosError) => {
     const message = error.response?.data?.error?.message;
@@ -38,7 +37,7 @@ const showMaintenanceAlert = () => {
     }
 
     hasShownMaintenanceAlert = true;
-    maintenanceStore.getState().open(MAINTENANCE_ALERT_MESSAGE);
+    maintenanceStore.getState().open();
 };
 
 export const getApiKeyInfo = () => {
