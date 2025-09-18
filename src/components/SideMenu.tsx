@@ -1,20 +1,68 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import {
+    Bell,
+    Box,
+    Home,
+    LogOut,
+    Menu,
+    MessageSquare,
+    Search,
+    Sparkles,
+    UserCircle,
+    Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader as SheetContentHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetHeader as SheetContentHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import { useAuth } from "@/providers/AuthProvider";
+
+type MenuItem = {
+    href: string;
+    label: string;
+    icon: LucideIcon;
+    hideForGuest?: boolean;
+    requiresAuth?: boolean;
+};
+
+const menuItems: MenuItem[] = [
+    { href: "/home", label: "Home", icon: Home, hideForGuest: true },
+    { href: "/search", label: "Search", icon: Search },
+    { href: "/notice", label: "Notice", icon: Bell },
+    { href: "/character_list", label: "Character List", icon: Users, hideForGuest: true },
+    { href: "/chat", label: "Finder Chat", icon: MessageSquare },
+    { href: "/starforce", label: "Starforce History", icon: Sparkles, requiresAuth: true },
+    { href: "/cube", label: "Cube History", icon: Box, requiresAuth: true },
+    { href: "/my_page", label: "My Page", icon: UserCircle, hideForGuest: true },
+];
 
 const SideMenu = () => {
     const router = useRouter();
-    const { status, logout } = useAuth();
-    const isGuest = status === "guest";
+    const { status, isGuest, isAuthenticated, logout } = useAuth();
 
     const handleLogout = async () => {
         await logout();
         router.push("/");
     };
+
+    const availableItems = menuItems.filter((item) => {
+        if (item.requiresAuth && !isAuthenticated) {
+            return false;
+        }
+        if (item.hideForGuest && isGuest) {
+            return false;
+        }
+        return true;
+    });
 
     return (
         <Sheet>
@@ -29,74 +77,27 @@ const SideMenu = () => {
                     <SheetDescription>menu</SheetDescription>
                 </SheetContentHeader>
                 <div className="mt-4 space-y-2">
-                    {!isGuest ? (
-                        <SheetClose asChild>
+                    {availableItems.map((item) => (
+                        <SheetClose asChild key={item.href}>
                             <Button
                                 variant="ghost"
-                                className="w-full"
-                                onClick={() => router.push("/home")}
+                                className="w-full justify-start gap-3"
+                                onClick={() => router.push(item.href)}
                             >
-                                Home
+                                <item.icon className="h-4 w-4" aria-hidden="true" />
+                                <span>{item.label}</span>
                             </Button>
                         </SheetClose>
-                    ) : null}
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={() => router.push("/search")}
-                        >
-                            Search
-                        </Button>
-                    </SheetClose>
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={() => router.push("/notice")}
-                        >
-                            Notice
-                        </Button>
-                    </SheetClose>
-                    {!isGuest ? (
-                        <SheetClose asChild>
-                            <Button
-                                variant="ghost"
-                                className="w-full"
-                                onClick={() => router.push("/character_list")}
-                            >
-                                Character List
-                            </Button>
-                        </SheetClose>
-                    ) : null}
-                    <SheetClose asChild>
-                        <Button
-                            variant="ghost"
-                            className="w-full"
-                            onClick={() => router.push("/chat")}
-                        >
-                            Finder Chat
-                        </Button>
-                    </SheetClose>
-                    {!isGuest ? (
-                        <SheetClose asChild>
-                            <Button
-                                variant="ghost"
-                                className="w-full"
-                                onClick={() => router.push("/my_page")}
-                            >
-                                My Page
-                            </Button>
-                        </SheetClose>
-                    ) : null}
+                    ))}
                     {status !== "unauthenticated" ? (
                         <SheetClose asChild>
                             <Button
                                 variant="ghost"
-                                className="w-full"
+                                className="w-full justify-start gap-3"
                                 onClick={handleLogout}
                             >
-                                {status === "guest" ? "Exit Guest" : "Logout"}
+                                <LogOut className="h-4 w-4" aria-hidden="true" />
+                                <span>{status === "guest" ? "Exit Guest" : "Logout"}</span>
                             </Button>
                         </SheetClose>
                     ) : null}
