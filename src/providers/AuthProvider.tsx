@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const redirectToastPathRef = useRef<string | null>(null);
     const skipGuestGuardToastRef = useRef(false);
     const skipUnauthenticatedToastRef = useRef(false);
+    const logoutToastPendingRef = useRef(false);
     const t = useTranslations();
 
     const syncSession = useCallback(async () => {
@@ -97,15 +98,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [applyAuthState]);
 
     const logout = useCallback(async () => {
+        skipUnauthenticatedToastRef.current = true;
+        logoutToastPendingRef.current = true;
+
         if (status === "authenticated") {
             await supabase.auth.signOut();
         }
         if (typeof window !== "undefined") {
             localStorage.removeItem(GUEST_STORAGE_KEY);
         }
-        skipUnauthenticatedToastRef.current = true;
         applyAuthState(null, false, setStatus, setIsLoading);
-        toast.success(t("authProvider.toast.logout"));
     }, [applyAuthState, status]);
 
     useEffect(() => {
@@ -127,6 +129,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (isPublicPath(pathname) || isUnauthenticatedAccessiblePath(pathname)) {
                 redirectToastPathRef.current = null;
                 skipUnauthenticatedToastRef.current = false;
+                if (logoutToastPendingRef.current) {
+                    toast.success(t("authProvider.toast.logout"));
+                    logoutToastPendingRef.current = false;
+                }
                 return;
             }
             if (!skipUnauthenticatedToastRef.current) {
