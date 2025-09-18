@@ -63,13 +63,15 @@ const initialDetailState = {
 
 const NoticePage = () => {
   const t = useTranslations();
-  const isMountedRef = useRef(true);
+  const isMountedRef = useRef(false);
   const [activeTab, setActiveTab] = useState<NoticeCategory>('notice');
   const [listStates, setListStates] = useState<NoticeListStates>(() => createInitialListStates());
   const listStatesRef = useRef(listStates);
   const [detailState, setDetailState] = useState(initialDetailState);
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     return () => {
       isMountedRef.current = false;
     };
