@@ -17,9 +17,23 @@ export const GET = async (
 
         const { endpoint, ...query } = params;
 
+        const rankingEndpointMap: Record<string, string> = {
+            overall: "overall",
+            union: "union",
+            dojang: "dojang",
+            theseed: "theseed",
+            achievement: "achievement",
+            guild: "guild",
+        };
+
+        const resolvedEndpoint = rankingEndpointMap[endpoint];
+        if (!resolvedEndpoint) {
+            return Failed("Unsupported ranking endpoint", 400);
+        }
+
         try {
             const res = await axios.get(
-                `https://open.api.nexon.com/maplestory/v1/ranking/${endpoint}`,
+                `https://open.api.nexon.com/maplestory/v1/ranking/${resolvedEndpoint}`,
                 {
                     params: query,
                     headers: { "x-nxopen-api-key": apiKey },

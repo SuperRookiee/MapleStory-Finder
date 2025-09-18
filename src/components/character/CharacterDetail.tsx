@@ -402,10 +402,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 <div className="space-y-4">
                                     <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
                                     <Ability ability={ability} loading={basicLoading || !ability} />
-                                    <Ranking
-                                        ranking={rankings}
-                                        loading={basicLoading || !rankings}
-                                    />
+                                    <Ranking ranking={rankings} loading={basicLoading} />
                                 </div>
                             </div>
                         </TabsContent>

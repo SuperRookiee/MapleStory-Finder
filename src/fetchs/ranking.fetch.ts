@@ -5,8 +5,16 @@ import { IRankingResponse } from "@/interface/ranking/IRankingResponse";
 const rankingRunner = createRequestRunner({ concurrency: 5 });
 const callRankingApiBase = createApiCaller({ basePath: "ranking", runner: rankingRunner });
 
+type RankingEndpoint =
+    | "overall"
+    | "union"
+    | "dojang"
+    | "theseed"
+    | "achievement"
+    | "guild";
+
 const callRankingApi = <T>(
-    endpoint: string,
+    endpoint: RankingEndpoint,
     params: ApiParams = {},
 ): Promise<IRankingResponse<T>> =>
     callRankingApiBase<IRankingResponse<T>>(endpoint, params);
