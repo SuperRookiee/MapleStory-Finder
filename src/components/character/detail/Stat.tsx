@@ -130,7 +130,7 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
             <div key={label} className="flex justify-between">
                 <span className={cn("font-medium", highlightClass)}>{label}</span>
                 {loading ? (
-                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-4 w-16 bg-muted-foreground" />
                 ) : (
                     <span className={cn(highlightClass)}>{formatStatValue(value)}</span>
                 )}
@@ -142,13 +142,9 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
         <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
             <div className="bg-neutral-200 dark:bg-neutral-700 px-4 py-4 border-b border-neutral-300 dark:border-neutral-600">
                 <div className="text-xs text-neutral-600 dark:text-neutral-400">전투력</div>
-                {loading ? (
-                    <Skeleton className="h-6 w-32" />
-                ) : (
-                    <div className="text-2xl font-extrabold text-amber-600">
-                        {formatStatValue(battlePower)}
-                    </div>
-                )}
+                <div className="text-2xl font-extrabold text-amber-600">
+                    {loading ? <Skeleton className="h-6 w-32" /> : formatStatValue(battlePower)}
+                </div>
             </div>
 
             <div className="p-4 grid grid-cols-2 gap-4 border-b text-sm border-neutral-300 dark:border-neutral-600">

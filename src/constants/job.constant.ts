@@ -8,8 +8,8 @@ export type JobRootCategory =
     | '노바'
     | '레프'
     | '아니마'
-    | '신의 아이'
-    | '서울';
+    | '초월자'
+    | '프렌즈 월드';
 
 export type JobBranch = '전사' | '마법사' | '궁수' | '도적' | '해적';
 
@@ -34,8 +34,8 @@ export const JOB_ROOT_CATEGORY_LABELS: Record<JobRootCategory, LocalizedText> = 
     '노바': { ko: '노바', en: 'Nova' },
     '레프': { ko: '레프', en: 'Lef' },
     '아니마': { ko: '아니마', en: 'Anima' },
-    '신의 아이': { ko: '신의 아이', en: 'Child of God' },
-    '서울': { ko: '서울', en: 'Seoul' },
+    '초월자': { ko: '초월자', en: 'Transcendent' },
+    '프렌즈 월드': { ko: '서울', en: 'Friends World' },
 };
 
 export const JOB_BRANCH_LABELS: Record<JobBranch, LocalizedText> = {
@@ -122,18 +122,46 @@ export const JOBS: Record<JobRootCategory, Record<JobBranch, JobInfo[]>> = {
         '도적': [],
         '해적': [job('호영', 'Hoyoung', ['LUK'], ['DEX'], ['Ho Young', 'HoYoung'])],
     },
-    '신의 아이': {
+    '초월자': {
         '전사': [job('제로', 'Zero', ['STR'], ['DEX'])],
         '마법사': [],
         '궁수': [],
         '도적': [],
         '해적': [],
     },
-    '서울': {
+    '프렌즈 월드': {
         '전사': [],
         '마법사': [job('키네시스', 'Kinesis', ['INT'], ['LUK'])],
         '궁수': [],
         '도적': [],
         '해적': [],
     },
+};
+
+export const JOB_NAME_MAP: Record<string, JobInfo> = (() => {
+    const map: Record<string, JobInfo> = {};
+
+    const register = (key: string | undefined, info: JobInfo) => {
+        if (!key) return;
+        const normalized = key.trim().toLowerCase();
+        if (!normalized || normalized in map) return;
+        map[normalized] = info;
+    };
+
+    Object.values(JOBS).forEach((branches) => {
+        Object.values(branches).forEach((jobs) => {
+            jobs.forEach((info) => {
+                register(info.name.ko, info);
+                register(info.name.en, info);
+                info.aliases?.forEach((alias) => register(alias, info));
+            });
+        });
+    });
+
+    return map;
+})();
+
+export const getJobInfoByName = (name?: string): JobInfo | undefined => {
+    if (!name) return undefined;
+    return JOB_NAME_MAP[name.trim().toLowerCase()];
 };
