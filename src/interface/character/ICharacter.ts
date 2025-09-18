@@ -382,12 +382,22 @@ export interface ICharacterPropensity {
     charm_level: number
 }
 
+export interface IAbilityInfo {
+    ability_no: number
+    ability_grade: string
+    ability_value: string
+}
+
+export interface IAbilityPreset {
+    ability_grade: string
+    ability_info: IAbilityInfo[]
+}
+
 export interface ICharacterAbility {
     date: string
-    ability_preset_no: number
-    ability_info: {
-        ability_no: number
-        ability_grade: string
-        ability_value: string
-    }[]
+    ability_info: IAbilityInfo[]
+    ability_preset_1: IAbilityPreset | null
+    ability_preset_2: IAbilityPreset | null
+    ability_preset_3: IAbilityPreset | null
+    preset_no: number
 }
