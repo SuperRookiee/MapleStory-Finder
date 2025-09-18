@@ -35,6 +35,22 @@ type NoticeSummary = INoticeArticle | IEventNoticeArticle | ICashshopNoticeArtic
 
 type NoticeDetailData = INoticeDetail | IEventNoticeDetail | ICashshopNoticeDetail;
 
+type NoticeListState = {
+  items: NoticeSummary[];
+  loading: boolean;
+  error: string | null;
+  fetched: boolean;
+};
+
+type NoticeListStates = Record<NoticeCategory, NoticeListState>;
+
+const createInitialListStates = (): NoticeListStates => ({
+  notice: { items: [], loading: false, error: null, fetched: false },
+  update: { items: [], loading: false, error: null, fetched: false },
+  event: { items: [], loading: false, error: null, fetched: false },
+  cashshop: { items: [], loading: false, error: null, fetched: false },
+});
+
 const initialDetailState = {
   open: false,
   loading: false,
@@ -49,12 +65,8 @@ const NoticePage = () => {
   const t = useTranslations();
   const isMountedRef = useRef(true);
   const [activeTab, setActiveTab] = useState<NoticeCategory>('notice');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [noticeList, setNoticeList] = useState<INoticeArticle[]>([]);
-  const [updateList, setUpdateList] = useState<INoticeArticle[]>([]);
-  const [eventList, setEventList] = useState<IEventNoticeArticle[]>([]);
-  const [cashshopList, setCashshopList] = useState<ICashshopNoticeArticle[]>([]);
+  const [listStates, setListStates] = useState<NoticeListStates>(() => createInitialListStates());
+  const listStatesRef = useRef(listStates);
   const [detailState, setDetailState] = useState(initialDetailState);
 
   useEffect(() => {
@@ -63,35 +75,86 @@ const NoticePage = () => {
     };
   }, []);
 
-  const loadNotices = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [noticeResponse, updateResponse, eventResponse, cashshopResponse] = await Promise.all([
-        findNoticeList(),
-        findUpdateNoticeList(),
-        findEventNoticeList(),
-        findCashshopNoticeList(),
-      ]);
+  const updateListState = useCallback(
+    (category: NoticeCategory, updater: (prev: NoticeListState) => NoticeListState) => {
+      setListStates((prev) => {
+        const nextCategoryState = updater(prev[category]);
+        const nextState = { ...prev, [category]: nextCategoryState };
+        listStatesRef.current = nextState;
+        return nextState;
+      });
+    },
+    [],
+  );
 
-      if (!isMountedRef.current) return;
+  const mergeListState = useCallback(
+    (category: NoticeCategory, partial: Partial<NoticeListState>) => {
+      updateListState(category, (prevState) => ({ ...prevState, ...partial }));
+    },
+    [updateListState],
+  );
 
-      setNoticeList(noticeResponse.data.notice ?? []);
-      setUpdateList(updateResponse.data.update_notice ?? []);
-      setEventList(eventResponse.data.event_notice ?? []);
-      setCashshopList(cashshopResponse.data.cashshop_notice ?? []);
-    } catch (err) {
-      if (!isMountedRef.current) return;
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      if (!isMountedRef.current) return;
-      setLoading(false);
-    }
-  }, []);
+  const loadCategory = useCallback(
+    async (category: NoticeCategory, options: { force?: boolean } = {}) => {
+      const current = listStatesRef.current[category];
+      if (current.loading) return;
+      if (!options.force && current.fetched) return;
+
+      mergeListState(category, { loading: true, error: null });
+
+      try {
+        let items: NoticeSummary[] = [];
+
+        switch (category) {
+          case 'notice': {
+            const response = await findNoticeList();
+            items = response.data.notice ?? [];
+            break;
+          }
+          case 'update': {
+            const response = await findUpdateNoticeList();
+            items = response.data.update_notice ?? [];
+            break;
+          }
+          case 'event': {
+            const response = await findEventNoticeList();
+            items = response.data.event_notice ?? [];
+            break;
+          }
+          case 'cashshop': {
+            const response = await findCashshopNoticeList();
+            items = response.data.cashshop_notice ?? [];
+            break;
+          }
+          default:
+            return;
+        }
+
+        if (!isMountedRef.current) return;
+
+        mergeListState(category, { items, loading: false, error: null, fetched: true });
+      } catch (err) {
+        if (!isMountedRef.current) return;
+
+        const message = err instanceof Error ? err.message : String(err);
+
+        updateListState(category, (prevState) => ({
+          ...prevState,
+          loading: false,
+          error: message,
+          fetched: options.force ? prevState.fetched : false,
+        }));
+      }
+    },
+    [mergeListState, updateListState],
+  );
 
   useEffect(() => {
-    void loadNotices();
-  }, [loadNotices]);
+    const state = listStates[activeTab];
+    if (!state.fetched && !state.loading && !state.error) {
+      void loadCategory(activeTab);
+    }
+  }, [activeTab, listStates, loadCategory]);
 
   const formatDateTime = useCallback(
     (value: string | null | undefined) => {
@@ -150,9 +213,12 @@ const NoticePage = () => {
     [isOngoingSale, t],
   );
 
-  const handleRetry = useCallback(() => {
-    void loadNotices();
-  }, [loadNotices]);
+  const handleRetry = useCallback(
+    (category: NoticeCategory) => {
+      void loadCategory(category, { force: true });
+    },
+    [loadCategory],
+  );
 
   const handleSelectNotice = useCallback(
     (category: NoticeCategory, summary: NoticeSummary) => {
@@ -253,13 +319,15 @@ const NoticePage = () => {
 
   const renderList = (
     category: NoticeCategory,
-    items: NoticeSummary[],
+    state: NoticeListState,
     options?: {
       renderHeaderCells?: () => ReactNode;
       renderRowCells?: (item: NoticeSummary) => ReactNode;
     },
   ) => {
-    if (loading) {
+    const { items, loading: isLoading, error: listError } = state;
+
+    if (isLoading) {
       return (
         <div className="flex h-40 items-center justify-center">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden="true" />
@@ -267,12 +335,12 @@ const NoticePage = () => {
       );
     }
 
-    if (error) {
+    if (listError) {
       return (
         <div className="flex h-40 flex-col items-center justify-center gap-3 text-center text-sm text-muted-foreground">
           <p>{t('notice.errors.list')}</p>
-          <p className="text-xs text-muted-foreground/70">{error}</p>
-          <Button variant="outline" size="sm" onClick={handleRetry}>
+          <p className="text-xs text-muted-foreground/70">{listError}</p>
+          <Button variant="outline" size="sm" onClick={() => handleRetry(category)}>
             {t('notice.actions.retry')}
           </Button>
         </div>
@@ -347,11 +415,11 @@ const NoticePage = () => {
     );
   };
 
-  const renderUpdateList = () => renderList('update', updateList);
-  const renderNoticeList = () => renderList('notice', noticeList);
+  const renderUpdateList = () => renderList('update', listStates.update);
+  const renderNoticeList = () => renderList('notice', listStates.notice);
 
   const renderEventList = () => {
-    return renderList('event', eventList, {
+    return renderList('event', listStates.event, {
       renderHeaderCells: () => (
         <TableHead className="hidden min-w-[240px] text-right text-sm text-muted-foreground md:table-cell">
           {t('notice.table.headers.period')}
@@ -369,7 +437,7 @@ const NoticePage = () => {
   };
 
   const renderCashshopList = () => {
-    return renderList('cashshop', cashshopList, {
+    return renderList('cashshop', listStates.cashshop, {
       renderHeaderCells: () => (
         <>
           <TableHead className="hidden min-w-[240px] text-right text-sm text-muted-foreground lg:table-cell">
