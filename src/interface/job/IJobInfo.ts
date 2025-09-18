@@ -1,5 +1,13 @@
+export type JobStat = "STR" | "DEX" | "INT" | "LUK" | "HP" | "MP";
+
+export type LocalizedText = {
+    ko: string;
+    en: string;
+};
+
 export interface JobInfo {
-    name: string;
-    mainStat: ('STR' | 'DEX' | 'INT' | 'LUK')[];
-    subStat?: ('STR' | 'DEX' | 'INT' | 'LUK')[];
+    name: LocalizedText;
+    mainStat: JobStat[];
+    subStat?: JobStat[];
+    aliases?: string[];
 }
