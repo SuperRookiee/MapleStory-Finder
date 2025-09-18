@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterCashItemEquipment } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface CashEquipProps {
     equip?: ICharacterCashItemEquipment | null;
@@ -9,11 +10,13 @@ interface CashEquipProps {
 }
 
 export const CashEquip = ({ equip, loading }: CashEquipProps) => {
+    const t = useTranslations();
+
     if (loading || !equip) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>캐시장비</CardTitle>
+                    <CardTitle>{t('character.detail.sections.cash.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-4 gap-4">
@@ -31,7 +34,7 @@ export const CashEquip = ({ equip, loading }: CashEquipProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>캐시장비</CardTitle>
+                <CardTitle>{t('character.detail.sections.cash.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-4 gap-4">

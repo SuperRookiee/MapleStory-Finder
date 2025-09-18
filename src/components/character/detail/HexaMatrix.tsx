@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterHexaMatrix } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface HexaMatrixProps {
     hexaMatrix?: ICharacterHexaMatrix | null;
@@ -8,11 +9,13 @@ interface HexaMatrixProps {
 }
 
 export const HexaMatrix = ({ hexaMatrix, loading }: HexaMatrixProps) => {
+    const t = useTranslations();
+
     if (loading || !hexaMatrix) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>헥사 매트릭스</CardTitle>
+                    <CardTitle>{t('character.detail.sections.hexaMatrix.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
@@ -28,14 +31,16 @@ export const HexaMatrix = ({ hexaMatrix, loading }: HexaMatrixProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>헥사 매트릭스</CardTitle>
+                <CardTitle>{t('character.detail.sections.hexaMatrix.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-2 text-sm">
                     {hexaMatrix.character_hexa_core_equipment.map((core, idx) => (
                         <div key={`${core.hexa_core_name}-${idx}`} className="flex justify-between">
                             <span>{core.hexa_core_name}</span>
-                            <span className="text-muted-foreground">Lv.{core.hexa_core_level}</span>
+                            <span className="text-muted-foreground">
+                                {t('common.level', { value: core.hexa_core_level })}
+                            </span>
                         </div>
                     ))}
                 </div>

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterLinkSkill } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface LinkSkillProps {
     linkSkill?: ICharacterLinkSkill | null;
@@ -9,11 +10,13 @@ interface LinkSkillProps {
 }
 
 export const LinkSkill = ({ linkSkill, loading }: LinkSkillProps) => {
+    const t = useTranslations();
+
     if (loading || !linkSkill) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>링크 스킬</CardTitle>
+                    <CardTitle>{t('character.detail.sections.linkSkill.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-4 gap-4">
@@ -29,7 +32,7 @@ export const LinkSkill = ({ linkSkill, loading }: LinkSkillProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>링크 스킬</CardTitle>
+                <CardTitle>{t('character.detail.sections.linkSkill.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-4 gap-4">

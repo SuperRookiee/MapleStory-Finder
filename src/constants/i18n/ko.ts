@@ -203,6 +203,119 @@ export const ko = {
                 loadCash: "캐시 정보 로딩 실패",
                 loadEtc: "기타 정보 로딩 실패",
             },
+            common: {
+                preset: "프리셋 {number}",
+            },
+            sections: {
+                ability: {
+                    title: "어빌리티",
+                },
+                android: {
+                    title: "안드로이드",
+                    grade: "{grade}등급",
+                },
+                beauty: {
+                    title: "외형",
+                    hair: "헤어",
+                    face: "얼굴",
+                    skin: "피부",
+                },
+                cash: {
+                    title: "캐시장비",
+                },
+                dojang: {
+                    title: "무릉도장",
+                    bestFloor: "최고 층수: {floor}층",
+                    bestTime: "기록: {time}초",
+                },
+                hexaMatrix: {
+                    title: "헥사 매트릭스",
+                },
+                hexaStat: {
+                    title: "헥사 스탯",
+                },
+                hyperStat: {
+                    title: "하이퍼 스탯",
+                    availablePoints: "사용 가능 포인트: {value}",
+                },
+                linkSkill: {
+                    title: "링크 스킬",
+                },
+                otherStat: {
+                    title: "기타 스탯",
+                    empty: "정보가 없습니다.",
+                },
+                pet: {
+                    title: "펫",
+                },
+                propensity: {
+                    title: "성향",
+                    labels: {
+                        charisma: "카리스마",
+                        empathy: "감성",
+                        insight: "통찰",
+                        willpower: "의지",
+                        diligence: "손재주",
+                        charm: "매력",
+                    },
+                },
+                ring: {
+                    title: "스페셜 링",
+                },
+                setEffect: {
+                    title: "세트 효과",
+                    entry: "{count}세트: {option}",
+                },
+                skill: {
+                    title: "스킬",
+                },
+                symbol: {
+                    title: "심볼",
+                },
+                union: {
+                    title: "유니온",
+                    level: "레벨",
+                    grade: "등급",
+                    artifactLevel: "아티팩트 레벨",
+                    raiderEffects: "공격대원 효과",
+                    artifactEffects: "아티팩트 효과",
+                },
+                vMatrix: {
+                    title: "V 매트릭스",
+                },
+            },
+            stat: {
+                battlePower: "전투력",
+                labels: {
+                    statAttack: "스탯공격력",
+                    attackPower: "공격력",
+                    magicAttack: "마력",
+                    damage: "데미지",
+                    finalDamage: "최종 데미지",
+                    bossDamage: "보스 몬스터 데미지",
+                    normalDamage: "일반 몬스터 데미지",
+                    ignoreDefense: "방어율 무시",
+                    critRate: "크리티컬 확률",
+                    critDamage: "크리티컬 데미지",
+                    cooldownReductionSeconds: "재사용 대기시간 감소 (초)",
+                    cooldownReductionPercent: "재사용 대기시간 감소 (%)",
+                    cooldownIgnore: "재사용 대기시간 미적용",
+                    statusDamage: "상태이상 추가 데미지",
+                    buffDuration: "버프 지속시간",
+                    attackSpeed: "공격 속도",
+                    weaponMastery: "무기 숙련도",
+                    mesoObtained: "메소 획득량",
+                    itemDropRate: "아이템 드롭률",
+                    bonusExp: "추가 경험치 획득",
+                    starForce: "스타포스",
+                    arcaneForce: "아케인포스",
+                    authenticForce: "어센틱포스",
+                    speed: "이동속도",
+                    jump: "점프력",
+                    statusResistance: "상태이상 내성",
+                    stance: "스탠스",
+                },
+            },
         },
         banner: {
             union: "유니온 {level}",
@@ -226,6 +339,26 @@ export const ko = {
             achievementDetail: "등급 {grade} · 점수 {score}",
             updated: "{date} 기준",
             empty: "랭킹 정보가 없습니다.",
+        },
+        item: {
+            equipment: {
+                title: "장비",
+                mainOptions: {
+                    allStat: "올스탯",
+                    maxHp: "최대 HP",
+                    maxMp: "최대 MP",
+                    attackPower: "공격력",
+                    magicPower: "마력",
+                    armor: "방어력",
+                },
+                potential: {
+                    label: "잠재옵션",
+                    gradeLabel: "({grade} 아이템)",
+                },
+                additionalPotential: {
+                    label: "에디셔널 잠재옵션",
+                },
+            },
         },
     },
 } as const;

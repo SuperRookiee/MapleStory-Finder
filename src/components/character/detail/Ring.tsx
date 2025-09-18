@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { IRingExchangeSkillEquipment } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface RingProps {
     ring?: IRingExchangeSkillEquipment | null;
@@ -8,11 +9,13 @@ interface RingProps {
 }
 
 export const Ring = ({ ring, loading }: RingProps) => {
+    const t = useTranslations();
+
     if (loading || !ring) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>스페셜 링</CardTitle>
+                    <CardTitle>{t('character.detail.sections.ring.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-6 w-full" />
@@ -24,11 +27,13 @@ export const Ring = ({ ring, loading }: RingProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>스페셜 링</CardTitle>
+                <CardTitle>{t('character.detail.sections.ring.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <p className="text-sm">{ring.special_ring_exchange_name}</p>
-                <p className="text-sm">Lv.{ring.special_ring_exchange_level}</p>
+                <p className="text-sm">
+                    {t('common.level', { value: ring.special_ring_exchange_level })}
+                </p>
             </CardContent>
         </Card>
     );

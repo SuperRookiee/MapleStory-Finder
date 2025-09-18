@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterOtherStat } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface OtherStatProps {
     otherStat?: ICharacterOtherStat | null;
@@ -8,11 +9,13 @@ interface OtherStatProps {
 }
 
 export const OtherStat = ({ otherStat, loading }: OtherStatProps) => {
+    const t = useTranslations();
+
     if (loading) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>기타 스탯</CardTitle>
+                    <CardTitle>{t('character.detail.sections.otherStat.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-6 w-full" />
@@ -25,10 +28,10 @@ export const OtherStat = ({ otherStat, loading }: OtherStatProps) => {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>기타 스탯</CardTitle>
+                    <CardTitle>{t('character.detail.sections.otherStat.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                    <p>정보가 없습니다.</p>
+                    <p>{t('character.detail.sections.otherStat.empty')}</p>
                 </CardContent>
             </Card>
         );
@@ -37,7 +40,7 @@ export const OtherStat = ({ otherStat, loading }: OtherStatProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>기타 스탯</CardTitle>
+                <CardTitle>{t('character.detail.sections.otherStat.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm space-y-2">
                 {otherStat.other_stat.map((group) => (

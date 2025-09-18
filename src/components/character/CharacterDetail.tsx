@@ -401,7 +401,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                         <div>{basic.character_name}</div>
                                         <div className="mt-1 text-sm font-normal text-muted-foreground sm:mt-0 sm:flex sm:items-center sm:gap-2">
                                             <span>{basic.character_class}</span>
-                                            <span>Lv.{basic.character_level}</span>
+                                            <span>
+                                                {t("common.level", { value: basic.character_level })}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

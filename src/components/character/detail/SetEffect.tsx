@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterSetEffect } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface SetEffectProps {
     setEffect?: ICharacterSetEffect | null;
@@ -8,11 +9,13 @@ interface SetEffectProps {
 }
 
 export const SetEffect = ({ setEffect, loading }: SetEffectProps) => {
+    const t = useTranslations();
+
     if (loading || !setEffect) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>세트 효과</CardTitle>
+                    <CardTitle>{t('character.detail.sections.setEffect.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-2">
@@ -28,7 +31,7 @@ export const SetEffect = ({ setEffect, loading }: SetEffectProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>세트 효과</CardTitle>
+                <CardTitle>{t('character.detail.sections.setEffect.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
@@ -37,7 +40,10 @@ export const SetEffect = ({ setEffect, loading }: SetEffectProps) => {
                             <p className="font-semibold">{set.set_name}</p>
                             {set.set_effect_info.map((info) => (
                                 <p key={info.set_count} className="text-xs">
-                                    {info.set_count}세트: {info.set_option}
+                                    {t('character.detail.sections.setEffect.entry', {
+                                        count: info.set_count,
+                                        option: info.set_option,
+                                    })}
                                 </p>
                             ))}
                         </div>

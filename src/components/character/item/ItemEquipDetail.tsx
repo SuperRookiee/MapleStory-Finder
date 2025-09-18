@@ -2,23 +2,38 @@ import Image from "next/image";
 import RenderOptionRow from "@/components/character/item/renderOptionRow";
 import { getGradeColor } from "@/constants/option_grade_color.constant";
 import { IItemEquipment } from "@/interface/character/ICharacter";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 interface ItemEquipDetailProps {
     item: IItemEquipment;
 }
 
 const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
+    const t = useTranslations();
+
     const mainOptions: [string, string, string | undefined][] = [
         ["STR", "str", item.item_total_option?.str],
         ["DEX", "dex", item.item_total_option?.dex],
         ["INT", "int", item.item_total_option?.int],
         ["LUK", "luk", item.item_total_option?.luk],
-        ["올스탯", "all_stat", item.item_total_option?.all_stat ? `${item.item_total_option.all_stat}%` : undefined],
-        ["최대 HP", "max_hp", item.item_total_option?.max_hp],
-        ["최대 MP", "max_mp", item.item_total_option?.max_mp],
-        ["공격력", "attack_power", item.item_total_option?.attack_power],
-        ["마력", "magic_power", item.item_total_option?.magic_power],
-        ["방어력", "armor", item.item_total_option?.armor],
+        [
+            t("character.item.equipment.mainOptions.allStat"),
+            "all_stat",
+            item.item_total_option?.all_stat ? `${item.item_total_option.all_stat}%` : undefined,
+        ],
+        [t("character.item.equipment.mainOptions.maxHp"), "max_hp", item.item_total_option?.max_hp],
+        [t("character.item.equipment.mainOptions.maxMp"), "max_mp", item.item_total_option?.max_mp],
+        [
+            t("character.item.equipment.mainOptions.attackPower"),
+            "attack_power",
+            item.item_total_option?.attack_power,
+        ],
+        [
+            t("character.item.equipment.mainOptions.magicPower"),
+            "magic_power",
+            item.item_total_option?.magic_power,
+        ],
+        [t("character.item.equipment.mainOptions.armor"), "armor", item.item_total_option?.armor],
     ];
 
     const base = item.item_base_option || {};
@@ -50,7 +65,11 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
                         )}
                     </h3>
                     {item.potential_option_grade && (
-                        <p className="text-xs text-muted-foreground">({item.potential_option_grade} 아이템)</p>
+                        <p className="text-xs text-muted-foreground">
+                            {t("character.item.equipment.potential.gradeLabel", {
+                                grade: item.potential_option_grade,
+                            })}
+                        </p>
                     )}
                 </div>
             </div>
@@ -76,7 +95,9 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
                 {/* 잠재 옵션 */}
                 {item.potential_option_grade && (
                     <div className={getGradeColor(item?.potential_option_grade)}>
-                        <p className="mb-1 text-card-foreground">잠재옵션</p>
+                        <p className="mb-1 text-card-foreground">
+                            {t("character.item.equipment.potential.label")}
+                        </p>
                         {item.potential_option_1 && <p>{item.potential_option_1}</p>}
                         {item.potential_option_2 && <p>{item.potential_option_2}</p>}
                         {item.potential_option_3 && <p>{item.potential_option_3}</p>}
@@ -85,7 +106,9 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
                 {/* 에디셔널 잠재 */}
                 {item.additional_potential_option_grade && (
                     <div className={getGradeColor(item.additional_potential_option_grade)}>
-                        <p className="mb-1 text-card-foreground">에디셔널 잠재옵션</p>
+                        <p className="mb-1 text-card-foreground">
+                            {t("character.item.equipment.additionalPotential.label")}
+                        </p>
                         {item.additional_potential_option_1 && <p>{item.additional_potential_option_1}</p>}
                         {item.additional_potential_option_2 && <p>{item.additional_potential_option_2}</p>}
                         {item.additional_potential_option_3 && <p>{item.additional_potential_option_3}</p>}

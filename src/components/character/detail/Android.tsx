@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterAndroidEquipment } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface AndroidProps {
     android?: ICharacterAndroidEquipment | null;
@@ -9,11 +10,13 @@ interface AndroidProps {
 }
 
 export const Android = ({ android, loading }: AndroidProps) => {
+    const t = useTranslations();
+
     if (loading || !android) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>안드로이드</CardTitle>
+                    <CardTitle>{t('character.detail.sections.android.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-16 w-16" />
@@ -25,7 +28,7 @@ export const Android = ({ android, loading }: AndroidProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>안드로이드</CardTitle>
+                <CardTitle>{t('character.detail.sections.android.title')}</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center space-x-4">
                 {android.android_icon && (
@@ -33,7 +36,9 @@ export const Android = ({ android, loading }: AndroidProps) => {
                 )}
                 <div className="text-sm">
                     <p>{android.android_name}</p>
-                    <p className="text-muted-foreground">{android.android_grade}등급</p>
+                    <p className="text-muted-foreground">
+                        {t('character.detail.sections.android.grade', { grade: android.android_grade })}
+                    </p>
                 </div>
             </CardContent>
         </Card>

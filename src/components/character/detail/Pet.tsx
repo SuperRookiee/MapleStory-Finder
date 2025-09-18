@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterPetEquipment } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface PetProps {
     pet?: ICharacterPetEquipment | null;
@@ -9,11 +10,13 @@ interface PetProps {
 }
 
 export const Pet = ({ pet, loading }: PetProps) => {
+    const t = useTranslations();
+
     if (loading || !pet) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>펫</CardTitle>
+                    <CardTitle>{t('character.detail.sections.pet.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex space-x-4">
@@ -35,7 +38,7 @@ export const Pet = ({ pet, loading }: PetProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>펫</CardTitle>
+                <CardTitle>{t('character.detail.sections.pet.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="flex space-x-4">

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterSymbolEquipment } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface SymbolEquipProps {
     symbol?: ICharacterSymbolEquipment | null;
@@ -9,11 +10,13 @@ interface SymbolEquipProps {
 }
 
 export const SymbolEquip = ({ symbol, loading }: SymbolEquipProps) => {
+    const t = useTranslations();
+
     if (loading || !symbol) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>심볼</CardTitle>
+                    <CardTitle>{t('character.detail.sections.symbol.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-3 gap-4">
@@ -29,7 +32,7 @@ export const SymbolEquip = ({ symbol, loading }: SymbolEquipProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>심볼</CardTitle>
+                <CardTitle>{t('character.detail.sections.symbol.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-3 gap-4">
