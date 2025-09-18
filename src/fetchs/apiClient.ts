@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import pLimit from "p-limit";
+import { maintenanceStore } from "@/stores/maintenanceStore";
 import { userStore } from "@/stores/userStore";
 
 export type ApiParams = Record<string, string | number | undefined>;
@@ -37,7 +38,7 @@ const showMaintenanceAlert = () => {
     }
 
     hasShownMaintenanceAlert = true;
-    window.alert(MAINTENANCE_ALERT_MESSAGE);
+    maintenanceStore.getState().open(MAINTENANCE_ALERT_MESSAGE);
 };
 
 export const getApiKeyInfo = () => {
