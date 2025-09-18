@@ -17,6 +17,29 @@ const redirectToMissingApiKey = (isGuest: boolean) => {
     }
 };
 
+const MAINTENANCE_ERROR_MESSAGE = "Please wait until the game maintenance is finished";
+const MAINTENANCE_ALERT_MESSAGE = "API 점검 중입니다.";
+
+const isMaintenanceError = (error: AxiosError) => {
+    const message = error.response?.data?.error?.message;
+    const status = error.response?.status;
+    return (
+        message === MAINTENANCE_ERROR_MESSAGE &&
+        (status === undefined || status === 400)
+    );
+};
+
+let hasShownMaintenanceAlert = false;
+
+const showMaintenanceAlert = () => {
+    if (typeof window === "undefined" || hasShownMaintenanceAlert) {
+        return;
+    }
+
+    hasShownMaintenanceAlert = true;
+    window.alert(MAINTENANCE_ALERT_MESSAGE);
+};
+
 export const getApiKeyInfo = () => {
     const { apiKey, isGuest } = userStore.getState().user;
     const fallback = process.env.NEXT_PUBLIC_NEXON_API_KEY ?? "";
@@ -87,11 +110,14 @@ export const createApiCaller = ({
                 });
                 return response.data;
             } catch (error) {
-                if (
-                    error instanceof AxiosError &&
-                    error.response?.data?.error?.message === "Missing API Key"
-                ) {
-                    redirectToMissingApiKey(isGuest);
+                if (error instanceof AxiosError) {
+                    if (isMaintenanceError(error)) {
+                        showMaintenanceAlert();
+                    }
+
+                    if (error.response?.data?.error?.message === "Missing API Key") {
+                        redirectToMissingApiKey(isGuest);
+                    }
                 }
                 throw error;
             }
