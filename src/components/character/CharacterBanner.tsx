@@ -157,7 +157,7 @@ const CharacterBanner = ({
                             }
                         </div>
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
-                            <div className="px-8 py-2 rounded-md bg-primary text-primary-foreground text-sm">
+                            <div className="px-8 py-1.5 rounded-md bg-primary text-primary-foreground text-sm">
                                 {basic.character_name}
                             </div>
                         </div>

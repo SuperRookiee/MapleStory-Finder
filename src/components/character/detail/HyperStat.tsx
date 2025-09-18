@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ICharacterHyperStat } from "@/interface/character/ICharacter";
@@ -43,11 +43,9 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
 
     return (
         <Card className="w-full">
-            <CardHeader className="space-y-1">
+            <CardHeader>
                 <CardTitle>하이퍼 스탯</CardTitle>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                    사용 가능 포인트: {hyper.use_available_hyper_stat}
-                </p>
+                <CardDescription>사용 가능 포인트: {hyper.use_available_hyper_stat}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={hyper.use_preset_no}>

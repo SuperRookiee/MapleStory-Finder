@@ -95,9 +95,9 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
         "재사용 대기시간 감소 (%)",
         "재사용 대기시간 미적용",
         "상태이상 추가 데미지",
+        "버프 지속시간",
     ];
     const miscKeys = [
-        "버프 지속시간",
         "공격 속도",
         "무기 숙련도",
         "메소 획득량",
@@ -119,7 +119,7 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
             return "text-primary";
         }
         if (subStatSet.has(normalized)) {
-            return "text-primary/70";
+            return "text-primary/80";
         }
         return undefined;
     };
