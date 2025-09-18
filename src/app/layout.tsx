@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import Script from "next/script";
 import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { MaintenanceDialog } from "@/components/common/MaintenanceDialog";
 import { Toaster } from "@/components/ui/sonner";
@@ -29,7 +29,6 @@ export const metadata: Metadata = {
     description: "MapleStory Finder",
     applicationName: "MapleStory Finder",
     manifest: "/manifest.webmanifest",
-    themeColor: "#38bdf8",
     icons: {
         icon: [
             {
@@ -46,6 +45,13 @@ export const metadata: Metadata = {
             sizes: "180x180",
         },
     },
+};
+
+export const viewport: Viewport = {
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#FF8000FF" },
+        { media: "(prefers-color-scheme: dark)", color: "#FF7F00FF" },
+    ],
 };
 
 const isProduction = process.env.NODE_ENV === "production";
