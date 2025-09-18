@@ -179,6 +179,47 @@ export const ko = {
             title: "정보",
         },
     },
+    notice: {
+        title: "메이플스토리 공지 모음",
+        description:
+            "최근 공지사항, 업데이트 노트, 진행 중 이벤트, 캐시샵 소식을 한곳에서 확인하세요.",
+        tabs: {
+            notice: "공지사항",
+            update: "업데이트",
+            event: "이벤트",
+            cashshop: "캐시샵",
+        },
+        table: {
+            headers: {
+                title: "제목",
+                date: "등록일",
+                period: "이벤트 기간",
+                salePeriod: "판매 기간",
+                status: "상태",
+            },
+            empty: "등록된 게시글이 없습니다.",
+            noData: "—",
+        },
+        status: {
+            ongoing: "진행 중",
+            ended: "종료",
+            unknown: "정보 없음",
+        },
+        detail: {
+            loading: "공지 정보를 불러오는 중...",
+            postedAt: "{date}에 등록됨",
+            eventPeriod: "이벤트 기간",
+            salePeriod: "판매 기간",
+            error: "공지 내용을 불러오지 못했습니다.",
+            openOriginal: "원문 열기",
+        },
+        errors: {
+            list: "공지 목록을 불러오지 못했습니다. 다시 시도해 주세요.",
+        },
+        actions: {
+            retry: "다시 시도",
+        },
+    },
     authProvider: {
         toast: {
             logout: "로그아웃되었습니다.",

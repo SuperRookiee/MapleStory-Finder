@@ -21,6 +21,7 @@ export const isGuestAccessiblePath = (pathname: string) =>
     pathname === "/chat" ||
     pathname === "/starforce" ||
     pathname === "/cube" ||
+    pathname === "/notice" ||
     pathname.startsWith("/character/");
 
 export const isUnauthenticatedAccessiblePath = (pathname: string) =>
@@ -28,6 +29,7 @@ export const isUnauthenticatedAccessiblePath = (pathname: string) =>
     pathname === "/search" ||
     pathname === "/starforce" ||
     pathname === "/cube" ||
+    pathname === "/notice" ||
     pathname.startsWith("/character/");
 
 type AuthContextValue = {
