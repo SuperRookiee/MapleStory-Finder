@@ -3,6 +3,7 @@ import Script from "next/script";
 import { type ReactNode, unstable_ViewTransition as ViewTransition } from "react";
 import type { Metadata } from "next";
 import "./globals.css";
+import { MaintenanceDialog } from "@/components/common/MaintenanceDialog";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
@@ -58,6 +59,7 @@ const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
         <LanguageProvider>
             <AuthProvider>
                 <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+                <MaintenanceDialog />
                 <Toaster />
             </AuthProvider>
         </LanguageProvider>
