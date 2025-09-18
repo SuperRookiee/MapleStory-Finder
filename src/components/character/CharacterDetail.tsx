@@ -37,6 +37,13 @@ import { findUnion, findUnionArtifact, findUnionRaider } from "@/fetchs/union.fe
 import { IRankingResponse } from "@/interface/ranking/IRankingResponse";
 import { useTranslations } from "@/providers/LanguageProvider";
 
+const getTodayKstDate = () => {
+    const now = new Date();
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 60_000;
+    const kst = new Date(utcTime + 9 * 60 * 60_000);
+    return kst.toISOString().slice(0, 10);
+};
+
 const CharacterDetail = ({ ocid }: { ocid: string }) => {
     const {
         basic, stat, rankings, hyper,
@@ -89,15 +96,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     }
                 };
 
-                const rankingPromise = Promise.all([
-                    safeRankingFetch(findOverallRanking(ocid)),
-                    safeRankingFetch(findUnionRanking(ocid)),
-                    safeRankingFetch(findDojangRanking(ocid, { difficulty: 0 })),
-                    safeRankingFetch(findTheSeedRanking(ocid)),
-                    safeRankingFetch(findAchievementRanking(ocid)),
-                ] as const);
-
-                const [basicRes, statRes, hyperRes, abilityRes, unionRes, dojangRes, rankingResults] =
+                const [basicRes, statRes, hyperRes, abilityRes, unionRes, dojangRes] =
                     await Promise.all([
                         shouldFetchBasic ? findCharacterBasic(ocid) : Promise.resolve(null),
                         findCharacterStat(ocid),
@@ -105,7 +104,6 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                         findCharacterAbility(ocid),
                         findUnion(ocid),
                         findCharacterDojang(ocid),
-                        rankingPromise,
                     ]);
                 if (cancelled) return;
                 const basicData = shouldFetchBasic ? basicRes?.data ?? null : matchedPreviewBasic;
@@ -118,27 +116,65 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                 setUnion(unionRes.data);
                 setDojang(dojangRes.data);
 
-                const [
-                    overallRankingRes,
-                    unionRankingRes,
-                    dojangRankingRes,
-                    theseedRankingRes,
-                    achievementRankingRes,
-                ] = rankingResults;
+                const worldNameForRanking = basicData?.world_name ?? matchedPreviewBasic?.world_name;
+                if (worldNameForRanking) {
+                    const requestDate = getTodayKstDate();
+                    const [
+                        overallRankingRes,
+                        unionRankingRes,
+                        dojangRankingRes,
+                        theseedRankingRes,
+                        achievementRankingRes,
+                    ] = await Promise.all([
+                        safeRankingFetch(
+                            findOverallRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findUnionRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findDojangRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                                difficulty: 0,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findTheSeedRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                        safeRankingFetch(
+                            findAchievementRanking(ocid, {
+                                date: requestDate,
+                                world_name: worldNameForRanking,
+                            }),
+                        ),
+                    ]);
 
-                const rankingData = {
-                    overall: overallRankingRes?.data.ranking?.[0] ?? null,
-                    union: unionRankingRes?.data.ranking?.[0] ?? null,
-                    dojang: dojangRankingRes?.data.ranking?.[0] ?? null,
-                    theseed: theseedRankingRes?.data.ranking?.[0] ?? null,
-                    achievement: achievementRankingRes?.data.ranking?.[0] ?? null,
-                };
+                    const rankingData = {
+                        overall: overallRankingRes?.data.ranking?.[0] ?? null,
+                        union: unionRankingRes?.data.ranking?.[0] ?? null,
+                        dojang: dojangRankingRes?.data.ranking?.[0] ?? null,
+                        theseed: theseedRankingRes?.data.ranking?.[0] ?? null,
+                        achievement: achievementRankingRes?.data.ranking?.[0] ?? null,
+                    };
 
-                const hasRankingData = Object.values(rankingData).some(
-                    (entry) => entry !== null,
-                );
+                    const hasRankingData = Object.values(rankingData).some(
+                        (entry) => entry !== null,
+                    );
 
-                setRankings(hasRankingData ? rankingData : null);
+                    setRankings(hasRankingData ? rankingData : null);
+                } else {
+                    setRankings(null);
+                }
 
                 if (basicData?.character_guild_name) {
                     try {
