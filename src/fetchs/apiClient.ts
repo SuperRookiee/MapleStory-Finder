@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import pLimit from "p-limit";
 import { maintenanceStore } from "@/stores/maintenanceStore";
 import { userStore } from "@/stores/userStore";
+import { IErrorResponse } from "@/interface/error/IErrorResponse";
 
 export type ApiParams = Record<string, string | number | undefined>;
 
@@ -20,13 +21,10 @@ const redirectToMissingApiKey = (isGuest: boolean) => {
 
 const MAINTENANCE_ERROR_MESSAGE = "Please wait until the game maintenance is finished";
 
-const isMaintenanceError = (error: AxiosError) => {
+const isMaintenanceError = (error: AxiosError<IErrorResponse>) => {
     const message = error.response?.data?.error?.message;
     const status = error.response?.status;
-    return (
-        message === MAINTENANCE_ERROR_MESSAGE &&
-        (status === undefined || status === 400)
-    );
+    return (message === MAINTENANCE_ERROR_MESSAGE && (status === undefined || status === 400));
 };
 
 let hasShownMaintenanceAlert = false;
@@ -58,10 +56,7 @@ type RequestRunnerOptions = {
     delayMs?: number;
 };
 
-export const createRequestRunner = ({
-    concurrency,
-    delayMs,
-}: RequestRunnerOptions = {}): RequestRunner => {
+export const createRequestRunner = ({ concurrency, delayMs }: RequestRunnerOptions = {}): RequestRunner => {
     const limiter = typeof concurrency === "number" ? pLimit(concurrency) : null;
     let queue: Promise<unknown> = Promise.resolve();
 
@@ -94,10 +89,7 @@ type ApiCallerOptions = {
     runner?: RequestRunner;
 };
 
-export const createApiCaller = ({
-    basePath = "",
-    runner = defaultRunner,
-}: ApiCallerOptions = {}) =>
+export const createApiCaller = ({ basePath = "", runner = defaultRunner }: ApiCallerOptions = {}) =>
     async <TResponse>(endpoint: string, params: ApiParams = {}): Promise<TResponse> => {
         const { key, isGuest } = getApiKeyInfo();
         const url = basePath ? `/api/${basePath}/${endpoint}` : `/api/${endpoint}`;
