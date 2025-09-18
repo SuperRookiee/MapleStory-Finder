@@ -169,6 +169,14 @@ export const translations = {
                 search: "Search for characters",
             },
         },
+        offline: {
+            title: "You're offline",
+            description:
+                "Check your connection and try again. Recently visited pages may still be available offline.",
+            actions: {
+                retry: "Retry",
+            },
+        },
         home: {
             characterInfo: {
                 emptyState: "Please choose your character",
@@ -375,6 +383,14 @@ export const translations = {
             actions: {
                 home: "메인으로 돌아가기",
                 search: "캐릭터 검색하기",
+            },
+        },
+        offline: {
+            title: "오프라인 상태입니다",
+            description:
+                "인터넷 연결을 확인한 뒤 다시 시도해주세요. 최근에 방문한 페이지는 일부 오프라인에서도 사용할 수 있어요.",
+            actions: {
+                retry: "다시 시도",
             },
         },
         home: {
