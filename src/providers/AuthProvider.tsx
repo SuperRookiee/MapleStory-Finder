@@ -19,12 +19,16 @@ export const isGuestAccessiblePath = (pathname: string) =>
     pathname === "/" ||
     pathname === "/search" ||
     pathname === "/chat" ||
+    pathname === "/starforce" ||
+    pathname === "/cube" ||
     pathname === "/notice" ||
     pathname.startsWith("/character/");
 
 export const isUnauthenticatedAccessiblePath = (pathname: string) =>
     pathname === "/" ||
     pathname === "/search" ||
+    pathname === "/starforce" ||
+    pathname === "/cube" ||
     pathname === "/notice" ||
     pathname.startsWith("/character/");
 
