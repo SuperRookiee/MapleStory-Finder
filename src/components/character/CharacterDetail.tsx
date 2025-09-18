@@ -131,19 +131,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
         return () => {
             cancelled = true;
         };
-    }, [
-        ocid,
-        matchedPreviewBasic,
-        reset,
-        setBasic,
-        setStat,
-        setPopularity,
-        setHyper,
-        setAbility,
-        setUnion,
-        setDojang,
-        setGuild,
-    ]);
+    }, [ocid, matchedPreviewBasic, reset]);
 
     // 유니온 탭 로딩
     useEffect(() => {
@@ -164,7 +152,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             }
         };
         loadUnion();
-    }, [tab, ocid, union, unionRaider, unionArtifact, setUnion, setUnionRaider, setUnionArtifact]);
+    }, [tab, ocid, union, unionRaider, unionArtifact]);
 
     // 장비 탭 로딩
     useEffect(() => {
@@ -185,7 +173,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             }
         };
         loadEquip();
-    }, [tab, ocid, itemEquip, symbolEquip, setEffect, setItemEquip, setSymbolEquip, setSetEffect]);
+    }, [tab, ocid, itemEquip, symbolEquip]);
 
     // 스킬 탭 로딩
     useEffect(() => {
@@ -217,20 +205,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             }
         };
         loadSkill();
-    }, [
-        tab,
-        ocid,
-        skill,
-        linkSkill,
-        hexaMatrix,
-        hexaStat,
-        vMatrix,
-        setSkill,
-        setLinkSkill,
-        setHexaMatrix,
-        setHexaStat,
-        setVMatrix,
-    ]);
+    }, [tab, ocid, skill, linkSkill, hexaMatrix, hexaStat, vMatrix]);
 
     // 캐시 탭 로딩
     useEffect(() => {
@@ -253,7 +228,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             }
         };
         loadCash();
-    }, [tab, ocid, cashEquip, beauty, android, pet, setCashEquip, setBeauty, setAndroid, setPet]);
+    }, [tab, ocid, cashEquip, beauty, android, pet]);
 
     // 기타 탭 로딩
     useEffect(() => {
@@ -281,18 +256,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             }
         };
         loadEtc();
-    }, [
-        tab,
-        ocid,
-        dojang,
-        ring,
-        otherStat,
-        propensity,
-        setDojang,
-        setRing,
-        setOtherStat,
-        setPropensity,
-    ]);
+    }, [tab, ocid, dojang, ring, otherStat, propensity]);
 
     useEffect(() => {
         const viewport = document.querySelector(
