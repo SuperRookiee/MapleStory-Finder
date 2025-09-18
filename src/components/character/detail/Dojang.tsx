@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterDojang } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface DojangProps {
     dojang?: ICharacterDojang | null;
@@ -8,11 +9,13 @@ interface DojangProps {
 }
 
 export const Dojang = ({ dojang, loading }: DojangProps) => {
+    const t = useTranslations();
+
     if (loading || !dojang) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>무릉도장</CardTitle>
+                    <CardTitle>{t('character.detail.sections.dojang.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-6 w-full" />
@@ -24,11 +27,19 @@ export const Dojang = ({ dojang, loading }: DojangProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>무릉도장</CardTitle>
+                <CardTitle>{t('character.detail.sections.dojang.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-                <p className="text-sm">최고 층수: {dojang.dojang_best_floor}층</p>
-                <p className="text-sm">기록: {dojang.dojang_best_time}초</p>
+                <p className="text-sm">
+                    {t('character.detail.sections.dojang.bestFloor', {
+                        floor: dojang.dojang_best_floor,
+                    })}
+                </p>
+                <p className="text-sm">
+                    {t('character.detail.sections.dojang.bestTime', {
+                        time: dojang.dojang_best_time,
+                    })}
+                </p>
             </CardContent>
         </Card>
     );

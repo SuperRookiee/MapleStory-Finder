@@ -1,6 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Language } from "@/constants/i18n/translations";
 import { getJobInfoByName } from "@/constants/job.constant";
 import { ICharacterStat } from "@/interface/character/ICharacter";
+import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
 import { cn } from "@/utils/utils";
 
 interface StatProps {
@@ -9,45 +11,56 @@ interface StatProps {
     loading?: boolean;
 }
 
-const formatKoreanUnits = (value: number) => {
+const formatNumberByLanguage = (value: number, language: Language) => {
     if (!Number.isFinite(value)) {
         return String(value);
     }
 
-    const sign = value < 0 ? -1 : 1;
-    const absValue = Math.abs(value);
-    const hundredMillion = 100_000_000;
-    const tenThousand = 10_000;
+    if (language === "ko") {
+        const sign = value < 0 ? -1 : 1;
+        const absValue = Math.abs(value);
+        const hundredMillion = 100_000_000;
+        const tenThousand = 10_000;
 
-    if (absValue < tenThousand) {
-        const smallValue = sign * absValue;
-        return Number.isInteger(smallValue) ? smallValue.toLocaleString() : smallValue.toString();
+        if (absValue < tenThousand) {
+            const signedValue = sign * absValue;
+            if (Number.isInteger(signedValue)) {
+                return signedValue.toLocaleString("ko-KR");
+            }
+            return (sign * absValue).toString();
+        }
+
+        const hundredMillions = Math.floor(absValue / hundredMillion);
+        const remainderAfterHundred = absValue % hundredMillion;
+        const tenThousands = Math.floor(remainderAfterHundred / tenThousand);
+        const remainder = Math.floor(remainderAfterHundred % tenThousand);
+
+        const parts: string[] = [];
+
+        if (hundredMillions > 0) {
+            parts.push(`${hundredMillions}억`);
+        }
+
+        if (tenThousands > 0) {
+            parts.push(`${tenThousands}만`);
+        }
+
+        if (remainder > 0 || parts.length === 0) {
+            parts.push(remainder.toLocaleString("ko-KR"));
+        }
+
+        const formatted = parts.join(" ");
+        return sign < 0 ? `-${formatted}` : formatted;
     }
 
-    const hundredMillions = Math.floor(absValue / hundredMillion);
-    const remainderAfterHundred = absValue % hundredMillion;
-    const tenThousands = Math.floor(remainderAfterHundred / tenThousand);
-    const remainder = Math.floor(remainderAfterHundred % tenThousand);
-
-    const parts: string[] = [];
-
-    if (hundredMillions > 0) {
-        parts.push(`${hundredMillions}억`);
+    const locale = language === "en" ? "en-US" : undefined;
+    if (Number.isInteger(value)) {
+        return value.toLocaleString(locale);
     }
-
-    if (tenThousands > 0) {
-        parts.push(`${tenThousands}만`);
-    }
-
-    if (remainder > 0 || parts.length === 0) {
-        parts.push(remainder.toLocaleString());
-    }
-
-    const formatted = parts.join(" ");
-    return sign < 0 ? `-${formatted}` : formatted;
+    return value.toLocaleString(locale, { maximumFractionDigits: 2 });
 };
 
-const formatStatValue = (value?: string) => {
+const formatStatValue = (value: string | undefined, language: Language) => {
     if (value === undefined || value === null || value === "") {
         return "-";
     }
@@ -58,7 +71,7 @@ const formatStatValue = (value?: string) => {
     if (numericPattern.test(sanitized)) {
         const numericValue = Number(sanitized);
         if (!Number.isNaN(numericValue)) {
-            return formatKoreanUnits(numericValue);
+            return formatNumberByLanguage(numericValue, language);
         }
     }
 
@@ -66,6 +79,8 @@ const formatStatValue = (value?: string) => {
 };
 
 export const Stat = ({ stat, characterClass, loading }: StatProps) => {
+    const { language } = useLanguage();
+    const t = useTranslations();
     const jobInfo = getJobInfoByName(characterClass ?? stat?.character_class);
 
     const mainStatSet = new Set((jobInfo?.mainStat ?? []).map((key) => key.toUpperCase()));
@@ -80,36 +95,36 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
     const battlePower = statMap["전투력"];
 
     const mainKeys = ["HP", "MP", "STR", "DEX", "INT", "LUK"];
-    const offenseKeys = [
-        "스탯공격력",
-        "공격력",
-        "마력",
-        "데미지",
-        "최종 데미지",
-        "보스 몬스터 데미지",
-        "일반 몬스터 데미지",
-        "방어율 무시",
-        "크리티컬 확률",
-        "크리티컬 데미지",
-        "재사용 대기시간 감소 (초)",
-        "재사용 대기시간 감소 (%)",
-        "재사용 대기시간 미적용",
-        "상태이상 추가 데미지",
-        "버프 지속시간",
+    const offenseStats = [
+        { key: "스탯공격력", label: t("character.detail.stat.labels.statAttack") },
+        { key: "공격력", label: t("character.detail.stat.labels.attackPower") },
+        { key: "마력", label: t("character.detail.stat.labels.magicAttack") },
+        { key: "데미지", label: t("character.detail.stat.labels.damage") },
+        { key: "최종 데미지", label: t("character.detail.stat.labels.finalDamage") },
+        { key: "보스 몬스터 데미지", label: t("character.detail.stat.labels.bossDamage") },
+        { key: "일반 몬스터 데미지", label: t("character.detail.stat.labels.normalDamage") },
+        { key: "방어율 무시", label: t("character.detail.stat.labels.ignoreDefense") },
+        { key: "크리티컬 확률", label: t("character.detail.stat.labels.critRate") },
+        { key: "크리티컬 데미지", label: t("character.detail.stat.labels.critDamage") },
+        { key: "재사용 대기시간 감소 (초)", label: t("character.detail.stat.labels.cooldownReductionSeconds") },
+        { key: "재사용 대기시간 감소 (%)", label: t("character.detail.stat.labels.cooldownReductionPercent") },
+        { key: "재사용 대기시간 미적용", label: t("character.detail.stat.labels.cooldownIgnore") },
+        { key: "상태이상 추가 데미지", label: t("character.detail.stat.labels.statusDamage") },
+        { key: "버프 지속시간", label: t("character.detail.stat.labels.buffDuration") },
     ];
-    const miscKeys = [
-        "공격 속도",
-        "무기 숙련도",
-        "메소 획득량",
-        "아이템 드롭률",
-        "추가 경험치 획득",
-        "스타포스",
-        "아케인포스",
-        "어센틱포스",
-        "이동속도",
-        "점프력",
-        "상태이상 내성",
-        "스탠스",
+    const miscStats = [
+        { key: "공격 속도", label: t("character.detail.stat.labels.attackSpeed") },
+        { key: "무기 숙련도", label: t("character.detail.stat.labels.weaponMastery") },
+        { key: "메소 획득량", label: t("character.detail.stat.labels.mesoObtained") },
+        { key: "아이템 드롭률", label: t("character.detail.stat.labels.itemDropRate") },
+        { key: "추가 경험치 획득", label: t("character.detail.stat.labels.bonusExp") },
+        { key: "스타포스", label: t("character.detail.stat.labels.starForce") },
+        { key: "아케인포스", label: t("character.detail.stat.labels.arcaneForce") },
+        { key: "어센틱포스", label: t("character.detail.stat.labels.authenticForce") },
+        { key: "이동속도", label: t("character.detail.stat.labels.speed") },
+        { key: "점프력", label: t("character.detail.stat.labels.jump") },
+        { key: "상태이상 내성", label: t("character.detail.stat.labels.statusResistance") },
+        { key: "스탠스", label: t("character.detail.stat.labels.stance") },
     ];
 
     const getHighlightClass = (statKey?: string) => {
@@ -124,6 +139,8 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
         return undefined;
     };
 
+    const formatValue = (value?: string) => formatStatValue(value, language);
+
     const renderRow = (label: string, value?: string, statKey?: string) => {
         const highlightClass = getHighlightClass(statKey);
         return (
@@ -132,7 +149,7 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
                 {loading ? (
                     <Skeleton className="h-4 w-16 bg-muted-foreground" />
                 ) : (
-                    <span className={cn(highlightClass)}>{formatStatValue(value)}</span>
+                    <span className={cn(highlightClass)}>{formatValue(value)}</span>
                 )}
             </div>
         );
@@ -141,9 +158,11 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
     return (
         <div className="w-full mx-auto rounded-md overflow-hidden shadow bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
             <div className="bg-neutral-200 dark:bg-neutral-700 px-4 py-4 border-b border-neutral-300 dark:border-neutral-600">
-                <div className="text-xs text-neutral-600 dark:text-neutral-400">전투력</div>
+                <div className="text-xs text-neutral-600 dark:text-neutral-400">
+                    {t("character.detail.stat.battlePower")}
+                </div>
                 <div className="text-2xl font-extrabold text-amber-600">
-                    {loading ? <Skeleton className="h-6 w-32" /> : formatStatValue(battlePower)}
+                    {loading ? <Skeleton className="h-6 w-32" /> : formatValue(battlePower)}
                 </div>
             </div>
 
@@ -153,10 +172,14 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
 
             <div className="p-4 space-y-6 text-sm">
                 <div className="grid grid-cols-2 gap-4">
-                    {offenseKeys.map((key) => (loading || statMap[key] ? renderRow(key, statMap[key]) : null))}
+                    {offenseStats.map(({ key, label }) =>
+                        loading || statMap[key] ? renderRow(label, statMap[key], key) : null,
+                    )}
                 </div>
                 <div className="grid grid-cols-2 gap-4 border-t border-neutral-300 dark:border-neutral-600 pt-4">
-                    {miscKeys.map((key) => (loading || statMap[key] ? renderRow(key, statMap[key]) : null))}
+                    {miscStats.map(({ key, label }) =>
+                        loading || statMap[key] ? renderRow(label, statMap[key], key) : null,
+                    )}
                 </div>
             </div>
         </div>

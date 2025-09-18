@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IItemEquipment } from "@/interface/character/ICharacter";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 interface IEquipmentGrid {
     items?: IItemEquipment[];
@@ -44,10 +45,12 @@ const slotPosition: Record<string, { col: number; row: number }> = {
 };
 
 const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
+    const t = useTranslations();
+
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>장비</CardTitle>
+                <CardTitle>{t("character.item.equipment.title")}</CardTitle>
             </CardHeader>
             <CardContent className="flex w-full justify-center px-2 sm:px-6">
                 <div className="grid grid-cols-5 grid-rows-6 gap-1.5 sm:gap-2 p-2 sm:p-4 bg-muted rounded-lg w-fit">

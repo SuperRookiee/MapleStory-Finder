@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterHexaMatrixStat, IHexaStatCore } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface HexaStatProps {
     hexaStat?: ICharacterHexaMatrixStat | null;
@@ -8,11 +9,13 @@ interface HexaStatProps {
 }
 
 export const HexaStat = ({ hexaStat, loading }: HexaStatProps) => {
+    const t = useTranslations();
+
     if (loading || !hexaStat) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>헥사 스탯</CardTitle>
+                    <CardTitle>{t('character.detail.sections.hexaStat.title')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                     {Array.from({ length: 3 }).map((_, i) => (
@@ -32,16 +35,17 @@ export const HexaStat = ({ hexaStat, loading }: HexaStatProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>헥사 스탯</CardTitle>
+                <CardTitle>{t('character.detail.sections.hexaStat.title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
                 {cores.map((core, idx) => (
                     <div key={`${core.slot_id}-${idx}`} className="flex justify-between">
                         <span className="font-medium">
-                            {core.main_stat_name} Lv.{core.main_stat_level}
+                            {core.main_stat_name} {t('common.level', { value: core.main_stat_level })}
                         </span>
                         <span>
-                            {core.sub_stat_name_1} Lv.{core.sub_stat_level_1} / {core.sub_stat_name_2} Lv.{core.sub_stat_level_2}
+                            {core.sub_stat_name_1} {t('common.level', { value: core.sub_stat_level_1 })} /{' '}
+                            {core.sub_stat_name_2} {t('common.level', { value: core.sub_stat_level_2 })}
                         </span>
                     </div>
                 ))}

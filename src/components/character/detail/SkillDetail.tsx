@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { ICharacterSkill } from "@/interface/character/ICharacter";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 interface SkillDetailProps {
     skill: ICharacterSkill["character_skill"][number];
 }
 
 const SkillDetail = ({ skill }: SkillDetailProps) => {
+    const t = useTranslations();
+
     return (
         <div className="bg-black/85 text-white rounded-lg shadow-lg p-4 max-w-xs">
             <div className="flex items-center gap-3 mb-2">
@@ -20,7 +23,9 @@ const SkillDetail = ({ skill }: SkillDetailProps) => {
                 </div>
                 <div>
                     <h3 className="font-bold text-sm">{skill.skill_name}</h3>
-                    <p className="text-xs">Lv. {skill.skill_level}</p>
+                    <p className="text-xs">
+                        {t("common.level", { value: skill.skill_level })}
+                    </p>
                 </div>
             </div>
             {skill.skill_description && (

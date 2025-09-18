@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ICharacterHyperStat } from "@/interface/character/ICharacter";
+import { useTranslations } from "@/providers/LanguageProvider";
 
 interface HyperStatProps {
     hyper?: ICharacterHyperStat | null;
@@ -9,11 +10,13 @@ interface HyperStatProps {
 }
 
 export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
+    const t = useTranslations();
+
     if (loading || !hyper) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>하이퍼 스탯</CardTitle>
+                    <CardTitle>{t("character.detail.sections.hyperStat.title")}</CardTitle>
                     <Skeleton className="h-4 w-32" />
                 </CardHeader>
                 <CardContent>
@@ -36,16 +39,32 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
     }
 
     const presets = [
-        { key: "1", label: "프리셋 1", stats: hyper.hyper_stat_preset_1 },
-        { key: "2", label: "프리셋 2", stats: hyper.hyper_stat_preset_2 },
-        { key: "3", label: "프리셋 3", stats: hyper.hyper_stat_preset_3 },
+        {
+            key: "1",
+            label: t("character.detail.common.preset", { number: 1 }),
+            stats: hyper.hyper_stat_preset_1,
+        },
+        {
+            key: "2",
+            label: t("character.detail.common.preset", { number: 2 }),
+            stats: hyper.hyper_stat_preset_2,
+        },
+        {
+            key: "3",
+            label: t("character.detail.common.preset", { number: 3 }),
+            stats: hyper.hyper_stat_preset_3,
+        },
     ];
 
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>하이퍼 스탯</CardTitle>
-                <CardDescription>사용 가능 포인트: {hyper.use_available_hyper_stat}</CardDescription>
+                <CardTitle>{t("character.detail.sections.hyperStat.title")}</CardTitle>
+                <CardDescription>
+                    {t("character.detail.sections.hyperStat.availablePoints", {
+                        value: hyper.use_available_hyper_stat,
+                    })}
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={hyper.use_preset_no}>

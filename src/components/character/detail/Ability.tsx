@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ICharacterAbility } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 const gradeStyles: Record<string, string> = {
     "레전드리": 'bg-green-500 dark:bg-green-600 text-white',
@@ -16,11 +17,13 @@ interface AbilityProps {
 }
 
 export const Ability = ({ ability, loading }: AbilityProps) => {
+    const t = useTranslations();
+
     if (loading || !ability) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>어빌리티</CardTitle>
+                    <CardTitle>{t('character.detail.sections.ability.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-6 w-full" />
@@ -30,15 +33,27 @@ export const Ability = ({ ability, loading }: AbilityProps) => {
     }
 
     const presets = [
-        { key: "1", label: "프리셋 1", data: ability.ability_preset_1 },
-        { key: "2", label: "프리셋 2", data: ability.ability_preset_2 },
-        { key: "3", label: "프리셋 3", data: ability.ability_preset_3 },
+        {
+            key: "1",
+            label: t('character.detail.common.preset', { number: 1 }),
+            data: ability.ability_preset_1,
+        },
+        {
+            key: "2",
+            label: t('character.detail.common.preset', { number: 2 }),
+            data: ability.ability_preset_2,
+        },
+        {
+            key: "3",
+            label: t('character.detail.common.preset', { number: 3 }),
+            data: ability.ability_preset_3,
+        },
     ];
 
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>어빌리티</CardTitle>
+                <CardTitle>{t('character.detail.sections.ability.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={String(ability.preset_no)}>

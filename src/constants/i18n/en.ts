@@ -209,6 +209,119 @@ export const en = {
                 loadCash: "Failed to load cash information.",
                 loadEtc: "Failed to load additional information.",
             },
+            common: {
+                preset: "Preset {number}",
+            },
+            sections: {
+                ability: {
+                    title: "Ability",
+                },
+                android: {
+                    title: "Android",
+                    grade: "{grade} Grade",
+                },
+                beauty: {
+                    title: "Appearance",
+                    hair: "Hair",
+                    face: "Face",
+                    skin: "Skin",
+                },
+                cash: {
+                    title: "Cash Equipment",
+                },
+                dojang: {
+                    title: "Mu Lung Dojo",
+                    bestFloor: "Highest floor: {floor}F",
+                    bestTime: "Record: {time}s",
+                },
+                hexaMatrix: {
+                    title: "Hexa Matrix",
+                },
+                hexaStat: {
+                    title: "Hexa Stats",
+                },
+                hyperStat: {
+                    title: "Hyper Stats",
+                    availablePoints: "Available points: {value}",
+                },
+                linkSkill: {
+                    title: "Link Skills",
+                },
+                otherStat: {
+                    title: "Other Stats",
+                    empty: "No information available.",
+                },
+                pet: {
+                    title: "Pets",
+                },
+                propensity: {
+                    title: "Traits",
+                    labels: {
+                        charisma: "Charisma",
+                        empathy: "Empathy",
+                        insight: "Insight",
+                        willpower: "Willpower",
+                        diligence: "Diligence",
+                        charm: "Charm",
+                    },
+                },
+                ring: {
+                    title: "Special Ring",
+                },
+                setEffect: {
+                    title: "Set Effects",
+                    entry: "{count}-set: {option}",
+                },
+                skill: {
+                    title: "Skills",
+                },
+                symbol: {
+                    title: "Symbols",
+                },
+                union: {
+                    title: "Union",
+                    level: "Level",
+                    grade: "Rank",
+                    artifactLevel: "Artifact Level",
+                    raiderEffects: "Raid member effects",
+                    artifactEffects: "Artifact effects",
+                },
+                vMatrix: {
+                    title: "V Matrix",
+                },
+            },
+            stat: {
+                battlePower: "Combat Power",
+                labels: {
+                    statAttack: "Stat ATT",
+                    attackPower: "Attack Power",
+                    magicAttack: "Magic ATT",
+                    damage: "Damage",
+                    finalDamage: "Final Damage",
+                    bossDamage: "Boss Damage",
+                    normalDamage: "Damage to Normal Monsters",
+                    ignoreDefense: "Ignore DEF",
+                    critRate: "Critical Rate",
+                    critDamage: "Critical Damage",
+                    cooldownReductionSeconds: "Cooldown Reduction (s)",
+                    cooldownReductionPercent: "Cooldown Reduction (%)",
+                    cooldownIgnore: "Cooldown Skip",
+                    statusDamage: "Damage to Statused Enemies",
+                    buffDuration: "Buff Duration",
+                    attackSpeed: "Attack Speed",
+                    weaponMastery: "Weapon Mastery",
+                    mesoObtained: "Meso Obtained",
+                    itemDropRate: "Item Drop Rate",
+                    bonusExp: "Bonus EXP",
+                    starForce: "Star Force",
+                    arcaneForce: "Arcane Force",
+                    authenticForce: "Authentic Force",
+                    speed: "Speed",
+                    jump: "Jump",
+                    statusResistance: "Status Resistance",
+                    stance: "Stance",
+                },
+            },
         },
         banner: {
             union: "Union Lv. {level}",
@@ -232,6 +345,26 @@ export const en = {
             achievementDetail: "Grade {grade} · Score {score}",
             updated: "As of {date}",
             empty: "No ranking data available.",
+        },
+        item: {
+            equipment: {
+                title: "Equipment",
+                mainOptions: {
+                    allStat: "All Stat",
+                    maxHp: "Max HP",
+                    maxMp: "Max MP",
+                    attackPower: "ATT",
+                    magicPower: "Magic ATT",
+                    armor: "Defense",
+                },
+                potential: {
+                    label: "Potential Options",
+                    gradeLabel: "({grade} item)",
+                },
+                additionalPotential: {
+                    label: "Additional Potential",
+                },
+            },
         },
     },
 } as const;

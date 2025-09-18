@@ -3,6 +3,7 @@ import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipCont
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ICharacterPropensity } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 
 interface PropensityProps {
     propensity?: ICharacterPropensity | null;
@@ -21,11 +22,13 @@ interface CustomTooltipProps {
 }
 
 export const Propensity = ({ propensity, loading }: PropensityProps) => {
+    const t = useTranslations();
+
     if (loading || !propensity) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>성향</CardTitle>
+                    <CardTitle>{t('character.detail.sections.propensity.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Skeleton className="h-6 w-full" />
@@ -35,13 +38,16 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
     }
 
     const data = [
-        { subject: '카리스마', value: propensity.charisma_level },
-        { subject: '감성', value: propensity.sensibility_level },
-        { subject: '통찰', value: propensity.insight_level },
-        { subject: '의지', value: propensity.willingness_level },
-        { subject: '손재주', value: propensity.handicraft_level },
-        { subject: '매력', value: propensity.charm_level },
-    ];
+        { key: 'charisma', value: propensity.charisma_level },
+        { key: 'empathy', value: propensity.sensibility_level },
+        { key: 'insight', value: propensity.insight_level },
+        { key: 'willpower', value: propensity.willingness_level },
+        { key: 'diligence', value: propensity.handicraft_level },
+        { key: 'charm', value: propensity.charm_level },
+    ].map((item) => ({
+        subject: t(`character.detail.sections.propensity.labels.${item.key}`),
+        value: item.value,
+    }));
 
     // 커스텀 툴팁
     const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
@@ -60,12 +66,12 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
         return null;
     };
 
-    return (
-        <Card className="w-full">
-            <CardHeader>
-                <CardTitle>성향</CardTitle>
-            </CardHeader>
-            <CardContent className="h-64">
+        return (
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>{t('character.detail.sections.propensity.title')}</CardTitle>
+                </CardHeader>
+                <CardContent className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                     <RadarChart data={data}>
                         <PolarGrid />

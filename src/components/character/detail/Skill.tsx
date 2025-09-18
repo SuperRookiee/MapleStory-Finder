@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ICharacterSkill } from '@/interface/character/ICharacter';
+import { useTranslations } from '@/providers/LanguageProvider';
 import SkillDetail from './SkillDetail';
 
 interface SkillProps {
@@ -12,11 +13,13 @@ interface SkillProps {
 }
 
 export const Skill = ({ skill, loading }: SkillProps) => {
+    const t = useTranslations();
+
     if (loading || !skill) {
         return (
             <Card className="w-full">
                 <CardHeader>
-                    <CardTitle>스킬</CardTitle>
+                    <CardTitle>{t('character.detail.sections.skill.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-4 gap-4">
@@ -35,7 +38,7 @@ export const Skill = ({ skill, loading }: SkillProps) => {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>스킬</CardTitle>
+                <CardTitle>{t('character.detail.sections.skill.title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue={romans[0]} className="w-full">
