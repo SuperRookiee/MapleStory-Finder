@@ -49,6 +49,15 @@ const SideMenu = () => {
                             Search
                         </Button>
                     </SheetClose>
+                    <SheetClose asChild>
+                        <Button
+                            variant="ghost"
+                            className="w-full"
+                            onClick={() => router.push("/notice")}
+                        >
+                            Notice
+                        </Button>
+                    </SheetClose>
                     {!isGuest ? (
                         <SheetClose asChild>
                             <Button
