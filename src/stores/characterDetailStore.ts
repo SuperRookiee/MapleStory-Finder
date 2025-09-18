@@ -1,14 +1,23 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPopularity, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
+import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
+import { IAchievementRanking, IDojangRanking, IOverallRanking, ITheSeedRanking, IUnionRanking } from "@/interface/ranking/IRanking";
 import { IUnion, IUnionArtifact, IUnionChampion, IUnionRaider } from "@/interface/union/IUnion";
+
+type RankingState = {
+    overall: IOverallRanking | null;
+    union: IUnionRanking | null;
+    dojang: IDojangRanking | null;
+    theseed: ITheSeedRanking | null;
+    achievement: IAchievementRanking | null;
+};
 
 type CharacterDetailSlice = {
     // 기본 정보
     basic: ICharacterBasic | null
     stat: ICharacterStat | null
-    popularity: ICharacterPopularity | null
+    rankings: RankingState | null
     hyper: ICharacterHyperStat | null
     guild: IGuildBasic | null
 
@@ -44,7 +53,7 @@ type CharacterDetailSlice = {
     // setter
     setBasic: (basic: CharacterDetailSlice['basic']) => void
     setStat: (stat: CharacterDetailSlice['stat']) => void
-    setPopularity: (popularity: CharacterDetailSlice['popularity']) => void
+    setRankings: (rankings: CharacterDetailSlice['rankings']) => void
     setHyper: (hyper: CharacterDetailSlice['hyper']) => void
     setGuild: (guild: CharacterDetailSlice['guild']) => void
     setUnion: (union: CharacterDetailSlice['union']) => void
@@ -77,7 +86,7 @@ const initialState: Omit<
     CharacterDetailSlice,
     | 'setBasic'
     | 'setStat'
-    | 'setPopularity'
+    | 'setRankings'
     | 'setHyper'
     | 'setGuild'
     | 'setItemEquip'
@@ -105,7 +114,7 @@ const initialState: Omit<
 > = {
     basic: null,
     stat: null,
-    popularity: null,
+    rankings: null,
     hyper: null,
     guild: null,
 
@@ -144,7 +153,7 @@ export const characterDetailStore = create<CharacterDetailSlice>()(
 
             setBasic: (basic) => set({ basic }),
             setStat: (stat) => set({ stat }),
-            setPopularity: (popularity) => set({ popularity }),
+            setRankings: (rankings) => set({ rankings }),
             setHyper: (hyper) => set({ hyper }),
             setGuild: (guild) => set({ guild }),
             setUnion: (union) => set({ union }),

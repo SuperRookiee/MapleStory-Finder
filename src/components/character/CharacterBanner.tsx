@@ -7,8 +7,9 @@ import WorldIcon from "@/components/common/WorldIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger, } from "@/components/ui/tooltip"
-import { ICharacterBasic, ICharacterDojang, ICharacterPopularity } from "@/interface/character/ICharacter";
+import { ICharacterBasic, ICharacterDojang } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
+import { IOverallRanking } from "@/interface/ranking/IRanking";
 import { IUnion } from "@/interface/union/IUnion";
 import { useAuth } from "@/providers/AuthProvider";
 import { useTranslations } from "@/providers/LanguageProvider";
@@ -16,7 +17,7 @@ import { cn } from "@/utils/utils";
 
 type CharacterBannerProps = {
     basic: ICharacterBasic | null
-    popularity: ICharacterPopularity | null
+    overallRanking: IOverallRanking | null
     union: IUnion | null
     dojang: ICharacterDojang | null
     guild: IGuildBasic | null
@@ -34,7 +35,7 @@ type CharacterBannerProps = {
 
 const CharacterBanner = ({
     basic,
-    popularity,
+    overallRanking,
     union,
     dojang,
     guild,
@@ -52,6 +53,12 @@ const CharacterBanner = ({
         ? `/api/crop?url=${encodeURIComponent(basic.character_image)}`
         : null
     );
+
+    const rankingLabel = overallRanking
+        ? t('character.banner.ranking', {
+            value: overallRanking.ranking.toLocaleString(),
+        })
+        : null;
 
     const getFigure = () => {
         if (!basic?.character_image) return;
@@ -126,9 +133,9 @@ const CharacterBanner = ({
                                     {t('character.banner.dojang', { floor: dojang.dojang_best_floor })}
                                 </div>
                             )}
-                            {popularity && (
+                            {rankingLabel && (
                                 <div className="bg-muted px-2 py-1 rounded-md ">
-                                    {t('character.banner.popularity', { value: popularity.popularity })}
+                                    {rankingLabel}
                                 </div>
                             )}
                         </div>
