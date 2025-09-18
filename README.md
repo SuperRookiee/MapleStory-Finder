@@ -53,7 +53,7 @@ MapleStory Finder는 Nexon Open API를 통해 전 세계 MapleStory 캐릭터 �
 다음 순서로 개발 환경을 구성하세요.
 
 ### 1. Prerequisites
-- Node.js 22 이상 (LTS 권장)
+- Node.js 24
 - npm (Node.js 설치 시 기본 포함)
 
 ### 2. Installation
