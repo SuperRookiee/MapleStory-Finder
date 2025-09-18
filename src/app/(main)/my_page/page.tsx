@@ -29,6 +29,12 @@ const PageContent = () => {
     password: '',
     apiKey: '',
   });
+  const [initialForm, setInitialForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    apiKey: '',
+  });
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -42,12 +48,14 @@ const PageContent = () => {
     supabase.auth.getUser().then(({ data }) => {
       const user = data.user;
       if (user) {
-        setForm((f) => ({
-          ...f,
+        const nextForm = {
           name: user.user_metadata?.name ?? '',
           email: user.email ?? '',
+          password: '',
           apiKey: user.user_metadata?.nexon_api_key ?? '',
-        }));
+        };
+        setForm(nextForm);
+        setInitialForm(nextForm);
       }
       setInitialLoading(false);
     });
@@ -71,11 +79,27 @@ const PageContent = () => {
     } else {
       toast.success('Profile updated');
       setApiKey(form.apiKey);
+      setInitialForm({
+        name: form.name,
+        email: form.email,
+        password: '',
+        apiKey: form.apiKey,
+      });
+      setForm((prev) => ({
+        ...prev,
+        password: '',
+      }));
     }
     setLoading(false);
   };
 
   if (initialLoading) return <FormSkeleton />;
+
+  const isFormChanged =
+    form.name !== initialForm.name ||
+    form.email !== initialForm.email ||
+    form.password !== initialForm.password ||
+    form.apiKey !== initialForm.apiKey;
 
   return (
     <div className="flex justify-center p-4">
@@ -118,7 +142,7 @@ const PageContent = () => {
             required
           />
         </div>
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full" disabled={loading || !isFormChanged}>
           {loading ? 'Saving...' : 'Save'}
         </Button>
       </form>
