@@ -27,9 +27,8 @@ export const HyperStat = ({ hyper, loading }: HyperStatProps) => {
                     </div>
                     <ul className="mt-4 space-y-2">
                         {Array.from({ length: 5 }).map((_, i) => (
-                            <li key={i} className="flex justify-between text-sm">
-                                <Skeleton className="h-4 w-24" />
-                                <Skeleton className="h-4 w-16" />
+                            <li key={i}>
+                                <Skeleton className="h-8 w-full" />
                             </li>
                         ))}
                     </ul>

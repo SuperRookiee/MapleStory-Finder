@@ -20,7 +20,7 @@ export const Union = ({ union, raider, artifact, loading }: UnionProps) => {
                     <CardTitle>{t('character.detail.sections.union.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-40 w-full" />
                 </CardContent>
             </Card>
         );
