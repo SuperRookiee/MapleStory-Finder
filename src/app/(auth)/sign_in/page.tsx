@@ -160,7 +160,7 @@ const SignInPage = () => {
 
     return (
         <div className="flex min-h-screen">
-            <div className='absolute top-1 left-full flex translate-x-2 flex-col gap-1.5 sm:flex-row sm:translate-x-0'>
+            <div className='absolute top-1 right-1 flex flex-row'>
                 <LanguageToggle />
                 <DarkModeToggle />
             </div>

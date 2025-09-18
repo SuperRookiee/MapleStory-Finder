@@ -253,12 +253,12 @@ export const translations = {
                 submit: "로그인",
                 submitting: "로그인 중...",
                 google: {
-                    start: "구글로 로그인",
-                    loading: "구글로 로그인 중...",
+                    start: "구글 로그인",
+                    loading: "구글 로그인 중...",
                 },
                 kakao: {
-                    start: "카카오로 로그인",
-                    loading: "카카오로 로그인 중...",
+                    start: "카카오 로그인",
+                    loading: "카카오 로그인 중...",
                 },
                 guest: {
                     start: "게스트로 둘러보기",

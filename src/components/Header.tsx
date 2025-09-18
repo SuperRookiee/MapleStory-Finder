@@ -22,7 +22,7 @@ const Header = () => {
         <Image src="/Reheln.png" alt="Finder" width={40} height={40} priority />
       </Link>
       {/* 오른쪽 메뉴 */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center">
         <LanguageToggle />
         <DarkModeToggle />
         <SideMenu />
