@@ -71,7 +71,7 @@ const SignInPage = () => {
         const fallbackUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
         const baseUrl = envUrlValue ?? fallbackUrl;
         const normalizedUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
-        return `${normalizedUrl.replace(/\/$/, '')}/home`;
+        return `${normalizedUrl.replace(/\/$/, '')}/auth/callback`;
     };
 
     useEffect(() => {
