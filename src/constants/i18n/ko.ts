@@ -324,6 +324,8 @@ export const ko = {
             guild: "길드 {name}",
             figure: "피규어",
             figureTooltip: "아직 미완성 기능입니다",
+            starforce: "스타포스",
+            cube: "큐브",
         },
         ranking: {
             title: "랭킹",

@@ -157,7 +157,7 @@ export const Ranking = ({ ranking, loading }: RankingProps) => {
             </CardHeader>
             <CardContent>
                 {items.length > 0 ? (
-                    <ul className="space-y-3">
+                    <ul className="space-y-2">
                         {items.map((item) => (
                             <li
                                 key={item.key}

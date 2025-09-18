@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { SquareArrowOutUpRight } from "lucide-react";
+import CharacterMenu from "@/components/character/detail/CharacterMenu";
 import WorldIcon from "@/components/common/WorldIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger, } from "@/components/ui/tooltip"
 import { ICharacterBasic, ICharacterDojang } from "@/interface/character/ICharacter";
 import { IGuildBasic } from "@/interface/guild/IGuild";
 import { IOverallRanking } from "@/interface/ranking/IRanking";
@@ -46,24 +44,10 @@ const CharacterBanner = ({
     imageSrc,
     imageTransitionName,
 }: CharacterBannerProps) => {
-    const router = useRouter();
     const { status } = useAuth();
     const t = useTranslations();
-    const bannerImageSrc = imageSrc ?? (basic?.character_image
-        ? `/api/crop?url=${encodeURIComponent(basic.character_image)}`
-        : null
-    );
-
-    const rankingLabel = overallRanking
-        ? t('character.banner.ranking', {
-            value: overallRanking.ranking.toLocaleString(),
-        })
-        : null;
-
-    const getFigure = () => {
-        if (!basic?.character_image) return;
-        router.push("/figure");
-    };
+    const bannerImageSrc = imageSrc ?? (basic?.character_image ? `/api/crop?url=${encodeURIComponent(basic.character_image)}` : null);
+    const rankingLabel = overallRanking ? t('character.banner.ranking', {value: overallRanking.ranking.toLocaleString(),}) : null;
 
     return (
         <Card
@@ -93,12 +77,12 @@ const CharacterBanner = ({
                         <div className="absolute top-2 left-1/2 -translate-x-1/2">
                             <Skeleton className="w-16 h-6"/>
                         </div>
-                        <div className="absolute bottom-12 left-2 space-y-2">
+                        <div className="absolute bottom-12 left-2 space-y-3">
                             <Skeleton className="w-32 h-6"/>
                             <Skeleton className="w-32 h-6"/>
                             <Skeleton className="w-32 h-6"/>
                         </div>
-                        <div className="absolute bottom-12 right-2  space-y-2">
+                        <div className="absolute bottom-12 right-2  space-y-3">
                             <Skeleton className="w-32 h-6"/>
                             <Skeleton className="w-32 h-6"/>
                         </div>
@@ -122,7 +106,7 @@ const CharacterBanner = ({
                         <div className="absolute top-2 right-2 bg-muted px-2 py-1 rounded-md text-sm font-medium z-10">
                             {basic.character_class}
                         </div>
-                        <div className="absolute bottom-12 left-2 space-y-2 text-sm z-10">
+                        <div className="absolute bottom-12 left-2 space-y-3 text-sm z-10">
                             {union && (
                                 <div className="bg-muted px-2 py-1 rounded-md">
                                     {t('character.banner.union', { level: union.union_level })}
@@ -134,34 +118,18 @@ const CharacterBanner = ({
                                 </div>
                             )}
                             {rankingLabel && (
-                                <div className="bg-muted px-2 py-1 rounded-md ">
+                                <div className="bg-muted px-2 py-1 rounded-md">
                                     {rankingLabel}
                                 </div>
                             )}
                         </div>
-                        <div className="absolute bottom-12 right-2 space-y-2 text-sm z-10">
+                        <div className="absolute bottom-12 right-2 space-y-3 text-sm z-10">
                             {guild?.guild_name && (
                                 <div className="bg-muted px-2 py-1 rounded-md">
                                     {t('character.banner.guild', { name: guild.guild_name })}
                                 </div>
                             )}
-                            {status !== 'guest' &&
-                                <div className="bg-muted px-2 py-1 rounded-md flex items-center gap-1 hover:cursor-pointer" onClick={() => getFigure()}>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <div
-                                                className=" bg-muted rounded-md flex items-center gap-2 hover:cursor-pointer"
-                                                onClick={() => getFigure()}
-                                            >
-                                                {t('character.banner.figure')} <SquareArrowOutUpRight size={14}/>
-                                            </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            {t('character.banner.figureTooltip')}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </div>
-                            }
+                            {status !== 'guest' && <CharacterMenu/>}
                         </div>
                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
                             <div className="px-8 py-1.5 rounded-md bg-primary text-primary-foreground text-sm">
@@ -174,9 +142,7 @@ const CharacterBanner = ({
                                 style={{
                                     transform: `scale(${imageScale})`,
                                     opacity: imageScale,
-                                    ...(imageTransitionName
-                                        ? { viewTransitionName: imageTransitionName }
-                                        : {}),
+                                    ...(imageTransitionName ? { viewTransitionName: imageTransitionName } : {}),
                                 }}
                             >
                                 <Image

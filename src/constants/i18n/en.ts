@@ -330,6 +330,8 @@ export const en = {
             guild: "Guild {name}",
             figure: "Figure",
             figureTooltip: "This feature is still under development.",
+            starforce: "Starforce",
+            cube: "Cube",
         },
         ranking: {
             title: "Ranking",
