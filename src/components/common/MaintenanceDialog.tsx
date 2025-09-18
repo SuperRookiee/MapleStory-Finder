@@ -31,7 +31,6 @@ export const MaintenanceDialog = () => {
     }
 
     const description = message ?? t("common.maintenanceDialog.description");
-
     return (
         <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogContent>
