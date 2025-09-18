@@ -58,50 +58,63 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
     return (
-        <html lang="en" suppressHydrationWarning>
-        <body className={`${mapleStory.className} ${mapleStory.variable} antialiased`}>
-        {/* 테마 스크립트 (inline) */}
-        <Script id="theme-script" strategy="beforeInteractive">
-            {`
-                (() => {
-                  try {
-                    const t = localStorage.getItem('theme');
-                    if (t === 'dark') {
-                      document.documentElement.classList.add('dark');
-                    }
-                  } catch (e) {}
-                })();
-            `}
-        </Script>
+        <html lang="ko" suppressHydrationWarning>
+            <body className={`${mapleStory.className} ${mapleStory.variable} antialiased`}>
+                <Script id="language-script" strategy="beforeInteractive">
+                    {`
+                        (() => {
+                          try {
+                            const stored = localStorage.getItem('finder_language');
+                            const next = stored === 'en' || stored === 'ko' ? stored : 'ko';
+                            document.documentElement.lang = next;
+                          } catch (e) {
+                            document.documentElement.lang = 'ko';
+                          }
+                        })();
+                    `}
+                </Script>
+                {/* 테마 스크립트 (inline) */}
+                <Script id="theme-script" strategy="beforeInteractive">
+                    {`
+                        (() => {
+                          try {
+                            const t = localStorage.getItem('theme');
+                            if (t === 'dark') {
+                              document.documentElement.classList.add('dark');
+                            }
+                          } catch (e) {}
+                        })();
+                    `}
+                </Script>
 
-        {/* 넥슨 Analytics 스크립트 (외부 src) */}
-        <Script
-            src={`https://openapi.nexon.com/js/analytics.js?app_id=${process.env.NEXT_PUBLIC_NEXON_APP_ID}`}
-            strategy="afterInteractive"
-        />
+                {/* 넥슨 Analytics 스크립트 (외부 src) */}
+                <Script
+                    src={`https://openapi.nexon.com/js/analytics.js?app_id=${process.env.NEXT_PUBLIC_NEXON_APP_ID}`}
+                    strategy="afterInteractive"
+                />
 
-        {isProduction ? (
-            <Script id="pwa-service-worker" strategy="afterInteractive">
-                {`
-                    if ('serviceWorker' in navigator) {
-                      window.addEventListener('load', () => {
-                        navigator.serviceWorker.register('/service-worker.js').catch((error) => {
-                          console.error('Service worker registration failed:', error);
-                        });
-                      });
-                    }
-                `}
-            </Script>
-        ) : null}
+                {isProduction ? (
+                    <Script id="pwa-service-worker" strategy="afterInteractive">
+                        {`
+                            if ('serviceWorker' in navigator) {
+                              window.addEventListener('load', () => {
+                                navigator.serviceWorker.register('/service-worker.js').catch((error) => {
+                                  console.error('Service worker registration failed:', error);
+                                });
+                              });
+                            }
+                        `}
+                    </Script>
+                ) : null}
 
-        <LanguageProvider>
-            <AuthProvider>
-                <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
-                <MaintenanceDialog />
-                <Toaster />
-            </AuthProvider>
-        </LanguageProvider>
-        </body>
+                <LanguageProvider>
+                    <AuthProvider>
+                        <ViewTransition enter="fade" exit="fade">{children}</ViewTransition>
+                        <MaintenanceDialog />
+                        <Toaster />
+                    </AuthProvider>
+                </LanguageProvider>
+            </body>
         </html>
     );
 };

@@ -14,37 +14,30 @@ type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-const detectBrowserLanguage = (): Language => {
-    if (typeof navigator === "undefined") return "en";
-    return navigator.language?.toLowerCase().startsWith("ko") ? "ko" : "en";
+const resolveInitialLanguage = (): Language => {
+    if (typeof window === "undefined") {
+        return "ko";
+    }
+
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (stored === "ko" || stored === "en") {
+        return stored;
+    }
+
+    return "ko";
 };
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-    const [language, setLanguageState] = useState<Language>("en");
-    const [initialized, setInitialized] = useState(false);
+    const [language, setLanguageState] = useState<Language>(resolveInitialLanguage);
 
     useEffect(() => {
-        if (typeof window === "undefined") return;
-        const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-        if (stored === "ko" || stored === "en") {
-            setLanguageState(stored);
-        } else {
-            const detected = detectBrowserLanguage();
-            setLanguageState(detected);
-            window.localStorage.setItem(LANGUAGE_STORAGE_KEY, detected);
-        }
-        setInitialized(true);
-    }, []);
-
-    useEffect(() => {
-        if (!initialized) return;
         if (typeof document !== "undefined") {
             document.documentElement.lang = language;
         }
         if (typeof window !== "undefined") {
             window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
         }
-    }, [initialized, language]);
+    }, [language]);
 
     const setLanguage = useCallback((next: Language) => {
         setLanguageState(next);
