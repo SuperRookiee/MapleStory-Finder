@@ -1,7 +1,6 @@
 import { createApiCaller, createRequestRunner, type ApiParams } from "@/fetchs/apiClient";
 import { ICharacterAbility, ICharacterAndroidEquipment, ICharacterBasic, ICharacterBeautyEquipment, ICharacterCashItemEquipment, ICharacterDojang, ICharacterHexaMatrix, ICharacterHexaMatrixStat, ICharacterHyperStat, ICharacterItemEquipment, ICharacterLinkSkill, ICharacterOtherStat, ICharacterPetEquipment, ICharacterPropensity, ICharacterSetEffect, ICharacterSkill, ICharacterStat, ICharacterSymbolEquipment, ICharacterVMatrix, IRingExchangeSkillEquipment, } from "@/interface/character/ICharacter";
 import { ICharacterResponse } from "@/interface/character/ICharacterResponse";
-import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 
 const limitRunner = createRequestRunner({ concurrency: 5 });
 const callCharacterApiBase = createApiCaller({ basePath: "character", runner: limitRunner });
@@ -15,9 +14,6 @@ const callCharacterApi = <T>(
 
 const callApi = <T>(endpoint: string, params: ApiParams = {}): Promise<ICharacterResponse<T>> =>
     callGeneralApiBase<ICharacterResponse<T>>(endpoint, params);
-
-export const findCharacterList = () =>
-    callCharacterApi<{ characters: ICharacterSummary[] }>("list");
 
 /* ---------------- 기본 API ---------------- */
 export const findCharacterBasic = (ocid: string, date?: string) =>
