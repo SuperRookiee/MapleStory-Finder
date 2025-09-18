@@ -24,7 +24,7 @@ const CharacterMenu = () => {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <div className="bg-muted px-2 py-1 rounded-md flex justify-center items-center hover:cursor-pointer">
-                    <Ellipsis size={16} />
+                    <Ellipsis size={20} />
                 </div>
             </DropdownMenuTrigger>
 

@@ -50,12 +50,7 @@ const CharacterBanner = ({
     const rankingLabel = overallRanking ? t('character.banner.ranking', {value: overallRanking.ranking.toLocaleString(),}) : null;
 
     return (
-        <Card
-            className={cn(
-                "relative h-60 sm:h-64 w-full overflow-hidden rounded",
-                backgroundColor,
-            )}
-        >
+        <Card className={cn("relative h-60 sm:h-64 w-full overflow-hidden rounded", backgroundColor)}>
             {backgroundImage && (
                 <Image
                     src={backgroundImage}
@@ -68,30 +63,7 @@ const CharacterBanner = ({
             <CardContent>
                 {loading || !basic ? (
                     <div className="absolute inset-0 animate-pulse">
-                        <div className="absolute top-2 left-2">
-                            <Skeleton className="w-24 h-6"/>
-                        </div>
-                        <div className="absolute top-2 right-2">
-                            <Skeleton className="w-24 h-6"/>
-                        </div>
-                        <div className="absolute top-2 left-1/2 -translate-x-1/2">
-                            <Skeleton className="w-16 h-6"/>
-                        </div>
-                        <div className="absolute bottom-12 left-2 space-y-3">
-                            <Skeleton className="w-32 h-6"/>
-                            <Skeleton className="w-32 h-6"/>
-                            <Skeleton className="w-32 h-6"/>
-                        </div>
-                        <div className="absolute bottom-12 right-2  space-y-3">
-                            <Skeleton className="w-32 h-6"/>
-                            <Skeleton className="w-32 h-6"/>
-                        </div>
-                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-                            <Skeleton className="w-40 h-8"/>
-                        </div>
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                            <Skeleton className="w-25 h-30"/>
-                        </div>
+                        <Skeleton className="w-full h-full"/>
                     </div>
                 ) : (
                     <>

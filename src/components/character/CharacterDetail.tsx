@@ -87,7 +87,7 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
             const shouldFetchBasic = !matchedPreviewBasic;
             setBasicLoading(shouldFetchBasic);
             try {
-                const safeRankingFetch = async <T,>(promise: Promise<IRankingResponse<T>>) => {
+                const safeRankingFetch = async <T, >(promise: Promise<IRankingResponse<T>>) => {
                     try {
                         return await promise;
                     } catch (error) {
@@ -378,12 +378,13 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                     />
 
                     {basicLoading || !basic ? (
-                        <Skeleton className="h-6 w-40 mx-auto" />
+                        <Skeleton className="h-8 w-1/3"/>
                     ) : (
                         <div className="sticky top-0 z-50 bg-background/90 py-2 mt-0 -mx-4 px-4">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 {/* 오른쪽: 캐릭터 요약 (모바일에서는 상단) */}
-                                <div className="order-1 flex flex-row items-center justify-center gap-2 text-left font-bold sm:order-2 sm:items-center sm:gap-2 sm:justify-end">
+                                <div
+                                    className="order-1 flex flex-row items-center justify-center gap-2 text-left font-bold sm:order-2 sm:items-center sm:gap-2 sm:justify-end">
                                     {characterImageSrc && (
                                         <Image
                                             src={characterImageSrc}
@@ -439,9 +440,9 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                     />
                                 </div>
                                 <div className="space-y-4">
-                                    <HyperStat hyper={hyper} loading={basicLoading || !hyper} />
-                                    <Ability ability={ability} loading={basicLoading || !ability} />
-                                    <Ranking ranking={rankings} loading={basicLoading} />
+                                    <HyperStat hyper={hyper} loading={basicLoading || !hyper}/>
+                                    <Ability ability={ability} loading={basicLoading || !ability}/>
+                                    <Ranking ranking={rankings} loading={basicLoading}/>
                                 </div>
                             </div>
                         </TabsContent>
@@ -462,33 +463,33 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                 items={itemEquip?.item_equipment || []}
                                 loading={!itemEquip}
                             />
-                            <SymbolEquip symbol={symbolEquip} loading={!symbolEquip} />
-                            <SetEffect setEffect={setEffect} loading={!setEffect} />
+                            <SymbolEquip symbol={symbolEquip} loading={!symbolEquip}/>
+                            <SetEffect setEffect={setEffect} loading={!setEffect}/>
                         </TabsContent>
 
                         {/* 스킬 */}
                         <TabsContent value="skill" className="space-y-4">
-                            <Skill skill={skill} loading={!skill} />
-                            <LinkSkill linkSkill={linkSkill} loading={!linkSkill} />
-                            <HexaStat hexaStat={hexaStat} loading={!hexaStat} />
-                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix} />
-                            <VMatrix vMatrix={vMatrix} loading={!vMatrix} />
+                            <Skill skill={skill} loading={!skill}/>
+                            <LinkSkill linkSkill={linkSkill} loading={!linkSkill}/>
+                            <HexaStat hexaStat={hexaStat} loading={!hexaStat}/>
+                            <HexaMatrix hexaMatrix={hexaMatrix} loading={!hexaMatrix}/>
+                            <VMatrix vMatrix={vMatrix} loading={!vMatrix}/>
                         </TabsContent>
 
                         {/* 캐시 */}
                         <TabsContent value="cash" className="space-y-4">
-                            <CashEquip equip={cashEquip} loading={!cashEquip} />
-                            <Beauty beauty={beauty} loading={!beauty} />
-                            <Android android={android} loading={!android} />
-                            <Pet pet={pet} loading={!pet} />
+                            <CashEquip equip={cashEquip} loading={!cashEquip}/>
+                            <Beauty beauty={beauty} loading={!beauty}/>
+                            <Android android={android} loading={!android}/>
+                            <Pet pet={pet} loading={!pet}/>
                         </TabsContent>
 
                         {/* 기타 */}
                         <TabsContent value="etc" className="space-y-4">
-                            <Dojang dojang={dojang} loading={!dojang} />
-                            <Ring ring={ring} loading={!ring} />
-                            <OtherStat otherStat={otherStat} loading={!otherStat} />
-                            <Propensity propensity={propensity} loading={!propensity} />
+                            <Dojang dojang={dojang} loading={!dojang}/>
+                            <Ring ring={ring} loading={!ring}/>
+                            <OtherStat otherStat={otherStat} loading={!otherStat}/>
+                            <Propensity propensity={propensity} loading={!propensity}/>
                         </TabsContent>
                     </Tabs>
                 </div>

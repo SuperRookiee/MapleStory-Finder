@@ -162,7 +162,7 @@ export const Stat = ({ stat, characterClass, loading }: StatProps) => {
                     {t("character.detail.stat.battlePower")}
                 </div>
                 <div className="text-2xl font-extrabold text-amber-600">
-                    {loading ? <Skeleton className="h-6 w-32" /> : formatValue(battlePower)}
+                    {loading ? <Skeleton className="h-8 w-52 mt-0.5" /> : formatValue(battlePower)}
                 </div>
             </div>
 
