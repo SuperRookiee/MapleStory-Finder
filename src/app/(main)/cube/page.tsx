@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useMemo, useState } from "react";
+import { type FormEvent, type ReactElement, useCallback, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -152,7 +152,7 @@ const CubePage = () => {
 
     const flagBadges = useCallback(
         (entry: CubeHistoryEntry) => {
-            const badges: JSX.Element[] = [];
+            const badges: ReactElement[] = [];
 
             if (isActiveFlag(entry.miracle_time_flag)) {
                 badges.push(

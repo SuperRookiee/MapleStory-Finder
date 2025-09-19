@@ -2,6 +2,7 @@ import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer, Tool
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { TranslationKey } from '@/constants/i18n/translations';
 import { ICharacterPropensity } from '@/interface/character/ICharacter';
 import { useTranslations } from '@/providers/LanguageProvider';
 
@@ -9,6 +10,23 @@ interface PropensityProps {
     propensity?: ICharacterPropensity | null;
     loading?: boolean;
 }
+
+type PropensityKey =
+    | 'charisma'
+    | 'empathy'
+    | 'insight'
+    | 'willpower'
+    | 'diligence'
+    | 'charm';
+
+const PROPENSITY_LABELS = {
+    charisma: 'character.detail.sections.propensity.labels.charisma',
+    empathy: 'character.detail.sections.propensity.labels.empathy',
+    insight: 'character.detail.sections.propensity.labels.insight',
+    willpower: 'character.detail.sections.propensity.labels.willpower',
+    diligence: 'character.detail.sections.propensity.labels.diligence',
+    charm: 'character.detail.sections.propensity.labels.charm',
+} satisfies Record<PropensityKey, TranslationKey>;
 
 // Tooltip props type 안전하게 정의
 interface CustomTooltipProps {
@@ -37,15 +55,17 @@ export const Propensity = ({ propensity, loading }: PropensityProps) => {
         );
     }
 
-    const data = [
-        { key: 'charisma', value: propensity.charisma_level },
-        { key: 'empathy', value: propensity.sensibility_level },
-        { key: 'insight', value: propensity.insight_level },
-        { key: 'willpower', value: propensity.willingness_level },
-        { key: 'diligence', value: propensity.handicraft_level },
-        { key: 'charm', value: propensity.charm_level },
-    ].map((item) => ({
-        subject: t(`character.detail.sections.propensity.labels.${item.key}`),
+    const data = (
+        [
+            { key: 'charisma', value: propensity.charisma_level },
+            { key: 'empathy', value: propensity.sensibility_level },
+            { key: 'insight', value: propensity.insight_level },
+            { key: 'willpower', value: propensity.willingness_level },
+            { key: 'diligence', value: propensity.handicraft_level },
+            { key: 'charm', value: propensity.charm_level },
+        ] satisfies { key: PropensityKey; value: number }[]
+    ).map((item) => ({
+        subject: t(PROPENSITY_LABELS[item.key]),
         value: item.value,
     }));
 
