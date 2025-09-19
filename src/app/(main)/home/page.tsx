@@ -145,15 +145,15 @@ const Home = () => {
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea className="h-page">
-                <div className="mx-auto flex min-h-full w-full max-w-6xl flex-col gap-6 p-1 pb-6 sm:p-4">
-                    <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background p-6 shadow-sm">
-                        <div className="absolute -right-24 top-1/2 hidden h-56 w-56 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl md:block" aria-hidden />
-                        <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-                            <div className="space-y-3">
+                <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-5 px-3 pb-5 pt-4 sm:px-4">
+                    <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background p-5 shadow-sm sm:p-6">
+                        <div className="absolute -right-24 top-1/2 hidden h-52 w-52 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl md:block" aria-hidden />
+                        <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                            <div className="space-y-2">
                                 <span className="inline-flex w-fit items-center rounded-full border border-border/60 bg-background/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.32em] text-muted-foreground">
                                     {t('home.hero.badge')}
                                 </span>
-                                <h1 className="text-3xl font-semibold leading-tight text-foreground sm:text-4xl">
+                                <h1 className="text-3xl font-semibold leading-tight text-foreground sm:text-[2.125rem]">
                                     {t('home.hero.title')}
                                 </h1>
                                 <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
@@ -183,23 +183,25 @@ const Home = () => {
                         </div>
                     </section>
 
-                    <div className="flex flex-1 flex-col gap-6 xl:flex-row">
-                        <section className="flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-sm backdrop-blur xl:w-[360px]">
-                            <div className="border-b border-border/60 px-6 py-5">
-                                <h2 className="text-lg font-semibold text-foreground">{t('home.favorites.title')}</h2>
-                                <p className="text-sm text-muted-foreground">{t('home.favorites.description')}</p>
-                            </div>
-                            <FavoriteList
-                                favorites={favorites}
-                                loading={loading}
-                                onSelect={handleSelect}
-                                onToggleFavorite={toggleFavorite}
-                                className="flex-1"
-                                emptyLabel={t('home.favorites.empty')}
-                            />
-                        </section>
+                    <div className="flex flex-1 min-h-0 flex-col gap-5 xl:flex-row">
+                        <ScrollArea className="h-full max-h-[var(--height-page)] xl:w-[360px]">
+                            <section className="flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-sm backdrop-blur xl:w-[360px]">
+                                <div className="border-b border-border/60 px-5 py-4">
+                                    <h2 className="text-lg font-semibold text-foreground">{t('home.favorites.title')}</h2>
+                                    <p className="text-sm text-muted-foreground">{t('home.favorites.description')}</p>
+                                </div>
+                                <FavoriteList
+                                    favorites={favorites}
+                                    loading={loading}
+                                    onSelect={handleSelect}
+                                    onToggleFavorite={toggleFavorite}
+                                    className="flex-1"
+                                    emptyLabel={t('home.favorites.empty')}
+                                />
+                            </section>
+                        </ScrollArea>
 
-                        <section className="hidden flex-1 overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-sm backdrop-blur md:flex">
+                        <section className="hidden min-h-0 flex-1 overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-sm backdrop-blur md:flex">
                             <CharacterInfo ocid={selected} goToDetailPage={goToDetailPage} className="h-full" />
                         </section>
                     </div>
