@@ -71,103 +71,110 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
     }, [basic?.character_image]);
 
     return (
-        <ScrollArea className={cn("h-full", className)}>
-            <div className="mx-auto flex h-full w-full max-w-5xl flex-col gap-6 p-6">
-                {!ocid ? (
-                    <div className="flex flex-1 items-center justify-center">
-                        <div className="rounded-3xl border border-dashed border-border/60 bg-muted/20 px-8 py-12 text-center text-sm text-muted-foreground">
-                            {t('home.characterInfo.emptyState')}
+        <div
+            className={cn(
+                "flex h-full min-h-0 flex-col overflow-hidden rounded-3xl border border-border/60 bg-background/90 shadow-sm backdrop-blur",
+                className,
+            )}
+        >
+            <ScrollArea className="h-full">
+                <div className="flex h-full w-full flex-col gap-5 px-4 py-5 sm:px-5">
+                    {!ocid ? (
+                        <div className="flex flex-1 items-center justify-center py-12">
+                            <div className="rounded-3xl border border-dashed border-border/60 bg-muted/20 px-8 py-10 text-center text-sm text-muted-foreground">
+                                {t('home.characterInfo.emptyState')}
+                            </div>
                         </div>
-                    </div>
-                ) : (
-                    <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background p-6 shadow-sm">
-                        <div className="absolute -right-24 top-1/2 hidden h-64 w-64 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl xl:block" aria-hidden />
-                        <div className="relative flex flex-col gap-6 xl:flex-row">
-                            <section className="flex flex-col items-center gap-5 text-center xl:w-72 xl:items-start xl:text-left">
-                                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                                    {loading || !basic ? (
-                                        <>
-                                            <Skeleton className="h-6 w-6 rounded-full" />
-                                            <Skeleton className="h-4 w-24" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <WorldIcon name={basic.world_name} />
-                                            <span>{basic.world_name}</span>
-                                        </>
-                                    )}
-                                </div>
+                    ) : (
+                        <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background px-5 py-5 shadow-sm">
+                            <div className="absolute -right-24 top-1/2 hidden h-64 w-64 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl xl:block" aria-hidden />
+                            <div className="relative flex flex-col gap-6 xl:flex-row">
+                                <section className="flex flex-col items-center gap-5 text-center xl:w-72 xl:items-start xl:text-left">
+                                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                                        {loading || !basic ? (
+                                            <>
+                                                <Skeleton className="h-6 w-6 rounded-full" />
+                                                <Skeleton className="h-4 w-24" />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <WorldIcon name={basic.world_name} />
+                                                <span>{basic.world_name}</span>
+                                            </>
+                                        )}
+                                    </div>
 
-                                <div className="relative aspect-square w-52 max-w-full overflow-hidden rounded-2xl border border-border/40 bg-background/70 p-6 shadow-inner">
-                                    {loading || !basic ? (
-                                        <Skeleton className="h-full w-full" />
-                                    ) : (
-                                        characterImageSrc && (
-                                            <div
-                                                className="flex h-full w-full items-center justify-center"
-                                                style={imageTransitionName ? { viewTransitionName: imageTransitionName } : undefined}
-                                            >
-                                                <Image
-                                                    src={characterImageSrc}
-                                                    alt={basic.character_name}
-                                                    className="h-full w-auto max-h-full object-contain"
-                                                    width={200}
-                                                    height={200}
-                                                    priority
-                                                />
-                                            </div>
-                                        )
-                                    )}
-                                </div>
+                                    <div className="relative aspect-square w-52 max-w-full overflow-hidden rounded-2xl border border-border/40 bg-background/70 p-5 shadow-inner">
+                                        {loading || !basic ? (
+                                            <Skeleton className="h-full w-full" />
+                                        ) : (
+                                            characterImageSrc && (
+                                                <div
+                                                    className="flex h-full w-full items-center justify-center"
+                                                    style={imageTransitionName ? { viewTransitionName: imageTransitionName } : undefined}
+                                                >
+                                                    <Image
+                                                        src={characterImageSrc}
+                                                        alt={basic.character_name}
+                                                        className="h-full w-auto max-h-full object-contain"
+                                                        width={200}
+                                                        height={200}
+                                                        priority
+                                                    />
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
 
-                                <div className="space-y-1">
-                                    {loading || !basic ? (
-                                        <Skeleton className="h-8 w-40" />
-                                    ) : (
-                                        <h2 className="text-3xl font-semibold tracking-tight text-foreground">
-                                            {basic.character_name}
-                                        </h2>
-                                    )}
-                                    {loading || !basic ? (
-                                        <Skeleton className="h-5 w-32" />
-                                    ) : (
-                                        <p className="text-sm text-muted-foreground">
-                                            {basic.character_class}
-                                        </p>
-                                    )}
-                                </div>
+                                    <div className="space-y-1">
+                                        {loading || !basic ? (
+                                            <Skeleton className="h-8 w-40" />
+                                        ) : (
+                                            <h2 className="text-3xl font-semibold tracking-tight text-foreground">
+                                                {basic.character_name}
+                                            </h2>
+                                        )}
+                                        {loading || !basic ? (
+                                            <Skeleton className="h-5 w-32" />
+                                        ) : (
+                                            <p className="text-sm text-muted-foreground">
+                                                {basic.character_class}
+                                            </p>
+                                        )}
+                                    </div>
 
-                                <div className="flex items-center justify-center gap-2 xl:justify-start">
-                                    {loading || !basic ? (
-                                        <Skeleton className="h-8 w-24" />
-                                    ) : (
-                                        <span className="rounded-full bg-primary/10 px-4 py-1 text-sm font-semibold text-primary">
-                                            {t('home.stats.level', { level: basic.character_level })}
-                                        </span>
-                                    )}
-                                </div>
+                                    <div className="flex items-center justify-center gap-2 xl:justify-start">
+                                        {loading || !basic ? (
+                                            <Skeleton className="h-8 w-24" />
+                                        ) : (
+                                            <span className="rounded-full bg-primary/10 px-4 py-1 text-sm font-semibold text-primary">
+                                                {t('home.stats.level', { level: basic.character_level })}
+                                            </span>
+                                        )}
+                                    </div>
 
-                                <div className="flex w-full justify-center xl:justify-start">
-                                    {loading || !basic ? (
-                                        <Skeleton className="h-10 w-28" />
-                                    ) : (
-                                        <Button onClick={goToDetailPage} className="rounded-full px-6">
-                                            {t('home.characterInfo.detailButton')}
-                                        </Button>
-                                    )}
-                                </div>
-                            </section>
+                                    <div className="flex w-full justify-center xl:justify-start">
+                                        {loading || !basic ? (
+                                            <Skeleton className="h-10 w-28" />
+                                        ) : (
+                                            <Button onClick={goToDetailPage} className="rounded-full px-6">
+                                                {t('home.characterInfo.detailButton')}
+                                            </Button>
+                                        )}
+                                    </div>
+                                </section>
 
-                            <div className="flex flex-1 items-stretch">
-                                <div className="w-full max-w-xl xl:ml-auto">
-                                    <ItemEquipments items={items} loading={loading || !basic} />
+                                <div className="flex flex-1 items-stretch">
+                                    <div className="w-full max-w-2xl xl:ml-auto xl:max-w-3xl">
+                                        <ItemEquipments items={items} loading={loading || !basic} />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        </ScrollArea>
+                    )}
+                </div>
+            </ScrollArea>
+        </div>
     );
 };
 
