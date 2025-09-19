@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import RenderOptionRow from "@/components/character/item/renderOptionRow";
 import { getGradeColor } from "@/constants/option_grade_color.constant";
 import { IItemEquipment } from "@/interface/character/ICharacter";
@@ -10,6 +11,13 @@ interface ItemEquipDetailProps {
 
 const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
     const t = useTranslations();
+    const panelStyle: CSSProperties = {
+        width: "min(18rem, calc(100vw - 3rem))",
+    };
+    const iconStyle: CSSProperties = {
+        width: "clamp(2.25rem, 8vw, 3rem)",
+        height: "clamp(2.25rem, 8vw, 3rem)",
+    };
 
     const mainOptions: [string, string, string | undefined][] = [
         ["STR", "str", item.item_total_option?.str],
@@ -43,29 +51,32 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
     const star = item.item_starforce_option || {};
 
     return (
-        <div className="bg-black/85 text-white rounded-lg shadow-lg p-4 min-w-64">
-            <div className="flex items-center gap-3 mb-2">
+        <div
+            className="bg-black/85 text-white rounded-lg shadow-lg p-3 sm:p-4"
+            style={panelStyle}
+        >
+            <div className="flex items-center gap-3 mb-3 sm:mb-4">
                 {/* 아이템 아이콘 */}
-                <div className="relative w-10 h-10 flex-shrink-0">
+                <div className="relative flex-shrink-0" style={iconStyle}>
                     <Image
                         src={item.item_icon}
                         alt={item.item_name}
                         fill
                         className="object-contain"
-                        sizes="40px"
+                        sizes="(max-width: 768px) 12vw, 3rem"
                     />
                 </div>
 
                 {/* 아이템명 + 스타포스 + 등급 */}
-                <div>
-                    <h3 className="font-bold text-sm flex items-center gap-2">
+                <div className="space-y-1">
+                    <h3 className="font-bold text-sm sm:text-base flex items-center gap-2">
                         {item.item_name}
                         {item.starforce && (
-                            <span className="text-yellow-400 text-xs">★{item.starforce}</span>
+                            <span className="text-yellow-400 text-[0.7rem] sm:text-xs">★{item.starforce}</span>
                         )}
                     </h3>
                     {item.potential_option_grade && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[0.7rem] sm:text-xs text-muted-foreground">
                             {t("character.item.equipment.potential.gradeLabel", {
                                 grade: item.potential_option_grade,
                             })}
@@ -75,7 +86,7 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
             </div>
 
             {/* 주요 옵션 */}
-            <div className="text-sm space-y-1 mb-4">
+            <div className="text-xs sm:text-sm space-y-1.5 mb-3 sm:mb-4">
                 {mainOptions.map(([label, statKey, totalValue]) => (
                     <RenderOptionRow
                         key={label}
@@ -91,11 +102,11 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
                 ))}
             </div>
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2 text-[0.7rem] sm:text-xs">
                 {/* 잠재 옵션 */}
                 {item.potential_option_grade && (
                     <div className={getGradeColor(item?.potential_option_grade)}>
-                        <p className="mb-1 text-card-foreground">
+                        <p className="mb-1 text-card-foreground text-xs">
                             {t("character.item.equipment.potential.label")}
                         </p>
                         {item.potential_option_1 && <p>{item.potential_option_1}</p>}
@@ -106,7 +117,7 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
                 {/* 에디셔널 잠재 */}
                 {item.additional_potential_option_grade && (
                     <div className={getGradeColor(item.additional_potential_option_grade)}>
-                        <p className="mb-1 text-card-foreground">
+                        <p className="mb-1 text-card-foreground text-xs">
                             {t("character.item.equipment.additionalPotential.label")}
                         </p>
                         {item.additional_potential_option_1 && <p>{item.additional_potential_option_1}</p>}
