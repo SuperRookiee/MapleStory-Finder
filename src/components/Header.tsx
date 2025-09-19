@@ -19,7 +19,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 flex h-[var(--header-height)] items-center justify-between border-b bg-background/90 px-4">
       {/* 로고 */}
       <Link href={logoHref} className="flex items-center">
-        <Image src="/Reheln.png" alt="Finder" width={40} height={40} priority />
+        <Image src="/images/reheln/Reheln.png" alt="Finder" width={40} height={40} priority />
       </Link>
       {/* 오른쪽 메뉴 */}
       <div className="flex items-center">
