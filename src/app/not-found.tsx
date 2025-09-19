@@ -50,7 +50,7 @@ const NotFound = () => {
                     <div className="relative flex items-center justify-center">
                         <div className="absolute -inset-10 rounded-full bg-primary/10 blur-3xl dark:bg-primary/20" />
                         <Image
-                            src="/Reheln.png"
+                            src="/images/reheln/Reheln.png"
                             alt={t('common.appName')}
                             width={112}
                             height={112}

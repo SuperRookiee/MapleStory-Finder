@@ -25,7 +25,7 @@ const Page = () => {
                             <div
                                 className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/70 px-4 py-1 text-xs font-medium uppercase tracking-[0.32em] text-muted-foreground">
                                 <Image
-                                    src="/Reheln.png"
+                                    src="/images/reheln/Reheln.png"
                                     alt={t('common.appName')}
                                     className="object-contain"
                                     width={20}
