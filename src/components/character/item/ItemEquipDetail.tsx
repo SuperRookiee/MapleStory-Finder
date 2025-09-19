@@ -52,7 +52,7 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
 
     return (
         <div
-            className="bg-black/85 text-white rounded-lg shadow-lg p-3 sm:p-4"
+            className="bg-black/85 text-white rounded-lg shadow-lg p-3 sm:p-4 border border-foreground/50"
             style={panelStyle}
         >
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
