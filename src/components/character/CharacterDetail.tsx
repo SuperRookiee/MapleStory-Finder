@@ -392,7 +392,11 @@ const CharacterDetail = ({ ocid }: { ocid: string }) => {
                                             width={SMALL_IMAGE_SIZE}
                                             height={SMALL_IMAGE_SIZE}
                                             className="object-contain transition-opacity h-auto"
-                                            style={{ opacity: smallImageOpacity }}
+                                            sizes="(max-width: 768px) 20vw, 6vw"
+                                            style={{
+                                                opacity: smallImageOpacity,
+                                                width: "clamp(2.4rem, calc(2rem + 0.9vmin), 3.25rem)",
+                                            }}
                                         />
                                     )}
                                     <div

@@ -46,14 +46,30 @@ const slotPosition: Record<string, { col: number; row: number }> = {
 
 const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
     const t = useTranslations();
+    const slotSize = "clamp(2.4rem, calc(2.1rem + 1.1vmin), 3.5rem)";
+    const slotPadding = "clamp(0.35rem, calc(0.25rem + 0.35vmin), 0.6rem)";
+    const iconSize = "clamp(1.8rem, calc(1.55rem + 0.6vmin), 2.8rem)";
+    const gridGap = "clamp(0.35rem, calc(0.3rem + 0.35vmin), 0.75rem)";
+    const gridPadding = "clamp(0.75rem, calc(0.5rem + 0.4vmin), 1.5rem)";
 
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>{t("character.item.equipment.title")}</CardTitle>
             </CardHeader>
-            <CardContent className="flex w-full justify-center px-2 sm:px-6">
-                <div className="grid grid-cols-5 grid-rows-6 gap-1.5 sm:gap-2 p-2 sm:p-4 bg-muted rounded-lg w-fit">
+            <CardContent
+                className="flex w-full justify-center"
+                style={{
+                    paddingInline: "clamp(0.5rem, calc(0.5rem + 0.5vmin), 2rem)",
+                }}
+            >
+                <div
+                    className="grid grid-cols-5 grid-rows-6 bg-muted rounded-lg w-fit"
+                    style={{
+                        gap: gridGap,
+                        padding: gridPadding,
+                    }}
+                >
                     {Object.entries(slotPosition).map(([slot, pos]) => {
                         const equip = items.find((item) => item.item_equipment_slot === slot);
 
@@ -62,15 +78,22 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                                 <Popover key={slot}>
                                     <PopoverTrigger asChild>
                                         <div
-                                            className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 p-2 border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
-                                            style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
+                                            className="border rounded-md flex items-center justify-center bg-card cursor-pointer hover:shadow-md"
+                                            style={{
+                                                gridColumnStart: pos.col,
+                                                gridRowStart: pos.row,
+                                                width: slotSize,
+                                                height: slotSize,
+                                                padding: slotPadding,
+                                            }}
                                         >
                                             <Image
                                                 src={equip.item_icon}
                                                 alt={equip.item_name}
                                                 width={48}
                                                 height={48}
-                                                className="w-8 h-auto sm:w-10 md:w-12"
+                                                className="h-auto"
+                                                style={{ width: iconSize }}
                                                 priority
                                             />
                                         </div>
@@ -89,10 +112,19 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                         return (
                             <div
                                 key={slot}
-                                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 p-2 border rounded-md flex items-center justify-center bg-card"
-                                style={{ gridColumnStart: pos.col, gridRowStart: pos.row }}
+                                className="border rounded-md flex items-center justify-center bg-card"
+                                style={{
+                                    gridColumnStart: pos.col,
+                                    gridRowStart: pos.row,
+                                    width: slotSize,
+                                    height: slotSize,
+                                    padding: slotPadding,
+                                }}
                             >
-                                <Skeleton className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10"/>
+                                <Skeleton
+                                    className="h-full w-full"
+                                    style={{ maxWidth: iconSize, maxHeight: iconSize }}
+                                />
                             </div>
                         );
                     })}

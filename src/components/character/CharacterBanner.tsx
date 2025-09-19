@@ -50,7 +50,10 @@ const CharacterBanner = ({
     const rankingLabel = overallRanking ? t('character.banner.ranking', {value: overallRanking.ranking.toLocaleString(),}) : null;
 
     return (
-        <Card className={cn("relative h-60 sm:h-64 w-full overflow-hidden rounded", backgroundColor)}>
+        <Card
+            className={cn("relative w-full overflow-hidden rounded", backgroundColor)}
+            style={{ height: "clamp(14rem, 36vmin, 20rem)" }}
+        >
             {backgroundImage && (
                 <Image
                     src={backgroundImage}
@@ -110,22 +113,30 @@ const CharacterBanner = ({
                         </div>
                         {bannerImageSrc && (
                             <div
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                                className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
                                 style={{
                                     transform: `scale(${imageScale})`,
                                     opacity: imageScale,
                                     ...(imageTransitionName ? { viewTransitionName: imageTransitionName } : {}),
                                 }}
                             >
-                                <Image
-                                    src={bannerImageSrc}
-                                    alt={basic?.character_name ?? "character"}
-                                    width={120}
-                                    height={120}
-                                    className="object-contain h-auto"
-                                    priority
-                                    unoptimized
-                                />
+                                <div
+                                    className="relative"
+                                    style={{
+                                        width: "clamp(7rem, calc(5rem + 4vmin), 10rem)",
+                                        height: "clamp(7rem, calc(5rem + 4vmin), 10rem)",
+                                    }}
+                                >
+                                    <Image
+                                        src={bannerImageSrc}
+                                        alt={basic?.character_name ?? "character"}
+                                        fill
+                                        className="h-full w-full object-contain"
+                                        priority
+                                        sizes="(max-width: 768px) 45vw, 18vw"
+                                        unoptimized
+                                    />
+                                </div>
                             </div>
                         )}
                     </>

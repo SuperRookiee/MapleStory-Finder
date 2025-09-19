@@ -43,7 +43,14 @@ const ItemEquipDetail = ({ item }: ItemEquipDetailProps) => {
     const star = item.item_starforce_option || {};
 
     return (
-        <div className="bg-black/85 text-white rounded-lg shadow-lg p-4 min-w-64">
+        <div
+            className="bg-black/85 text-white rounded-lg shadow-lg w-full max-w-[min(22rem,90vw)]"
+            style={{
+                padding: "clamp(1rem, calc(1rem + 0.5vmin), 1.75rem)",
+                fontSize: "clamp(0.8rem, calc(0.75rem + 0.2vmin), 1rem)",
+                lineHeight: "clamp(1.35, calc(1.2 + 0.25vmin), 1.6)",
+            }}
+        >
             <div className="flex items-center gap-3 mb-2">
                 {/* 아이템 아이콘 */}
                 <div className="relative w-10 h-10 flex-shrink-0">

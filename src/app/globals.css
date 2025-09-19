@@ -48,6 +48,7 @@
     color-scheme: light;
     --radius: 0.65rem;
     --header-height: 3rem;
+    --adaptive-font-size: clamp(14px, calc(8px + 1.2vmin), 18px);
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --card: oklch(1 0 0);
@@ -122,6 +123,7 @@
     }
 
     body {
+        font-size: var(--adaptive-font-size);
         @apply bg-background text-foreground;
     }
 }
