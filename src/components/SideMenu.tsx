@@ -76,7 +76,7 @@ const SideMenu = () => {
                     <SheetTitle>Finder</SheetTitle>
                     <SheetDescription>menu</SheetDescription>
                 </SheetContentHeader>
-                <div className="mt-4 space-y-2">
+                <div className="mt-2 space-y-2">
                     {availableItems.map((item) => (
                         <SheetClose asChild key={item.href}>
                             <Button

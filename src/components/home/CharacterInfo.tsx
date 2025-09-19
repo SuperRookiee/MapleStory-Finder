@@ -78,7 +78,7 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
             )}
         >
             <ScrollArea className="h-full">
-                <div className="flex h-full w-full flex-col gap-5 px-4 py-5 sm:px-5">
+                <div className="flex h-full w-full flex-col gap-5">
                     {!ocid ? (
                         <div className="flex flex-1 items-center justify-center py-12">
                             <div className="rounded-3xl border border-dashed border-border/60 bg-muted/20 px-8 py-10 text-center text-sm text-muted-foreground">

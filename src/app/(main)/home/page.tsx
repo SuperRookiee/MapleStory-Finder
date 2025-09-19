@@ -145,24 +145,24 @@ const Home = () => {
     return (
         <ViewTransition enter="fade" exit="fade">
             <ScrollArea className="h-page">
-                <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-4 pb-6 pt-5 sm:px-5 lg:px-6">
-                    <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background p-4 shadow-sm sm:p-5">
+                <div className="mx-auto flex h-full w-full max-w-7xl flex-col gap-4 px-2">
+                    <section className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background p-4 shadow-sm">
                         <div className="absolute -right-24 top-1/2 hidden h-48 w-48 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl md:block" aria-hidden />
                         <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                            <div className="space-y-1.5">
+                            <div className="space-y-2">
                                 <span className="inline-flex w-fit items-center rounded-full border border-border/60 bg-background/70 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.32em] text-muted-foreground">
                                     {t('home.hero.badge')}
                                 </span>
-                                <h1 className="text-2xl font-semibold leading-snug text-foreground sm:text-[2rem]">
+                                <h1 className="text-2xl font-semibold leading-snug text-foreground sm:text-4xl break-keep">
                                     {t('home.hero.title')}
                                 </h1>
-                                <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
+                                <p className="max-w-2xl text-sm text-muted-foreground sm:text-base break-keep">
                                     {t('home.hero.description')}
                                 </p>
                             </div>
                             <div className="grid w-full gap-2.5 sm:max-w-md sm:grid-cols-2 lg:max-w-lg">
                                 {stats.map(({ key, label, value, helper, Icon, showSkeleton }) => (
-                                    <div key={key} className="rounded-2xl border border-border/60 bg-background/80 p-3 shadow-sm sm:p-4">
+                                    <div key={key} className="rounded-2xl border border-border/60 bg-background/80 px-3 py-2 shadow-sm sm:p-4 transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/20">
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
                                                 <Icon className="h-4 w-4" />
@@ -176,7 +176,7 @@ const Home = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <p className="mt-2 text-xs text-muted-foreground">{helper}</p>
+                                        <p className="mt-2 text-xs text-muted-foreground break-keep">{helper}</p>
                                     </div>
                                 ))}
                             </div>
@@ -186,9 +186,9 @@ const Home = () => {
                     <div className="flex min-h-0 flex-1 flex-col gap-4 md:flex-row">
                         <ScrollArea className="h-full max-h-[var(--height-page)] md:w-[340px] xl:w-[380px]">
                             <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-background/85 shadow-sm backdrop-blur">
-                                <div className="border-b border-border/60 px-4 py-3.5">
-                                    <h2 className="text-base font-semibold text-foreground">{t('home.favorites.title')}</h2>
-                                    <p className="text-sm text-muted-foreground">{t('home.favorites.description')}</p>
+                                <div className="border-b border-border/60 px-4 py-2">
+                                    <h2 className="text-sm font-semibold text-foreground">{t('home.favorites.title')}</h2>
+                                    <p className="text-xs text-muted-foreground">{t('home.favorites.description')}</p>
                                 </div>
                                 <FavoriteList
                                     favorites={favorites}
