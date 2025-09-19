@@ -71,91 +71,102 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
     }, [basic?.character_image]);
 
     return (
-        <ScrollArea className={cn("hidden md:flex flex-1", className)}>
-            {!ocid ? (
-                <div className="flex justify-center items-center w-full h-page animate-pulse">
-                    {t('home.characterInfo.emptyState')}
-                </div>
-            ) : (
-                <div className="p-4 max-w-6xl mx-auto">
-                    <div className="flex flex-col lg:flex-row gap-10">
-                        <section className="lg:flex-[0.4] flex flex-col items-center max-w-[300px] mx-auto">
-                            <div className="self-start flex items-center gap-2 text-xl">
-                                {loading || !basic ? (
-                                    <>
-                                        <Skeleton className="w-6 h-6 rounded-full" />
-                                        <Skeleton className="h-6 w-24" />
-                                    </>
-                                ) : (
-                                    <>
-                                        <WorldIcon name={basic.world_name} />
-                                        {basic.world_name}
-                                    </>
-                                )}
-                            </div>
+        <ScrollArea className={cn("hidden h-full flex-1 md:flex", className)}>
+            <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-6 p-6">
+                {!ocid ? (
+                    <div className="flex flex-1 items-center justify-center">
+                        <div className="rounded-3xl border border-dashed border-border/60 bg-muted/20 px-8 py-12 text-center text-sm text-muted-foreground">
+                            {t('home.characterInfo.emptyState')}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br from-primary/10 via-background to-background p-6 shadow-sm">
+                        <div className="absolute -right-24 top-1/2 hidden h-64 w-64 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl xl:block" aria-hidden />
+                        <div className="relative flex flex-col gap-6 xl:flex-row">
+                            <section className="flex flex-col items-center gap-5 text-center xl:w-72 xl:items-start xl:text-left">
+                                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                                    {loading || !basic ? (
+                                        <>
+                                            <Skeleton className="h-6 w-6 rounded-full" />
+                                            <Skeleton className="h-4 w-24" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <WorldIcon name={basic.world_name} />
+                                            <span>{basic.world_name}</span>
+                                        </>
+                                    )}
+                                </div>
 
-                            {loading || !basic ? (
-                                <Skeleton className="w-64 h-64 mt-4" />
-                            ) : (
-                                characterImageSrc && (
-                                    <div
-                                        className="w-64 h-64 mt-4 flex items-center justify-center"
-                                        style={imageTransitionName ? { viewTransitionName: imageTransitionName } : undefined}
-                                    >
-                                        <Image
-                                            src={characterImageSrc}
-                                            alt={basic.character_name}
-                                            className="object-contain h-auto"
-                                            width={100}
-                                            height={100}
-                                            priority
-                                        />
-                                    </div>
-                                )
-                            )}
+                                <div className="relative aspect-square w-52 max-w-full overflow-hidden rounded-2xl border border-border/40 bg-background/70 p-6 shadow-inner">
+                                    {loading || !basic ? (
+                                        <Skeleton className="h-full w-full" />
+                                    ) : (
+                                        characterImageSrc && (
+                                            <div
+                                                className="flex h-full w-full items-center justify-center"
+                                                style={imageTransitionName ? { viewTransitionName: imageTransitionName } : undefined}
+                                            >
+                                                <Image
+                                                    src={characterImageSrc}
+                                                    alt={basic.character_name}
+                                                    className="h-full w-auto max-h-full object-contain"
+                                                    width={200}
+                                                    height={200}
+                                                    priority
+                                                />
+                                            </div>
+                                        )
+                                    )}
+                                </div>
 
-                            {loading || !basic ? (
-                                <Skeleton className="h-8 w-40 mt-4" />
-                            ) : (
-                                <h2 className="text-2xl font-bold mt-4 text-center lg:text-left">
-                                    {basic.character_name}
-                                </h2>
-                            )}
+                                <div className="space-y-1">
+                                    {loading || !basic ? (
+                                        <Skeleton className="h-8 w-40" />
+                                    ) : (
+                                        <h2 className="text-3xl font-semibold tracking-tight text-foreground">
+                                            {basic.character_name}
+                                        </h2>
+                                    )}
+                                    {loading || !basic ? (
+                                        <Skeleton className="h-5 w-32" />
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground">
+                                            {basic.character_class}
+                                        </p>
+                                    )}
+                                </div>
 
-                            {loading || !basic ? (
-                                <Skeleton className="h-6 w-32" />
-                            ) : (
-                                <p className="text-center lg:text-left text-muted-foreground">
-                                    {basic.character_class}
-                                </p>
-                            )}
+                                <div className="flex items-center justify-center gap-2 xl:justify-start">
+                                    {loading || !basic ? (
+                                        <Skeleton className="h-8 w-24" />
+                                    ) : (
+                                        <span className="rounded-full bg-primary/10 px-4 py-1 text-sm font-semibold text-primary">
+                                            {t('home.stats.level', { level: basic.character_level })}
+                                        </span>
+                                    )}
+                                </div>
 
-                            {loading || !basic ? (
-                                <Skeleton className="h-6 w-24" />
-                            ) : (
-                                <p className="text-center lg:text-left font-bold text-red-500">
-                                    Lv. {basic.character_level}
-                                </p>
-                            )}
+                                <div className="flex w-full justify-center xl:justify-start">
+                                    {loading || !basic ? (
+                                        <Skeleton className="h-10 w-28" />
+                                    ) : (
+                                        <Button onClick={goToDetailPage} className="rounded-full px-6">
+                                            {t('home.characterInfo.detailButton')}
+                                        </Button>
+                                    )}
+                                </div>
+                            </section>
 
-                            <div className="flex justify-center">
-                                {loading || !basic ? (
-                                    <Skeleton className="h-10 w-20" />
-                                ) : (
-                                    <Button onClick={goToDetailPage}>{t('home.characterInfo.detailButton')}</Button>
-                                )}
-                            </div>
-                        </section>
-
-                        {/* 우측: 장비 */}
-                        <div className="lg:flex-[0.6] flex justify-center">
-                            <div className="mx-auto max-w-[360px] md:max-w-[420px]">
-                                <ItemEquipments items={items} loading={loading || !basic} />
+                            <div className="flex flex-1 items-stretch">
+                                <div className="w-full max-w-xl xl:ml-auto">
+                                    <ItemEquipments items={items} loading={loading || !basic} />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </ScrollArea>
     );
 };

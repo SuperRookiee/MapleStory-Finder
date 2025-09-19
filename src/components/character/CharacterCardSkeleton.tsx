@@ -3,23 +3,23 @@
 import { Card } from '@/components/ui/card';
 
 const CharacterCardSkeleton = () => (
-    <Card className="p-4 flex flex-col w-full relative">
-        {/* 서버 정보 Skeleton */}
-        <div className="absolute top-2 left-2 flex items-center gap-1">
-            <div className="w-5 h-5 bg-muted animate-pulse rounded-full" />
-            <div className="h-3 w-16 bg-muted animate-pulse rounded" />
+    <Card className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card/80 p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-2">
+                <div className="h-5 w-5 animate-pulse rounded-full bg-muted" />
+                <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+            </div>
+            <div className="h-9 w-9 rounded-full border border-border/60 bg-muted/40" />
         </div>
 
-        {/* 캐릭터 이미지 Skeleton (비율 고정) */}
-        <div className="relative w-full aspect-[4/3] mb-4 bg-muted animate-pulse rounded-md" />
+        <div className="mt-6 aspect-[4/3] w-full rounded-2xl bg-muted/30" />
 
-        {/* 캐릭터 정보 Skeleton */}
-        <div className="mt-auto flex items-end justify-between min-h-[64px] sm:min-h-[72px] md:min-h-[80px]">
-            <div className="space-y-2 w-[70%]">
-                <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-                <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+        <div className="mt-6 flex items-end justify-between gap-4">
+            <div className="w-2/3 space-y-3">
+                <div className="h-5 w-full animate-pulse rounded bg-muted/70" />
+                <div className="h-4 w-3/4 animate-pulse rounded bg-muted/60" />
             </div>
-            <div className="h-6 sm:h-7 md:h-8 lg:h-10 bg-muted animate-pulse rounded w-16" />
+            <div className="h-10 w-12 animate-pulse rounded bg-muted/70" />
         </div>
     </Card>
 );

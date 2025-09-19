@@ -6,6 +6,7 @@ import WorldIcon from "@/components/common/WorldIcon";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
+import { cn } from "@/utils/utils";
 
 interface ICharacterCardProps {
     character: ICharacterSummary;
@@ -22,63 +23,62 @@ const CharacterCard = ({
 }: ICharacterCardProps) => {
     return (
         <Card
-            className={`p-4 flex flex-col relative w-full ${onSelect ? "cursor-pointer" : ""}`}
+            className={cn(
+                "group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card/80 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg",
+                onSelect && "cursor-pointer",
+            )}
             onClick={onSelect}
         >
-            {/* 서버 정보 */}
-            <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
-                <WorldIcon name={character.world_name} />
-                <span className="text-xs sm:text-sm md:text-base">
-                    {character.world_name}
-                </span>
-            </div>
-
-            {/* 즐겨찾기 버튼 */}
-            <div className="absolute top-2 right-2 z-10">
+            <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    <WorldIcon name={character.world_name} />
+                    <span className="truncate">{character.world_name}</span>
+                </div>
                 <Button
                     variant="ghost"
+                    className="h-9 w-9 rounded-full border border-border/60 bg-background/80 p-0 text-muted-foreground shadow-sm transition-colors hover:bg-primary/10 hover:text-primary"
                     onClick={(e) => {
                         e.preventDefault();
-                        e.stopPropagation(); // 부모 onClick 방지
+                        e.stopPropagation();
                         onToggleFavorite?.();
                     }}
+                    aria-label="Toggle favorite"
                 >
                     <Star
-                        className={`h-5 w-5 ${
-                            isFavorite ? "text-yellow-400" : "text-muted-foreground"
-                        }`}
+                        className={cn("h-4 w-4 transition-colors", isFavorite && "text-primary")}
                         fill={isFavorite ? "currentColor" : "none"}
                     />
                 </Button>
             </div>
 
-            {/* 캐릭터 이미지 */}
-            <div className="relative w-full aspect-[4/3] flex items-center justify-center">
+            <div className="relative mt-6 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border/40 bg-muted/20">
                 {character.image && (
                     <Image
                         src={`/api/crop?url=${encodeURIComponent(character.image)}`}
                         alt={character.character_name}
-                        className="object-contain translate-y-4 h-auto"
-                        width={100}
-                        height={100}
+                        className="h-full w-auto max-h-full object-contain transition duration-300 group-hover:scale-105"
+                        width={160}
+                        height={160}
                         priority
                     />
                 )}
             </div>
 
-            {/* 캐릭터 정보 */}
-            <div className="mt-auto flex items-end justify-between min-h-[64px] sm:min-h-[72px] md:min-h-[80px]">
-                <div className="truncate max-w-[70%]">
-                    <p className="font-bold text-sm sm:text-base md:text-lg lg:text-xl">
+            <div className="mt-6 flex items-end justify-between gap-4">
+                <div className="min-w-0">
+                    <p className="truncate text-lg font-semibold text-foreground">
                         {character.character_name}
                     </p>
-                    <p className="text-xs sm:text-sm md:text-base text-muted-foreground truncate">
+                    <p className="truncate text-sm text-muted-foreground">
                         {character.character_class}
                     </p>
                 </div>
-                <p className="text-red-500 font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl shrink-0 ml-2">
-                    {character.character_level}
-                </p>
+                <div className="flex flex-col items-end">
+                    <span className="text-xs font-semibold uppercase text-muted-foreground">Lv.</span>
+                    <span className="text-2xl font-semibold text-primary">
+                        {character.character_level}
+                    </span>
+                </div>
             </div>
         </Card>
     );

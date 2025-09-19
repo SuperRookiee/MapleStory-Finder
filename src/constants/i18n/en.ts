@@ -177,12 +177,68 @@ export const en = {
         },
     },
     home: {
+        hero: {
+            badge: "Favorites dashboard",
+            title: "Keep your favourites close",
+            description:
+                "Browse the characters you pinned and jump to detailed stats whenever you need them.",
+        },
+        stats: {
+            totalFavorites: "Saved favourites",
+            totalFavoritesHelper: "{count} characters are pinned for quick access.",
+            totalFavoritesHelperEmpty: "Pin a character to keep it ready for quick access.",
+            selected: "Current selection",
+            selectedHelper: "Choose a character from the list to preview gear instantly.",
+            level: "Lv. {level}",
+            none: "—",
+        },
+        favorites: {
+            title: "Favourite characters",
+            description: "Pick a character from the list to see an instant preview of their equipment.",
+            empty: "No favourites yet. Add a character to your favourites to display it here.",
+        },
         characterInfo: {
             emptyState: "Please choose your character",
             detailButton: "Detail",
         },
         dialog: {
             title: "Info",
+        },
+    },
+    characterList: {
+        header: {
+            badge: "Roster overview",
+            title: "Manage your MapleStory roster",
+            description:
+                "Filter the characters linked to your account and open their detailed pages in a single click.",
+        },
+        stats: {
+            total: "Synced characters",
+            filtered: "Visible with filters",
+            favorites: "Saved favourites",
+            totalHelper: "Characters fetched from your linked account.",
+            filteredHelper: "Filtered by {world}.",
+            favoritesHelper: "{count} favourites saved across the app.",
+        },
+        filters: {
+            title: "Filters",
+            description: "Choose a world or search by name to narrow down the list.",
+            world: {
+                label: "World",
+                all: "All worlds",
+            },
+            search: {
+                label: "Search",
+                placeholder: "Search character name...",
+            },
+        },
+        list: {
+            title: "Character overview",
+            description: "Select a card to open the full character detail page.",
+        },
+        empty: {
+            title: "No characters match your filters",
+            description: "Try selecting another world or refresh the sync to load your roster again.",
         },
     },
     notice: {
