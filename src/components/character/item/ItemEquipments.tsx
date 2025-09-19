@@ -3,7 +3,7 @@ import { Fragment, type CSSProperties } from "react";
 import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IItemEquipment } from "@/interface/character/ICharacter";
 import { useTranslations } from "@/providers/LanguageProvider";
@@ -126,6 +126,9 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                                             side="bottom"
                                             className="sm:hidden border-none p-4 pb-6 max-h-[85vh] overflow-y-auto"
                                         >
+                                            <SheetTitle className="sr-only">
+                                                {equip.item_name}
+                                            </SheetTitle>
                                             <div className="flex w-full justify-center">
                                                 <ItemEquipDetail item={equip}/>
                                             </div>
