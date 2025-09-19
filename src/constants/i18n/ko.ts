@@ -171,12 +171,66 @@ export const ko = {
         },
     },
     home: {
+        hero: {
+            badge: "즐겨찾기 대시보드",
+            title: "즐겨찾는 캐릭터를 한눈에",
+            description: "자주 확인하는 캐릭터를 등록하고 장비 정보를 빠르게 확인하세요.",
+        },
+        stats: {
+            totalFavorites: "등록된 즐겨찾기",
+            totalFavoritesHelper: "즐겨찾기에 {count}명의 캐릭터가 등록되어 있습니다.",
+            totalFavoritesHelperEmpty: "즐겨찾기를 추가하면 여기에서 빠르게 확인할 수 있어요.",
+            selected: "선택된 캐릭터",
+            selectedHelper: "목록에서 캐릭터를 선택하면 장비 미리보기를 볼 수 있습니다.",
+            level: "Lv. {level}",
+            none: "—",
+        },
+        favorites: {
+            title: "내 즐겨찾기",
+            description: "목록에서 캐릭터를 선택해 장비 요약을 확인하세요.",
+            empty: "즐겨찾기에 등록된 캐릭터가 없습니다.",
+        },
         characterInfo: {
             emptyState: "캐릭터를 선택해주세요",
             detailButton: "상세 보기",
         },
         dialog: {
             title: "정보",
+        },
+    },
+    characterList: {
+        header: {
+            badge: "캐릭터 현황",
+            title: "보유 캐릭터 관리",
+            description: "계정과 연동된 캐릭터를 필터링하고 한 번의 클릭으로 상세 페이지로 이동하세요.",
+        },
+        stats: {
+            total: "연동된 캐릭터",
+            filtered: "필터 적용 결과",
+            favorites: "즐겨찾기",
+            totalHelper: "계정과 연동된 캐릭터 수입니다.",
+            filteredHelper: "{world} 기준으로 표시 중입니다.",
+            favoritesHelper: "앱 전반에서 {count}명의 즐겨찾기를 사용할 수 있어요.",
+        },
+        filters: {
+            title: "필터",
+            description: "월드를 선택하거나 이름을 검색해 목록을 좁혀보세요.",
+            world: {
+                label: "월드",
+                all: "전체 월드",
+            },
+            search: {
+                label: "검색",
+                placeholder: "캐릭터 이름을 검색하세요",
+            },
+        },
+        list: {
+            title: "캐릭터 목록",
+            description: "카드를 선택하면 상세 정보를 확인할 수 있습니다.",
+        },
+        empty: {
+            title: "조건에 맞는 캐릭터가 없습니다",
+            description: "다른 월드를 선택하거나 계정 연동 상태를 다시 확인해 주세요.",
         },
     },
     notice: {
