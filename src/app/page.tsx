@@ -8,10 +8,13 @@ import DarkModeToggle from "@/components/DarkModeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/providers/AuthProvider";
 import { useTranslations } from "@/providers/LanguageProvider";
 
 const Page = () => {
     const t = useTranslations();
+    const { isAuthenticated } = useAuth();
+    const primaryCtaHref = isAuthenticated ? "/home" : "/sign_in";
     return (
         <ViewTransition enter="fade" exit="fade">
             <div className='absolute top-1 right-1 z-10 flex gap-1.5'>
@@ -42,7 +45,7 @@ const Page = () => {
                             </p>
                             <div className="flex flex-col gap-3 sm:flex-row">
                                 <Button asChild className="gap-2">
-                                    <Link href="/sign_in">
+                                    <Link href={primaryCtaHref}>
                                         {t('landing.hero.ctaPrimary')}
                                         <ArrowRight className="h-4 w-4"/>
                                     </Link>
