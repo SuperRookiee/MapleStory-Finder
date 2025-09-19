@@ -25,7 +25,7 @@ const FavoriteList = ({
 }: IFavoriteListProps) => {
     return (
         <ScrollArea className={cn("h-full", className)}>
-            <div className="space-y-4 px-5 py-5">
+            <div className="space-y-4 px-4 py-4 sm:px-5">
                 {loading ? (
                     Array.from({ length: 3 }).map((_, i) => <CharacterCardSkeleton key={i} />)
                 ) : favorites.length > 0 ? (
