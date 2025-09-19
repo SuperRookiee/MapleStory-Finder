@@ -25,15 +25,15 @@ const RenderOptionRow = ({ label, statKey, totalValue, base, add, etc, exception
     ].filter(Boolean);
 
     return (
-        <div className="flex justify-between text-sm">
-            <span className="text-blue-300">{label}</span>
-            <span className="min-w-[140px] text-right flex justify-end items-center gap-3 leading-5">
+        <div className="flex justify-between items-start text-xs sm:text-sm gap-3">
+            <span className="text-blue-300 leading-5 sm:leading-6">{label}</span>
+            <span className="min-w-[6.25rem] sm:min-w-[8.75rem] text-right flex justify-end items-center gap-2 sm:gap-3 leading-5 sm:leading-6">
                 {parts.length > 0 && (
-                    <span className="text-yellow-400 text-xs leading-5">
+                    <span className="text-yellow-400 text-[0.65rem] sm:text-xs leading-5 sm:leading-6">
                         ({parts.join(" ")})
                     </span>
                 )}
-                <span className="leading-5">+{totalValue}</span>
+                <span className="leading-5 sm:leading-6 text-xs sm:text-sm">+{totalValue}</span>
             </span>
         </div>
     );
