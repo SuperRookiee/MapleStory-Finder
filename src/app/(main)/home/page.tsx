@@ -183,9 +183,9 @@ const Home = () => {
                         </div>
                     </section>
 
-                    <div className="flex flex-1 min-h-0 flex-col gap-5 xl:flex-row">
-                        <ScrollArea className="h-full max-h-[var(--height-page)] xl:w-[360px]">
-                            <section className="flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-sm backdrop-blur xl:w-[360px]">
+                    <div className="flex flex-1 min-h-0 flex-col gap-5 md:flex-row">
+                        <ScrollArea className="h-full max-h-[var(--height-page)] md:w-[320px] xl:w-[360px]">
+                            <section className="flex h-full flex-col overflow-hidden rounded-3xl border border-border/60 bg-background/80 shadow-sm backdrop-blur md:w-[320px] xl:w-[360px]">
                                 <div className="border-b border-border/60 px-5 py-4">
                                     <h2 className="text-lg font-semibold text-foreground">{t('home.favorites.title')}</h2>
                                     <p className="text-sm text-muted-foreground">{t('home.favorites.description')}</p>
