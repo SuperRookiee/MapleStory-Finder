@@ -15,18 +15,28 @@ export const GET = Get(async (query: { url?: string }) => {
     });
     if (!response.ok) return Failed("failed to fetch image");
 
+    const contentType = response.headers.get("content-type") ?? "image/png";
     const buffer = Buffer.from(await response.arrayBuffer());
 
-    let cropped: Uint8Array;
-    try {
-        cropped = trimImage(buffer);
-    } catch {
-        return Failed("failed to process image");
+    // Only attempt to crop when the image is PNG; otherwise return the original.
+    if (contentType.includes("png")) {
+        try {
+            const cropped = trimImage(buffer);
+            return new Response(Buffer.from(cropped), {
+                headers: {
+                    "Content-Type": "image/png",
+                    "Access-Control-Allow-Origin": "*",
+                    "Cache-Control": "no-store",
+                },
+            });
+        } catch {
+            // If trimming fails, fall back to the original image buffer.
+        }
     }
 
-    return new Response(Buffer.from(cropped), {
+    return new Response(buffer, {
         headers: {
-            "Content-Type": "image/png",
+            "Content-Type": contentType,
             "Access-Control-Allow-Origin": "*",
             "Cache-Control": "no-store",
         },
