@@ -9,6 +9,7 @@ import CharacterInfo from "@/components/home/CharacterInfo";
 import FavoriteList from "@/components/home/FavoriteList";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { findCharacterBasic } from "@/fetchs/character.fetch";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
@@ -46,6 +47,7 @@ const Home = () => {
                     value: favoritesCount.toLocaleString(),
                     helper: favoritesHelper,
                     Icon: Bookmark,
+                    showSkeleton: loading,
                 },
                 {
                     key: 'selected' as const,
@@ -53,10 +55,11 @@ const Home = () => {
                     value: selectedCharacter?.character_name ?? t('home.stats.none'),
                     helper: selectedHelper,
                     Icon: UserRound,
+                    showSkeleton: false,
                 },
             ];
         },
-        [favorites.length, selectedCharacter, t],
+        [favorites.length, loading, selectedCharacter, t],
     );
 
     useEffect(() => {
@@ -158,7 +161,7 @@ const Home = () => {
                                 </p>
                             </div>
                             <div className="grid w-full gap-3 sm:max-w-lg sm:grid-cols-2">
-                                {stats.map(({ key, label, value, helper, Icon }) => (
+                                {stats.map(({ key, label, value, helper, Icon, showSkeleton }) => (
                                     <div key={key} className="rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm">
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -168,7 +171,9 @@ const Home = () => {
                                                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                                     {label}
                                                 </p>
-                                                <p className="text-xl font-semibold text-foreground">{value}</p>
+                                                <div className="text-xl font-semibold text-foreground">
+                                                    {showSkeleton ? <Skeleton className="h-6 w-12 rounded-md" /> : value}
+                                                </div>
                                             </div>
                                         </div>
                                         <p className="mt-3 text-xs text-muted-foreground">{helper}</p>
