@@ -32,16 +32,16 @@ export const metadata: Metadata = {
     icons: {
         icon: [
             {
-                url: "/Reheln.ico",
+                url: "/images/reheln/Reheln.ico",
             },
             {
-                url: "/Reheln.png",
+                url: "/images/reheln/Reheln.png",
                 type: "image/png",
                 sizes: "512x512",
             },
         ],
         apple: {
-            url: "/Reheln.png",
+            url: "/images/reheln/Reheln.png",
             sizes: "180x180",
         },
     },
