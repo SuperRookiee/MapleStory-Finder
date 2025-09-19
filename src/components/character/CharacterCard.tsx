@@ -51,14 +51,14 @@ const CharacterCard = ({
                 </Button>
             </div>
 
-            <div className="relative mt-6 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border/40 bg-muted/20">
+            <div className="relative mt-6 flex h-32 items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border/40 bg-muted/20 p-3 sm:h-36">
                 {character.image && (
                     <Image
                         src={`/api/crop?url=${encodeURIComponent(character.image)}`}
                         alt={character.character_name}
-                        className="h-full w-auto max-h-full object-contain transition duration-300 group-hover:scale-105"
-                        width={160}
-                        height={160}
+                        className="h-full w-auto max-h-full max-w-full object-contain transition duration-300 group-hover:scale-105"
+                        width={144}
+                        height={144}
                         priority
                     />
                 )}

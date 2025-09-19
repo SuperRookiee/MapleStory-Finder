@@ -71,8 +71,8 @@ const CharacterInfo = ({ ocid, goToDetailPage, className }: ICharacterInfoProps)
     }, [basic?.character_image]);
 
     return (
-        <ScrollArea className={cn("hidden h-full flex-1 md:flex", className)}>
-            <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-6 p-6">
+        <ScrollArea className={cn("h-full", className)}>
+            <div className="mx-auto flex h-full w-full max-w-5xl flex-col gap-6 p-6">
                 {!ocid ? (
                     <div className="flex flex-1 items-center justify-center">
                         <div className="rounded-3xl border border-dashed border-border/60 bg-muted/20 px-8 py-12 text-center text-sm text-muted-foreground">
