@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { Skeleton } from "@/components/ui/skeleton";
 import { IItemEquipment } from "@/interface/character/ICharacter";
 import { useTranslations } from "@/providers/LanguageProvider";
+import { cn } from "@/utils/utils";
 
 interface IEquipmentGrid {
     items?: IItemEquipment[];
@@ -46,6 +47,35 @@ const slotPosition: Record<string, { col: number; row: number }> = {
     "훈장": { col: 5, row: 3 },
 };
 
+const baseSlotClass = "flex items-center justify-center rounded-md border bg-card";
+const interactiveSlotClass = "cursor-pointer transition-transform duration-150 hover:scale-[1.02] hover:shadow-md";
+
+const getSlotStyle = (baseStyle: CSSProperties, pos: { col: number; row: number }) => ({
+    ...baseStyle,
+    gridColumnStart: pos.col,
+    gridRowStart: pos.row,
+});
+
+type EquipmentSlotTriggerProps = {
+    item: IItemEquipment;
+    style: CSSProperties;
+    className?: string;
+};
+
+const EquipmentSlotTrigger = ({ item, style, className }: EquipmentSlotTriggerProps) => (
+    <div className={cn(baseSlotClass, interactiveSlotClass, className)} style={style}>
+        <Image
+            src={item.item_icon}
+            alt={item.item_name}
+            width={48}
+            height={48}
+            sizes="(max-width: 768px) 10vw, 3.5rem"
+            className="h-full w-full object-contain"
+            priority
+        />
+    </div>
+);
+
 const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
     const t = useTranslations();
     const slotStyle: CSSProperties = {
@@ -64,33 +94,21 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                 <CardTitle>{t("character.item.equipment.title")}</CardTitle>
             </CardHeader>
             <CardContent className="flex w-full justify-center px-2 sm:px-4">
-                <div className="grid grid-cols-5 grid-rows-6 gap-1.5 sm:gap-2 p-2 sm:p-3 md:p-4 bg-muted rounded-lg w-fit">
+                <div className="grid w-fit grid-cols-5 grid-rows-6 gap-1.5 rounded-lg bg-muted p-2 sm:gap-2 sm:p-3 md:p-4">
                     {Object.entries(slotPosition).map(([slot, pos]) => {
                         const equip = items.find((item) => item.item_equipment_slot === slot);
+                        const style = getSlotStyle(slotStyle, pos);
 
                         if (equip && !loading) {
                             return (
                                 <Fragment key={slot}>
                                     <Popover>
                                         <PopoverTrigger asChild>
-                                            <div
-                                                className="hidden sm:flex border rounded-md items-center justify-center bg-card cursor-pointer transition-transform duration-150 hover:shadow-md hover:scale-[1.02]"
-                                                style={{
-                                                    ...slotStyle,
-                                                    gridColumnStart: pos.col,
-                                                    gridRowStart: pos.row,
-                                                }}
-                                            >
-                                                <Image
-                                                    src={equip.item_icon}
-                                                    alt={equip.item_name}
-                                                    width={48}
-                                                    height={48}
-                                                    sizes="(max-width: 768px) 10vw, 3.5rem"
-                                                    className="h-full w-full object-contain"
-                                                    priority
-                                                />
-                                            </div>
+                                            <EquipmentSlotTrigger
+                                                item={equip}
+                                                style={style}
+                                                className="hidden sm:flex"
+                                            />
                                         </PopoverTrigger>
                                         <PopoverContent
                                             side="right"
@@ -98,39 +116,24 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                                             sideOffset={8}
                                             className="hidden border-none bg-transparent p-0 shadow-none sm:block"
                                         >
-                                            <ItemEquipDetail item={equip}/>
+                                            <ItemEquipDetail item={equip} />
                                         </PopoverContent>
                                     </Popover>
                                     <Sheet>
                                         <SheetTrigger asChild>
-                                            <div
-                                                className="flex sm:hidden border rounded-md items-center justify-center bg-card cursor-pointer transition-transform duration-150 hover:shadow-md hover:scale-[1.02]"
-                                                style={{
-                                                    ...slotStyle,
-                                                    gridColumnStart: pos.col,
-                                                    gridRowStart: pos.row,
-                                                }}
-                                            >
-                                                <Image
-                                                    src={equip.item_icon}
-                                                    alt={equip.item_name}
-                                                    width={48}
-                                                    height={48}
-                                                    sizes="(max-width: 768px) 10vw, 3.5rem"
-                                                    className="h-full w-full object-contain"
-                                                    priority
-                                                />
-                                            </div>
+                                            <EquipmentSlotTrigger
+                                                item={equip}
+                                                style={style}
+                                                className="flex sm:hidden"
+                                            />
                                         </SheetTrigger>
                                         <SheetContent
                                             side="bottom"
-                                            className="sm:hidden border-none p-4 pb-6 max-h-[85vh] overflow-y-auto"
+                                            className="max-h-[85vh] overflow-y-auto border-none p-4 pb-6 sm:hidden"
                                         >
-                                            <SheetTitle className="sr-only">
-                                                {equip.item_name}
-                                            </SheetTitle>
+                                            <SheetTitle className="sr-only">{equip.item_name}</SheetTitle>
                                             <div className="flex w-full justify-center">
-                                                <ItemEquipDetail item={equip}/>
+                                                <ItemEquipDetail item={equip} />
                                             </div>
                                         </SheetContent>
                                     </Sheet>
@@ -139,16 +142,8 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
                         }
 
                         return (
-                            <div
-                                key={slot}
-                                className="border rounded-md flex items-center justify-center bg-card"
-                                style={{
-                                    ...slotStyle,
-                                    gridColumnStart: pos.col,
-                                    gridRowStart: pos.row,
-                                }}
-                            >
-                                <Skeleton className="h-full w-full" style={skeletonStyle}/>
+                            <div key={slot} className={baseSlotClass} style={style}>
+                                <Skeleton className="h-full w-full" style={skeletonStyle} />
                             </div>
                         );
                     })}
@@ -159,4 +154,3 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
 };
 
 export default ItemEquipments;
-
