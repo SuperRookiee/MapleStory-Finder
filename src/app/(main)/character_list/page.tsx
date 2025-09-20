@@ -1,6 +1,6 @@
 'use client'
 
-import { unstable_ViewTransition as ViewTransition, useCallback, useEffect, useMemo, useState } from "react";
+import { unstable_ViewTransition as ViewTransition, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Filter, Search, Star, Users } from "lucide-react";
 import { toast } from "sonner";
 import { characterListStore } from "@/stores/characterListStore";
@@ -14,20 +14,23 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addFavorite, getFavorites, removeFavorite } from "@/fetchs/favorite.fetch";
-import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { useTranslations } from "@/providers/LanguageProvider";
 
 const ALL_WORLDS_VALUE = "all";
+const INITIAL_VISIBLE_COUNT = 30;
+const LOAD_MORE_COUNT = 15;
 
 const CharacterList = () => {
     const t = useTranslations();
     const setApiKey = userStore((s) => s.setApiKey);
     const { characters, loading, fetchCharacters } = characterListStore();
-    const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState(ALL_WORLDS_VALUE);
     const [searchKeyword, setSearchKeyword] = useState("");
     const { favorites, setFavorites, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
     const [userId, setUserId] = useState<string | null>(null);
+    const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+    const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+    const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const load = async () => {
@@ -57,17 +60,77 @@ const CharacterList = () => {
         load();
     }, [fetchCharacters, setApiKey, setFavorites]);
 
-    // 서버 선택 필터링
-    useEffect(() => {
+    const filteredCharacters = useMemo(() => {
         const keyword = searchKeyword.trim().toLowerCase();
-        const filtered = characters.filter((c) => {
+
+        return characters.filter((c) => {
             const matchesWorld = worldFilter === ALL_WORLDS_VALUE || c.world_name === worldFilter;
             const matchesKeyword = c.character_name.toLowerCase().includes(keyword);
 
             return matchesWorld && matchesKeyword;
         });
-        setDisplayCharacters(filtered);
     }, [characters, worldFilter, searchKeyword]);
+
+    useEffect(() => {
+        setVisibleCount(INITIAL_VISIBLE_COUNT);
+    }, [worldFilter, searchKeyword]);
+
+    useEffect(() => {
+        setVisibleCount((prev) => {
+            if (filteredCharacters.length === 0) {
+                return 0;
+            }
+
+            if (prev === 0) {
+                return Math.min(INITIAL_VISIBLE_COUNT, filteredCharacters.length);
+            }
+
+            return Math.min(prev, filteredCharacters.length);
+        });
+    }, [filteredCharacters.length]);
+
+    const loadMore = useCallback(() => {
+        setVisibleCount((prev) => {
+            if (prev >= filteredCharacters.length) {
+                return prev;
+            }
+
+            return Math.min(prev + LOAD_MORE_COUNT, filteredCharacters.length);
+        });
+    }, [filteredCharacters.length]);
+
+    const hasMore = visibleCount < filteredCharacters.length;
+
+    useEffect(() => {
+        if (!hasMore) {
+            return;
+        }
+
+        const target = loadMoreRef.current;
+
+        if (!target) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    loadMore();
+                }
+            },
+            {
+                root: scrollContainerRef.current ?? undefined,
+                rootMargin: "0px 0px 400px 0px",
+                threshold: 0,
+            },
+        );
+
+        observer.observe(target);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [hasMore, loadMore]);
 
     const toggleFavorite = useCallback(async (ocid: string) => {
         if (!userId) return;
@@ -84,7 +147,11 @@ const CharacterList = () => {
         () => [ALL_WORLDS_VALUE, ...Array.from(new Set(characters.map((c) => c.world_name)))],
         [characters],
     );
-    const filteredCount = displayCharacters.length;
+    const filteredCount = filteredCharacters.length;
+    const visibleCharacters = useMemo(
+        () => filteredCharacters.slice(0, visibleCount),
+        [filteredCharacters, visibleCount],
+    );
     const selectedWorldLabel = worldFilter === ALL_WORLDS_VALUE ? t('characterList.filters.world.all') : worldFilter;
     const stats = useMemo(
         () => [
@@ -228,9 +295,9 @@ const CharacterList = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-full overflow-y-auto px-2 pb-6">
+                                <div ref={scrollContainerRef} className="h-full overflow-y-auto px-2 pb-6">
                                     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-                                        {displayCharacters.map((character) => (
+                                        {visibleCharacters.map((character) => (
                                             <CharacterCell
                                                 key={character.ocid}
                                                 character={character}
@@ -239,6 +306,7 @@ const CharacterList = () => {
                                             />
                                         ))}
                                     </div>
+                                    {hasMore && <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />}
                                 </div>
                             )}
                         </div>
