@@ -10,9 +10,12 @@ type CharacterListSlice = {
     characters: ICharacterSummary[];
     loading: boolean;
     fetchCharacters: () => Promise<void>;
+    loadCharacterImage: (ocid: string) => Promise<void>;
 }
 
-export const characterListStore = create<CharacterListSlice>()(persist((set) => ({
+const pendingImageRequests = new Map<string, Promise<void>>();
+
+export const characterListStore = create<CharacterListSlice>()(persist((set, get) => ({
         characters: [],
         loading: false,
         fetchCharacters: async () => {
@@ -27,30 +30,50 @@ export const characterListStore = create<CharacterListSlice>()(persist((set) => 
                     character_level: c.character_level,
                 }));
                 const sorted = basicList.sort((a, b) => b.character_level - a.character_level);
-                set({ characters: sorted, loading: false });
+                const previousImages = new Map(get().characters.map((c) => [c.ocid, c.image]));
 
-                const images = await Promise.all(
-                    sorted.map(async (char) => {
-                        const data = await findCharacterBasic(char.ocid);
-                        return { ocid: char.ocid, image: data.data.character_image };
-                    })
-                );
-
-                const imageMap = new Map<string, string>(
-                    images.map(({ ocid, image }) => [ocid, image])
-                );
-
-                set((state) => ({
-                    characters: state.characters.map((c) =>
-                        imageMap.has(c.ocid)
-                            ? { ...c, image: imageMap.get(c.ocid) }
-                            : c
-                    ),
+                const merged = sorted.map((character) => ({
+                    ...character,
+                    image: previousImages.get(character.ocid),
                 }));
+
+                set({ characters: merged, loading: false });
             } catch (err) {
                 set({ loading: false });
                 throw err;
             }
+        },
+        loadCharacterImage: async (ocid: string) => {
+            const { characters } = get();
+            const target = characters.find((c) => c.ocid === ocid);
+
+            if (!target || target.image) {
+                return;
+            }
+
+            const existingRequest = pendingImageRequests.get(ocid);
+            if (existingRequest) {
+                await existingRequest;
+                return;
+            }
+
+            const request = (async () => {
+                try {
+                    const data = await findCharacterBasic(ocid);
+                    const image = data.data.character_image;
+
+                    set((state) => ({
+                        characters: state.characters.map((character) =>
+                            character.ocid === ocid ? { ...character, image } : character,
+                        ),
+                    }));
+                } finally {
+                    pendingImageRequests.delete(ocid);
+                }
+            })();
+
+            pendingImageRequests.set(ocid, request);
+            await request;
         },
     }),
     {
