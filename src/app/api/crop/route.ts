@@ -16,17 +16,24 @@ export const GET = Get(async (query: { url?: string }) => {
     if (!response.ok) return Failed("failed to fetch image");
 
     const buffer = Buffer.from(await response.arrayBuffer());
+    const contentType = response.headers.get("content-type") ?? "";
 
-    let cropped: Uint8Array;
-    try {
-        cropped = trimImage(buffer);
-    } catch {
-        return Failed("failed to process image");
+    let processedBuffer: Buffer | Uint8Array = buffer;
+    let processedContentType = contentType || "application/octet-stream";
+
+    if (contentType.includes("image/png")) {
+        try {
+            processedBuffer = Buffer.from(trimImage(buffer));
+            processedContentType = "image/png";
+        } catch {
+            processedBuffer = buffer;
+            processedContentType = contentType || "image/png";
+        }
     }
 
-    return new Response(Buffer.from(cropped), {
+    return new Response(Buffer.from(processedBuffer), {
         headers: {
-            "Content-Type": "image/png",
+            "Content-Type": processedContentType,
             "Access-Control-Allow-Origin": "*",
             "Cache-Control": "no-store",
         },
