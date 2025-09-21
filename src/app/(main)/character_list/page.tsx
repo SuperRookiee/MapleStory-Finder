@@ -55,7 +55,7 @@ const CharacterList = () => {
         };
 
         load();
-    }, [fetchCharacters, setApiKey, setFavorites]);
+    }, []);
 
     // 서버 선택 필터링
     useEffect(() => {
@@ -78,7 +78,7 @@ const CharacterList = () => {
             await addFavorite(userId, ocid);
             addFavoriteOcid(ocid);
         }
-    }, [userId, favorites, addFavoriteOcid, removeFavoriteOcid]);
+    }, [userId, favorites]);
 
     const worlds = useMemo(
         () => [ALL_WORLDS_VALUE, ...Array.from(new Set(characters.map((c) => c.world_name)))],
