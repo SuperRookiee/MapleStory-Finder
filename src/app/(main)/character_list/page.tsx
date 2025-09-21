@@ -22,12 +22,17 @@ const ALL_WORLDS_VALUE = "all";
 const CharacterList = () => {
     const t = useTranslations();
     const setApiKey = userStore((s) => s.setApiKey);
-    const { characters, loading, fetchCharacters } = characterListStore();
+    const { characters, loading, fetchCharacters, loadCharacterImage } = characterListStore();
     const [displayCharacters, setDisplayCharacters] = useState<ICharacterSummary[]>([]);
     const [worldFilter, setWorldFilter] = useState(ALL_WORLDS_VALUE);
     const [searchKeyword, setSearchKeyword] = useState("");
     const { favorites, setFavorites, addFavorite: addFavoriteOcid, removeFavorite: removeFavoriteOcid } = favoriteStore();
     const [userId, setUserId] = useState<string | null>(null);
+    const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
+
+    const handleScrollContainerRef = useCallback((node: HTMLDivElement | null) => {
+        setScrollContainer(node);
+    }, []);
 
     useEffect(() => {
         const load = async () => {
@@ -228,7 +233,7 @@ const CharacterList = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-full overflow-y-auto px-2 pb-6">
+                                <div ref={handleScrollContainerRef} className="h-full overflow-y-auto px-2 pb-6">
                                     <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
                                         {displayCharacters.map((character) => (
                                             <CharacterCell
@@ -236,6 +241,8 @@ const CharacterList = () => {
                                                 character={character}
                                                 favorites={favorites}
                                                 toggleFavorite={toggleFavorite}
+                                                loadCharacterImage={loadCharacterImage}
+                                                scrollContainer={scrollContainer}
                                             />
                                         ))}
                                     </div>
