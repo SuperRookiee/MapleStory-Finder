@@ -6,7 +6,7 @@ import CalendarPanel from "@/components/todo-list/CalendarPanel";
 import MemoPanel from "@/components/todo-list/MemoPanel";
 import WeeklyBossPanel from "@/components/todo-list/WeeklyBossPanel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { WEEKLY_BOSS_MAP } from "@/constants/todoList";
+import { TODO_LIST_CHECKLIST_MAP, TODO_LIST_MONTHLY_BOSS_IDS } from "@/constants/todoList";
 import {
     TodoListEvent,
     TodoListMemo,
@@ -33,7 +33,15 @@ import { useTranslations } from "@/providers/LanguageProvider";
 
 const createInitialWeeklyState = (): WeeklyBossState => {
     const base: WeeklyBossState = {};
-    Object.keys(WEEKLY_BOSS_MAP).forEach((bossId) => {
+    Object.keys(TODO_LIST_CHECKLIST_MAP).forEach((bossId) => {
+        base[bossId] = { clearedAt: null };
+    });
+    return base;
+};
+
+const createInitialMonthlyState = (): MonthlyBossState => {
+    const base: MonthlyBossState = {};
+    TODO_LIST_MONTHLY_BOSS_IDS.forEach((bossId) => {
         base[bossId] = { clearedAt: null };
     });
     return base;
@@ -67,7 +75,7 @@ const TodoListPage = () => {
     const monthlyPeriodKey = useMemo(() => getCurrentMonthlyPeriodKey(), []);
 
     const [weeklyState, setWeeklyState] = useState<WeeklyBossState>(() => createInitialWeeklyState());
-    const [monthlyState, setMonthlyState] = useState<MonthlyBossState>({ clearedAt: null });
+    const [monthlyState, setMonthlyState] = useState<MonthlyBossState>(() => createInitialMonthlyState());
     const [memos, setMemos] = useState<TodoListMemo[]>([]);
     const [events, setEvents] = useState<TodoListEvent[]>([]);
 
@@ -121,10 +129,18 @@ const TodoListPage = () => {
         void (async () => {
             try {
                 const data = await loadMonthlyBossState(monthlyPeriodKey);
-                setMonthlyState({ clearedAt: data.clearedAt ?? null });
+                setMonthlyState(() => {
+                    const base = createInitialMonthlyState();
+                    Object.entries(data).forEach(([bossId, entry]) => {
+                        if (base[bossId]) {
+                            base[bossId] = { clearedAt: entry?.clearedAt ?? null };
+                        }
+                    });
+                    return base;
+                });
             } catch (error) {
                 handleError(error, "todoList.toast.error");
-                setMonthlyState({ clearedAt: null });
+                setMonthlyState(createInitialMonthlyState());
             } finally {
                 setMonthlyLoading(false);
             }
@@ -230,9 +246,12 @@ const TodoListPage = () => {
     );
 
     const handleToggleMonthly = useCallback(
-        (next: boolean) => {
+        (bossId: string, next: boolean) => {
             setMonthlyState((prev) => {
-                const updated: MonthlyBossState = { clearedAt: next ? new Date().toISOString() : null };
+                const updated: MonthlyBossState = {
+                    ...prev,
+                    [bossId]: { clearedAt: next ? new Date().toISOString() : null },
+                };
                 void persistMonthly(updated, prev);
                 return updated;
             });

@@ -3,14 +3,8 @@
 import { useCallback } from "react";
 import { Trophy, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    BLACK_MAGE_BOSS,
-    TODO_LIST_WEEKLY_BOSS_GROUPS,
-    getBossReward,
-    getWeeklyBossCount,
-} from "@/constants/todoList";
+import { TODO_LIST_BOSS_GROUPS, getBossReward } from "@/constants/todoList";
 import { MonthlyBossState, WeeklyBossState } from "@/fetchs/todoList.fetch";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
 import { cn } from "@/utils/utils";
@@ -19,7 +13,7 @@ interface WeeklyBossPanelProps {
     weeklyState: WeeklyBossState;
     monthlyState: MonthlyBossState;
     onToggleWeekly: (bossId: string, next: boolean) => void;
-    onToggleMonthly: (next: boolean) => void;
+    onToggleMonthly: (bossId: string, next: boolean) => void;
 }
 
 const WeeklyBossPanel = ({ weeklyState, monthlyState, onToggleWeekly, onToggleMonthly }: WeeklyBossPanelProps) => {
@@ -37,16 +31,27 @@ const WeeklyBossPanel = ({ weeklyState, monthlyState, onToggleWeekly, onToggleMo
         [language],
     );
 
-    const totalWeeklyClears = Object.values(weeklyState).filter((entry) => Boolean(entry?.clearedAt)).length;
-    const totalReward = Object.entries(weeklyState).reduce((acc, [bossId, entry]) => {
+    const checklistClears = Object.values(weeklyState).filter((entry) => Boolean(entry?.clearedAt)).length;
+    const monthlyClears = Object.values(monthlyState).filter((entry) => Boolean(entry?.clearedAt)).length;
+    const totalClears = checklistClears + monthlyClears;
+
+    const checklistReward = Object.entries(weeklyState).reduce((acc, [bossId, entry]) => {
         if (entry?.clearedAt) {
             return acc + getBossReward(bossId);
         }
         return acc;
     }, 0);
 
-    const totalBosses = getWeeklyBossCount();
-    const completionRate = totalBosses === 0 ? 0 : Math.round((totalWeeklyClears / totalBosses) * 100);
+    const monthlyReward = Object.entries(monthlyState).reduce((acc, [bossId, entry]) => {
+        if (entry?.clearedAt) {
+            return acc + getBossReward(bossId);
+        }
+        return acc;
+    }, 0);
+
+    const totalReward = checklistReward + monthlyReward;
+    const totalBosses = TODO_LIST_BOSS_GROUPS.reduce((acc, group) => acc + group.bosses.length, 0);
+    const completionRate = totalBosses === 0 ? 0 : Math.round((totalClears / totalBosses) * 100);
 
     return (
         <Card className="relative overflow-hidden">
@@ -58,134 +63,108 @@ const WeeklyBossPanel = ({ weeklyState, monthlyState, onToggleWeekly, onToggleMo
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <CardTitle className="text-2xl font-bold tracking-tight">
-                            {t("todoList.weekly.title")}
+                            {t("todoList.bosses.title")}
                         </CardTitle>
-                        <CardDescription>{t("todoList.weekly.description")}</CardDescription>
+                        <CardDescription>{t("todoList.bosses.description")}</CardDescription>
                     </div>
                     <Badge variant="secondary" className="bg-primary/10 text-primary">
-                        {t("todoList.weekly.resetInfo")}
+                        {t("todoList.bosses.resetInfo")}
                     </Badge>
                 </div>
                 <div className="mt-4 grid gap-3 rounded-xl border bg-background/60 p-4 shadow-sm sm:grid-cols-3">
                     <div>
                         <p className="text-xs uppercase text-muted-foreground">
-                            {t("todoList.weekly.summary.clears")}
+                            {t("todoList.bosses.summary.clears")}
                         </p>
-                        <p className="text-xl font-semibold text-foreground">{totalWeeklyClears}</p>
+                        <p className="text-xl font-semibold text-foreground">{totalClears}</p>
                         <p className="text-xs text-muted-foreground">
-                            {t("todoList.weekly.summary.total", { value: totalBosses })}
+                            {t("todoList.bosses.summary.total", { value: totalBosses })}
                         </p>
                     </div>
                     <div>
                         <p className="text-xs uppercase text-muted-foreground">
-                            {t("todoList.weekly.summary.reward")}
+                            {t("todoList.bosses.summary.reward")}
                         </p>
                         <p className="text-xl font-semibold text-primary">{formatCurrency(totalReward)}</p>
-                        <p className="text-xs text-muted-foreground">{t("todoList.weekly.summary.rewardHint")}</p>
+                        <p className="text-xs text-muted-foreground">{t("todoList.bosses.summary.rewardHint")}</p>
                     </div>
                     <div>
                         <p className="text-xs uppercase text-muted-foreground">
-                            {t("todoList.weekly.summary.progress")}
+                            {t("todoList.bosses.summary.progress")}
                         </p>
                         <p className="text-xl font-semibold text-foreground">{completionRate}%</p>
-                        <p className="text-xs text-muted-foreground">{t("todoList.weekly.summary.progressHint")}</p>
+                        <p className="text-xs text-muted-foreground">{t("todoList.bosses.summary.progressHint")}</p>
                     </div>
                 </div>
             </CardHeader>
             <CardContent className="relative z-10 space-y-6">
                 <div className="grid gap-4 xl:grid-cols-3">
-                    {TODO_LIST_WEEKLY_BOSS_GROUPS.map((group) => (
+                    {TODO_LIST_BOSS_GROUPS.map((group) => (
                         <div key={group.id} className="space-y-3 rounded-2xl border bg-background/70 p-4 shadow-sm">
                             <div className="flex items-start justify-between gap-2">
                                 <div>
                                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                                        {group.region}
+                                        {t(`todoList.bosses.frequency.${group.frequency}`)}
                                     </p>
-                                    <h3 className="text-lg font-semibold text-foreground">{group.title}</h3>
-                                    <p className="text-sm text-muted-foreground">{group.description}</p>
+                                    <h3 className="text-lg font-semibold text-foreground">
+                                        {t(`todoList.bosses.groups.${group.id}.title`)}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        {t(`todoList.bosses.groups.${group.id}.description`)}
+                                    </p>
                                 </div>
                                 <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-                                    {t("todoList.weekly.groupBadge", { count: group.bosses.length })}
+                                    {t("todoList.bosses.groupBadge", { count: group.bosses.length })}
                                 </Badge>
                             </div>
                             <div className="space-y-2">
                                 {group.bosses.map((boss) => {
-                                    const cleared = Boolean(weeklyState[boss.id]?.clearedAt);
+                                    const cleared =
+                                        group.frequency === "monthly"
+                                            ? Boolean(monthlyState[boss.id]?.clearedAt)
+                                            : Boolean(weeklyState[boss.id]?.clearedAt);
+                                    const handleToggle = () => {
+                                        if (group.frequency === "monthly") {
+                                            onToggleMonthly(boss.id, !cleared);
+                                        } else {
+                                            onToggleWeekly(boss.id, !cleared);
+                                        }
+                                    };
                                     return (
                                         <button
                                             key={boss.id}
                                             type="button"
-                                            onClick={() => onToggleWeekly(boss.id, !cleared)}
+                                            onClick={handleToggle}
                                             className={cn(
                                                 "flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition",
                                                 cleared
                                                     ? "border-primary/70 bg-primary/10 text-primary"
                                                     : "border-border/70 bg-background/70 hover:border-primary/40",
                                             )}
-                                        >
-                                            <div>
-                                                <p className="text-sm font-semibold">{boss.name}</p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {t("todoList.weekly.rewardLabel", { value: formatCurrency(boss.reward) })}
-                                                </p>
-                                            </div>
-                                            <Badge
-                                                variant={cleared ? "default" : "outline"}
-                                                className={cn(
-                                                    "rounded-full px-3 py-1 text-[11px] font-semibold",
-                                                    cleared ? "bg-primary text-primary-foreground" : "text-muted-foreground",
-                                                )}
                                             >
-                                                {cleared
-                                                    ? t("todoList.weekly.status.done")
-                                                    : t("todoList.weekly.status.todo")}
-                                            </Badge>
-                                        </button>
-                                    );
+                                                <div>
+                                                    <p className="text-sm font-semibold">{boss.name}</p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        {t("todoList.bosses.rewardLabel", { value: formatCurrency(boss.reward) })}
+                                                    </p>
+                                                </div>
+                                                <Badge
+                                                    variant={cleared ? "default" : "outline"}
+                                                    className={cn(
+                                                        "rounded-full px-3 py-1 text-[11px] font-semibold",
+                                                        cleared ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+                                                    )}
+                                                >
+                                                    {cleared
+                                                        ? t("todoList.bosses.status.done")
+                                                        : t("todoList.bosses.status.todo")}
+                                                </Badge>
+                                            </button>
+                                        );
                                 })}
                             </div>
                         </div>
                     ))}
-                </div>
-
-                <div className="rounded-2xl border bg-background/70 p-5 shadow-sm">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                                {t("todoList.monthly.subtitle")}
-                            </p>
-                            <h3 className="text-lg font-semibold text-foreground">{BLACK_MAGE_BOSS.name}</h3>
-                            <p className="text-sm text-muted-foreground">
-                                {t("todoList.monthly.description")}
-                            </p>
-                        </div>
-                        <Badge variant="secondary" className="bg-muted/60 text-foreground">
-                            {t("todoList.monthly.reward", { value: formatCurrency(BLACK_MAGE_BOSS.reward) })}
-                        </Badge>
-                    </div>
-                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        <div className="space-y-1">
-                            <p className="text-sm text-muted-foreground">
-                                {t("todoList.monthly.hint")}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                                {t("todoList.monthly.reset")}
-                            </p>
-                        </div>
-                        <Button
-                            onClick={() => onToggleMonthly(!monthlyState.clearedAt)}
-                            className={cn(
-                                "rounded-full px-6 py-2 text-sm font-semibold shadow-sm",
-                                monthlyState.clearedAt
-                                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                                    : "bg-background text-foreground hover:bg-primary/10",
-                            )}
-                        >
-                            {monthlyState.clearedAt
-                                ? t("todoList.monthly.status.done")
-                                : t("todoList.monthly.status.todo")}
-                        </Button>
-                    </div>
                 </div>
             </CardContent>
         </Card>
