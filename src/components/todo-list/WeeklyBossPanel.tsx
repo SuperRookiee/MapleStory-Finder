@@ -79,11 +79,13 @@ const WeeklyBossPanel = ({ weeklyState, monthlyState, onToggleWeekly, onToggleMo
 
     const formatCurrency = useCallback(
         (value: number) => {
-            const formatter = new Intl.NumberFormat(language === "ko" ? "ko-KR" : "en-US", {
-                maximumFractionDigits: language === "ko" ? 0 : 1,
+            const isKorean = language === "ko";
+            const formatter = new Intl.NumberFormat(isKorean ? "ko-KR" : "en-US", {
+                maximumFractionDigits: isKorean ? 0 : 1,
             });
-            const formatted = formatter.format(value / 1_000_000);
-            return language === "ko" ? `${formatted}만` : `${formatted} M`;
+            const divisor = isKorean ? 10_000 : 1_000_000;
+            const formatted = formatter.format(value / divisor);
+            return isKorean ? `${formatted}만` : `${formatted} M`;
         },
         [language],
     );
