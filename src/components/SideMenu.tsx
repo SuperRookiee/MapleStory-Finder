@@ -11,6 +11,7 @@ import {
     MessageSquare,
     Search,
     Sparkles,
+    ListChecks,
     UserCircle,
     Users,
 } from "lucide-react";
@@ -38,6 +39,7 @@ const menuItems: MenuItem[] = [
     { href: "/home", label: "Home", icon: Home, hideForGuest: true },
     { href: "/search", label: "Search", icon: Search },
     { href: "/notice", label: "Notice", icon: Bell },
+    { href: "/todo_list", label: "To-do list", icon: ListChecks, requiresAuth: true },
     { href: "/character_list", label: "Character List", icon: Users, hideForGuest: true },
     { href: "/chat", label: "Finder Chat", icon: MessageSquare },
     { href: "/starforce", label: "Starforce History", icon: Sparkles, requiresAuth: true },
