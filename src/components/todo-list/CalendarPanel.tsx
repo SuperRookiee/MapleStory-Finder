@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TodoListEvent } from "@/fetchs/todoList.fetch";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
-import { formatKstDateLabel, formatKstMonthLabel, getCalendarMatrix } from "@/utils/date";
+import { formatKstDateLabel, formatKstMonthLabel, buildCalendarMatrix } from "@/utils/date";
 import { cn } from "@/utils/utils";
 
 const dayNames: Record<string, string[]> = {
@@ -53,7 +53,7 @@ const CalendarPanel = ({
 
     const currentDayNames = language === "ko" ? dayNames.ko : dayNames.en;
 
-    const matrix = useMemo(() => getCalendarMatrix(monthKey), [monthKey]);
+    const matrix = useMemo(() => buildCalendarMatrix(monthKey), [monthKey]);
     const eventMap = useMemo(() => {
         return events.reduce<Record<string, TodoListEvent[]>>((acc, event) => {
             if (!acc[event.dateKey]) {
