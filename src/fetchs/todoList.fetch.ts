@@ -1,4 +1,5 @@
 import { supabase } from "@/libs/supabaseClient";
+import { TODO_LIST_MONTHLY_BOSS_IDS } from "@/constants/todoList";
 import {
     buildCalendarMatrix,
     formatKstDateKey,
@@ -12,7 +13,7 @@ import {
 
 export type WeeklyBossState = Record<string, { clearedAt: string | null }>;
 
-export type MonthlyBossState = { clearedAt: string | null };
+export type MonthlyBossState = Record<string, { clearedAt: string | null }>;
 
 export type TodoListMemo = {
     id: string;
@@ -113,11 +114,34 @@ const sanitizeWeeklyState = (value: unknown): WeeklyBossState => {
 };
 
 const sanitizeMonthlyState = (value: unknown): MonthlyBossState => {
+    const base: MonthlyBossState = {};
+    TODO_LIST_MONTHLY_BOSS_IDS.forEach((bossId) => {
+        base[bossId] = { clearedAt: null };
+    });
+
     if (!value || typeof value !== "object") {
-        return { clearedAt: null };
+        return base;
     }
-    const clearedAt = (value as { clearedAt?: unknown }).clearedAt;
-    return { clearedAt: typeof clearedAt === "string" ? clearedAt : null };
+
+    // Legacy support for single object shape { clearedAt: string | null }
+    if ("clearedAt" in (value as Record<string, unknown>)) {
+        const legacyCleared = (value as { clearedAt?: unknown }).clearedAt;
+        const bossId = TODO_LIST_MONTHLY_BOSS_IDS[0];
+        base[bossId] = { clearedAt: typeof legacyCleared === "string" ? legacyCleared : null };
+        return base;
+    }
+
+    Object.entries(value as Record<string, unknown>).forEach(([bossId, payload]) => {
+        if (!base[bossId]) {
+            return;
+        }
+        if (payload && typeof payload === "object" && "clearedAt" in payload) {
+            const clearedAt = (payload as { clearedAt?: unknown }).clearedAt;
+            base[bossId] = { clearedAt: typeof clearedAt === "string" ? clearedAt : null };
+        }
+    });
+
+    return base;
 };
 
 const sanitizeMemos = (value: unknown): TodoListMemo[] => {

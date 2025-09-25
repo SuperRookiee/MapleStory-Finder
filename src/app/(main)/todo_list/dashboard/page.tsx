@@ -18,8 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-    BLACK_MAGE_BOSS,
-    TODO_LIST_WEEKLY_BOSS_GROUPS,
+    TODO_LIST_CHECKLIST_GROUPS,
+    TODO_LIST_MONTHLY_BOSS_IDS,
     getBossReward,
     getWeeklyBossCount,
 } from "@/constants/todoList";
@@ -88,10 +88,12 @@ const DashboardPage = () => {
         return { cleared, reward, rate };
     }, [latestWeekly]);
 
-    const monthlyClears = useMemo(
-        () => monthlyHistory.filter((entry) => Boolean(entry.state.clearedAt)).length,
-        [monthlyHistory],
-    );
+    const monthlyClears = useMemo(() => {
+        return monthlyHistory.reduce((acc, entry) => {
+            const clearedCount = Object.values(entry.state).filter((item) => item?.clearedAt).length;
+            return acc + clearedCount;
+        }, 0);
+    }, [monthlyHistory]);
 
     const weeklyChartData = useMemo(() => {
         return weeklyHistory.map((entry) => {
@@ -111,15 +113,18 @@ const DashboardPage = () => {
     }, [language, weeklyHistory]);
 
     const monthlyChartData = useMemo(() => {
-        return monthlyHistory.map((entry) => ({
-            month: formatKstMonthLabel(entry.periodKey.slice(0, 7), language),
-            cleared: entry.state.clearedAt ? 1 : 0,
-        }));
+        return monthlyHistory.map((entry) => {
+            const cleared = Object.values(entry.state).filter((item) => item?.clearedAt).length;
+            return {
+                month: formatKstMonthLabel(entry.periodKey.slice(0, 7), language),
+                cleared,
+            };
+        });
     }, [language, monthlyHistory]);
 
     const groupStats = useMemo(() => {
         if (!latestWeekly) {
-            return TODO_LIST_WEEKLY_BOSS_GROUPS.map((group) => ({
+            return TODO_LIST_CHECKLIST_GROUPS.map((group) => ({
                 id: group.id,
                 title: group.title,
                 cleared: 0,
@@ -127,7 +132,7 @@ const DashboardPage = () => {
                 reward: 0,
             }));
         }
-        return TODO_LIST_WEEKLY_BOSS_GROUPS.map((group) => {
+        return TODO_LIST_CHECKLIST_GROUPS.map((group) => {
             const cleared = group.bosses.filter((boss) => latestWeekly.state[boss.id]?.clearedAt).length;
             const reward = group.bosses.reduce((acc, boss) => {
                 if (latestWeekly.state[boss.id]?.clearedAt) {
@@ -296,7 +301,9 @@ const DashboardPage = () => {
                                 className="flex items-center justify-between rounded-2xl border bg-background/60 px-4 py-3"
                             >
                                 <div>
-                                    <p className="text-sm font-semibold text-foreground">{group.title}</p>
+                                    <p className="text-sm font-semibold text-foreground">
+                                        {t(`todoList.bosses.groups.${group.id}.title`)}
+                                    </p>
                                     <p className="text-xs text-muted-foreground">
                                         {t("todoList.dashboard.groupStats.subtitle", {
                                             cleared: group.cleared,
@@ -326,13 +333,19 @@ const DashboardPage = () => {
                                 <BarChart data={monthlyChartData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                                     <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" tickLine={false} axisLine={false} />
-                                    <YAxis allowDecimals={false} stroke="hsl(var(--muted-foreground))" />
+                                    <YAxis
+                                        allowDecimals={false}
+                                        stroke="hsl(var(--muted-foreground))"
+                                        domain={[0, TODO_LIST_MONTHLY_BOSS_IDS.length]}
+                                    />
                                     <Tooltip
-                                        formatter={(value: number) =>
-                                            value
-                                                ? [t("todoList.dashboard.monthly.cleared"), t("todoList.dashboard.monthly.status")]
-                                                : [t("todoList.dashboard.monthly.notCleared"), t("todoList.dashboard.monthly.status")]
-                                        }
+                                        formatter={(value: number) => [
+                                            t("todoList.dashboard.monthly.tooltipValue", {
+                                                value,
+                                                total: TODO_LIST_MONTHLY_BOSS_IDS.length,
+                                            }),
+                                            t("todoList.dashboard.monthly.tooltipLabel"),
+                                        ]}
                                     />
                                     <Bar
                                         dataKey="cleared"
@@ -346,8 +359,8 @@ const DashboardPage = () => {
                         <div className="rounded-xl border bg-background/60 p-4 text-sm text-muted-foreground">
                             <p>
                                 {t("todoList.dashboard.monthly.summary", {
-                                    boss: BLACK_MAGE_BOSS.name,
                                     value: monthlyClears,
+                                    total: TODO_LIST_MONTHLY_BOSS_IDS.length,
                                 })}
                             </p>
                         </div>
