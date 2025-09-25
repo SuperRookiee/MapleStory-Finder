@@ -80,7 +80,8 @@ export const BOSS_PRICE_BY_ID = BOSS_PRICE_TABLE.reduce<Record<string, BossPrice
 
 export type TodoListBoss = {
     id: string;
-    name: string;
+    label: string;
+    bossName: string;
     difficulty: BossPriceEntry["difficulty"];
     reward: number; // mesos
     frequency: BossFrequency;
@@ -98,7 +99,8 @@ const createBoss = (priceId: BossPriceEntry["id"]): TodoListBoss => {
     const entry = BOSS_PRICE_BY_ID[priceId];
     return {
         id: entry.id,
-        name: entry.label,
+        label: entry.label,
+        bossName: entry.boss,
         difficulty: entry.difficulty,
         reward: entry.price,
         frequency: entry.frequency,

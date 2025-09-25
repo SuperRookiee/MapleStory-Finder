@@ -97,6 +97,13 @@ export const en = {
                 done: "Cleared",
                 todo: "Pending",
             },
+            difficulties: {
+                easy: "Easy",
+                normal: "Normal",
+                hard: "Hard",
+                chaos: "Chaos",
+                extreme: "Extreme",
+            },
             frequency: {
                 daily: "Daily",
                 weekly: "Weekly",
