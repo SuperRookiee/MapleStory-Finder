@@ -36,7 +36,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <main className="flex h-screen flex-col">
             <Header />
-            <main className="h-[calc(100vh-var(--header-height))] w-full flex-1 overflow-hidden p-2">
+            <main className="h-[calc(100vh-var(--header-height))] w-full flex-1 overflow-hidden px-6 py-2">
                 {children}
             </main>
         </main>
