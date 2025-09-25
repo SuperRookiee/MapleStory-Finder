@@ -96,6 +96,13 @@ export const ko = {
                 done: "완료",
                 todo: "예정",
             },
+            difficulties: {
+                easy: "이지",
+                normal: "노멀",
+                hard: "하드",
+                chaos: "카오스",
+                extreme: "익스트림",
+            },
             frequency: {
                 daily: "데일리",
                 weekly: "주간",
