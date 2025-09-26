@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart3, CalendarCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTranslations } from "@/providers/LanguageProvider";
 import { cn } from "@/utils/utils";
 
@@ -25,8 +26,9 @@ const TodoListLayout = ({ children }: { children: React.ReactNode }) => {
     const t = useTranslations();
 
     return (
+        <ScrollArea id="character-detail-scroll" className="h-page">
         <div className="flex h-full w-full flex-col">
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1">
                 <div className="flex min-h-full flex-col gap-6 pb-6">
                     <section className="relative overflow-hidden rounded-3xl border bg-gradient-to-br from-primary/10 via-background to-background p-6 shadow-xl">
                         <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
@@ -77,6 +79,7 @@ const TodoListLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </div>
         </div>
+        </ScrollArea>
     );
 };
 

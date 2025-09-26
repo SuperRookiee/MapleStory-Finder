@@ -34,7 +34,7 @@ export const en = {
     },
     todoList: {
         navigation: {
-            overview: "To-do list",
+            overview: "To Do list",
             dashboard: "Dashboard",
         },
         hero: {

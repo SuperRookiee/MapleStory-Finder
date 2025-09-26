@@ -2,29 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
-import {
-    Bell,
-    Box,
-    Home,
-    LogOut,
-    Menu,
-    MessageSquare,
-    Search,
-    Sparkles,
-    ListChecks,
-    UserCircle,
-    Users,
-} from "lucide-react";
+import { Bell, Box, Home, ListChecks, LogOut, Menu, MessageSquare, Search, Sparkles, UserCircle, Users, } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetDescription,
-    SheetHeader as SheetContentHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader as SheetContentHeader, SheetTitle, SheetTrigger, } from "@/components/ui/sheet";
 import { useAuth } from "@/providers/AuthProvider";
 
 type MenuItem = {
@@ -39,7 +19,7 @@ const menuItems: MenuItem[] = [
     { href: "/home", label: "Home", icon: Home, hideForGuest: true },
     { href: "/search", label: "Search", icon: Search },
     { href: "/notice", label: "Notice", icon: Bell },
-    { href: "/todo_list", label: "To-do list", icon: ListChecks, requiresAuth: true },
+    { href: "/todo_list", label: "To Do list", icon: ListChecks, requiresAuth: true },
     { href: "/character_list", label: "Character List", icon: Users, hideForGuest: true },
     { href: "/chat", label: "Finder Chat", icon: MessageSquare },
     { href: "/starforce", label: "Starforce History", icon: Sparkles, requiresAuth: true },

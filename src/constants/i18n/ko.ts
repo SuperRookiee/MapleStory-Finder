@@ -33,7 +33,7 @@ export const ko = {
     },
     todoList: {
         navigation: {
-            overview: "보스 투두 리스트",
+            overview: "보스 To Do 리스트",
             dashboard: "대시보드",
         },
         hero: {
