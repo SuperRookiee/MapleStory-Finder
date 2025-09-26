@@ -5,34 +5,12 @@ import { Trophy, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    TODO_LIST_BOSS_GROUPS,
-    TODO_LIST_BOSS_MAP,
-    TodoListBoss,
-    TodoListBossGroup,
-    BossFrequency,
-    WEEKLY_CHARACTER_CLEAR_LIMIT,
-    WEEKLY_WORLD_CLEAR_LIMIT,
-} from "@/constants/todoList";
-import {
-    MonthlyBossState,
-    WeeklyBossCharacterState,
-    WeeklyBossState,
-    TODO_LIST_UNASSIGNED_CHARACTER_KEY,
-    TODO_LIST_UNASSIGNED_WORLD_KEY,
-} from "@/fetchs/todoList.fetch";
+import { BossFrequency, TODO_LIST_BOSS_GROUPS, TODO_LIST_BOSS_MAP, TodoListBoss, TodoListBossGroup, WEEKLY_CHARACTER_CLEAR_LIMIT, WEEKLY_WORLD_CLEAR_LIMIT, } from "@/constants/todoList";
+import { MonthlyBossState, TODO_LIST_UNASSIGNED_CHARACTER_KEY, TODO_LIST_UNASSIGNED_WORLD_KEY, WeeklyBossCharacterState, WeeklyBossState, } from "@/fetchs/todoList.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
 import { cn } from "@/utils/utils";
@@ -347,7 +325,7 @@ const WeeklyBossPanel = ({
     const renderGroup = useCallback(
         (group: AggregatedBossGroup) => {
             return (
-                <div key={group.id} className="space-y-3 rounded-2xl border bg-background/70 p-4 shadow-sm">
+                <div key={group.id} className="space-y-3 rounded-2xl border bg-background/70 p-4 shadow-sm w-full">
                     <div className="flex items-start justify-between gap-2">
                         <div>
                             <p className="text-xs uppercase tracking-wide text-muted-foreground">
@@ -737,7 +715,7 @@ const WeeklyBossPanel = ({
                         }
                         return (
                             <TabsContent key={frequency} value={frequency} className="mt-4">
-                                <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+                                <div className="grid gap-4 grid-cols-1">
                                     {groups.map((group) => renderGroup(group))}
                                 </div>
                             </TabsContent>
