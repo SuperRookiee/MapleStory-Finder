@@ -273,9 +273,11 @@ const TodoListPage = () => {
                 if (successKey) {
                     toast.success(t(successKey));
                 }
+                return true;
             } catch (error) {
                 setEvents(previous);
                 handleError(error, "todoList.toast.error");
+                return false;
             }
         },
         [calendarMonthKey, handleError, t],
@@ -448,13 +450,14 @@ const TodoListPage = () => {
             }, new Map());
 
             const currentMonthEvents = eventsByMonth.get(calendarMonthKey) ?? [];
+            let currentMonthSuccess = true;
+
             if (currentMonthEvents.length > 0) {
                 eventsByMonth.delete(calendarMonthKey);
-                setEvents((prev) => {
-                    const nextList = sortEvents([...prev, ...currentMonthEvents]);
-                    void persistEvents(nextList, prev, "todoList.toast.eventAdded");
-                    return nextList;
-                });
+                const previousEvents = events;
+                const nextList = sortEvents([...previousEvents, ...currentMonthEvents]);
+                setEvents(nextList);
+                currentMonthSuccess = await persistEvents(nextList, previousEvents);
             }
 
             let otherMonthError = false;
@@ -473,22 +476,21 @@ const TodoListPage = () => {
                 );
             }
 
-            if (currentMonthEvents.length === 0 && !otherMonthError) {
+            if (currentMonthSuccess && !otherMonthError) {
                 toast.success(t("todoList.toast.eventAdded"));
             }
         },
-        [calendarMonthKey, handleError, persistEvents, selectedDateKey, t],
+        [calendarMonthKey, events, handleError, persistEvents, selectedDateKey, t],
     );
 
     const handleRemoveEvent = useCallback(
         async (eventId: string) => {
-            setEvents((prev) => {
-                const nextList = prev.filter((event) => event.id !== eventId);
-                void persistEvents(nextList, prev, "todoList.toast.eventRemoved");
-                return nextList;
-            });
+            const previousEvents = events;
+            const nextList = previousEvents.filter((event) => event.id !== eventId);
+            setEvents(nextList);
+            await persistEvents(nextList, previousEvents, "todoList.toast.eventRemoved");
         },
-        [persistEvents],
+        [events, persistEvents],
     );
 
     const handleUpdateEvent = useCallback(
@@ -496,26 +498,25 @@ const TodoListPage = () => {
             eventId: string,
             payload: { dateKey: string; title: string; friends: string[]; memo?: string },
         ) => {
-            setEvents((prev) => {
-                const nextList = sortEvents(
-                    prev.map((event) =>
-                        event.id === eventId
-                            ? {
-                                  ...event,
-                                  title: payload.title,
-                                  friends: payload.friends,
-                                  memo: payload.memo,
-                                  dateKey: payload.dateKey,
-                                  updatedAt: new Date().toISOString(),
-                              }
-                            : event,
-                    ),
-                );
-                void persistEvents(nextList, prev, "todoList.toast.eventUpdated");
-                return nextList;
-            });
+            const previousEvents = events;
+            const nextList = sortEvents(
+                previousEvents.map((event) =>
+                    event.id === eventId
+                        ? {
+                              ...event,
+                              title: payload.title,
+                              friends: payload.friends,
+                              memo: payload.memo,
+                              dateKey: payload.dateKey,
+                              updatedAt: new Date().toISOString(),
+                          }
+                        : event,
+                ),
+            );
+            setEvents(nextList);
+            await persistEvents(nextList, previousEvents, "todoList.toast.eventUpdated");
         },
-        [persistEvents],
+        [events, persistEvents],
     );
 
     const handleSelectDate = useCallback((dateKey: string) => {
