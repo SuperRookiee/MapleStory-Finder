@@ -62,7 +62,7 @@ type TodoListRow = {
     updated_at?: string | null;
 };
 
-const TABLE = "todo_list_entries";
+const TABLE = "todo_list";
 
 const generateId = () =>
     typeof crypto !== "undefined" && "randomUUID" in crypto
