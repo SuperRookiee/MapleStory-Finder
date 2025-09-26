@@ -30,7 +30,7 @@ import {
     WeeklyBossHistoryEntry,
 } from "@/fetchs/todoList.fetch";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
-import { formatKstDateLabel, formatKstMonthLabel } from "@/utils/date";
+import { formatKstMonthLabel, formatKstWeekRangeLabel } from "@/utils/date";
 import { formatCurrencyWithFallback } from "@/utils/number";
 
 type WeeklyBossSummary = Record<string, boolean>;
@@ -133,7 +133,7 @@ const DashboardPage = () => {
                 0,
             );
             return {
-                period: formatKstDateLabel(entry.periodKey, language),
+                period: formatKstWeekRangeLabel(entry.periodKey, language),
                 cleared,
                 rewardBillions: reward / 1_000_000_000,
             };

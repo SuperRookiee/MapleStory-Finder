@@ -120,6 +120,29 @@ export const formatKstDateLabel = (dateKey: string, locale: string) => {
     }).format(date);
 };
 
+export const formatKstWeekRangeLabel = (dateKey: string, locale: string) => {
+    const [yearStr, monthStr, dayStr] = dateKey.split("-");
+    const year = Number(yearStr);
+    const month = Number(monthStr) - 1;
+    const day = Number(dayStr);
+
+    const start = new Date(Date.UTC(year, month, day));
+    const end = new Date(Date.UTC(year, month, day + 6));
+
+    const options: Intl.DateTimeFormatOptions = {
+        timeZone: "Asia/Seoul",
+        month: locale.startsWith("ko") ? "long" : "short",
+        day: "numeric",
+    };
+
+    const formatter = new Intl.DateTimeFormat(locale, options);
+
+    const startLabel = formatter.format(start);
+    const endLabel = formatter.format(end);
+
+    return `${startLabel} ~ ${endLabel}`;
+};
+
 export const formatRelativeFromNow = (isoDate: string, locale: string) => {
     const formatter = new Intl.RelativeTimeFormat(locale.startsWith("ko") ? "ko" : "en", { numeric: "auto" });
     const target = new Date(isoDate).getTime();
