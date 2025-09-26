@@ -33,6 +33,28 @@ import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
 import { formatKstDateLabel, formatKstMonthLabel } from "@/utils/date";
 import { formatCurrencyWithFallback } from "@/utils/number";
 
+type WeeklyBossSummary = Record<string, boolean>;
+
+const summarizeWeeklyState = (state?: WeeklyBossHistoryEntry["state"]): WeeklyBossSummary => {
+    if (!state) {
+        return {};
+    }
+
+    const summary: WeeklyBossSummary = {};
+
+    Object.values(state.worlds ?? {}).forEach((characters) => {
+        Object.values(characters ?? {}).forEach((bosses) => {
+            Object.entries(bosses ?? {}).forEach(([bossId, entry]) => {
+                if (entry?.clearedAt) {
+                    summary[bossId] = true;
+                }
+            });
+        });
+    });
+
+    return summary;
+};
+
 const DashboardPage = () => {
     const t = useTranslations();
     const { language } = useLanguage();
@@ -62,6 +84,10 @@ const DashboardPage = () => {
     }, [handleError]);
 
     const latestWeekly = weeklyHistory.at(-1);
+    const latestWeeklySummary = useMemo(
+        () => summarizeWeeklyState(latestWeekly?.state),
+        [latestWeekly],
+    );
 
     const formatReward = useCallback(
         (value: number) =>
@@ -73,20 +99,15 @@ const DashboardPage = () => {
     );
 
     const latestWeeklyStats = useMemo(() => {
-        if (!latestWeekly) {
-            return { cleared: 0, reward: 0, rate: 0 };
-        }
-        const cleared = Object.values(latestWeekly.state).filter((entry) => entry?.clearedAt).length;
-        const reward = Object.entries(latestWeekly.state).reduce((acc, [bossId, entry]) => {
-            if (entry?.clearedAt) {
-                return acc + getBossReward(bossId);
-            }
-            return acc;
-        }, 0);
+        const cleared = Object.keys(latestWeeklySummary).length;
+        const reward = Object.keys(latestWeeklySummary).reduce(
+            (acc, bossId) => acc + getBossReward(bossId),
+            0,
+        );
         const total = getWeeklyBossCount();
         const rate = total === 0 ? 0 : Math.round((cleared / total) * 100);
         return { cleared, reward, rate };
-    }, [latestWeekly]);
+    }, [latestWeeklySummary]);
 
     const monthlyClears = useMemo(() => {
         return monthlyHistory.reduce((acc, entry) => {
@@ -97,13 +118,12 @@ const DashboardPage = () => {
 
     const weeklyChartData = useMemo(() => {
         return weeklyHistory.map((entry) => {
-            const cleared = Object.values(entry.state).filter((item) => item?.clearedAt).length;
-            const reward = Object.entries(entry.state).reduce((acc, [bossId, item]) => {
-                if (item?.clearedAt) {
-                    return acc + getBossReward(bossId);
-                }
-                return acc;
-            }, 0);
+            const summary = summarizeWeeklyState(entry.state);
+            const cleared = Object.keys(summary).length;
+            const reward = Object.keys(summary).reduce(
+                (acc, bossId) => acc + getBossReward(bossId),
+                0,
+            );
             return {
                 period: formatKstDateLabel(entry.periodKey, language),
                 cleared,
@@ -123,19 +143,10 @@ const DashboardPage = () => {
     }, [language, monthlyHistory]);
 
     const groupStats = useMemo(() => {
-        if (!latestWeekly) {
-            return TODO_LIST_CHECKLIST_GROUPS.map((group) => ({
-                id: group.id,
-                title: group.title,
-                cleared: 0,
-                total: group.bosses.length,
-                reward: 0,
-            }));
-        }
         return TODO_LIST_CHECKLIST_GROUPS.map((group) => {
-            const cleared = group.bosses.filter((boss) => latestWeekly.state[boss.id]?.clearedAt).length;
+            const cleared = group.bosses.filter((boss) => latestWeeklySummary[boss.id]).length;
             const reward = group.bosses.reduce((acc, boss) => {
-                if (latestWeekly.state[boss.id]?.clearedAt) {
+                if (latestWeeklySummary[boss.id]) {
                     return acc + boss.reward;
                 }
                 return acc;
@@ -148,7 +159,7 @@ const DashboardPage = () => {
                 reward,
             };
         });
-    }, [latestWeekly]);
+    }, [latestWeeklySummary]);
 
     if (isLoading) {
         return (
