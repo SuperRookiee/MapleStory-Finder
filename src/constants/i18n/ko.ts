@@ -122,7 +122,7 @@ export const ko = {
             regions: {
                 "arcane-river": {
                     title: "아케인 리버",
-                    description: "일일 심볼 퀘스트는 매주 목요일 00시에 초기화돼요.",
+                    description: "일일 심볼 퀘스트는 매일 밤 12시에 초기화돼요.",
                 },
                 grandis: {
                     title: "그란디스",
