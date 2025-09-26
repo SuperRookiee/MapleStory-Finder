@@ -7,12 +7,18 @@ import CalendarPanel from "@/components/todo-list/CalendarPanel";
 import MemoPanel from "@/components/todo-list/MemoPanel";
 import WeeklyBossPanel from "@/components/todo-list/WeeklyBossPanel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TODO_LIST_MONTHLY_BOSS_IDS } from "@/constants/todoList";
+import {
+    TODO_LIST_MONTHLY_BOSS_IDS,
+    TODO_LIST_BOSS_MAP,
+    WEEKLY_CHARACTER_CLEAR_LIMIT,
+    WEEKLY_WORLD_CLEAR_LIMIT,
+} from "@/constants/todoList";
 import {
     TodoListEvent,
     TodoListMemo,
     MonthlyBossState,
     WeeklyBossState,
+    WeeklyBossCharacterState,
     TODO_LIST_WEEKLY_STATE_VERSION,
     createEvent,
     createMemo,
@@ -48,8 +54,17 @@ const createInitialMonthlyState = (): MonthlyBossState => {
     return base;
 };
 
-const sortMemos = (items: TodoListMemo[]) =>
-    [...items].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+const sortMemos = (items: TodoListMemo[]) => {
+    const getKey = (memo: TodoListMemo) => memo.dueDate ?? memo.createdAt;
+    return [...items].sort((a, b) => {
+        const left = getKey(a);
+        const right = getKey(b);
+        if (left === right) {
+            return b.createdAt.localeCompare(a.createdAt);
+        }
+        return right.localeCompare(left);
+    });
+};
 
 const sortEvents = (items: TodoListEvent[]) =>
     [...items].sort((a, b) => {
@@ -58,6 +73,14 @@ const sortEvents = (items: TodoListEvent[]) =>
         }
         return a.dateKey.localeCompare(b.dateKey);
     });
+
+const countWeeklyClears = (character: WeeklyBossCharacterState) =>
+    Object.entries(character).reduce((acc, [bossId, state]) => {
+        if (state?.clearedAt && TODO_LIST_BOSS_MAP[bossId]?.frequency === "weekly") {
+            return acc + 1;
+        }
+        return acc;
+    }, 0);
 
 const getDaysInMonth = (monthKey: string) => {
     const [yearStr, monthStr] = monthKey.split("-");
@@ -252,6 +275,33 @@ const TodoListPage = () => {
                 const currentCharacter = { ...(currentWorld[characterId] ?? {}) };
 
                 if (next) {
+                    const boss = TODO_LIST_BOSS_MAP[bossId];
+                    if (boss?.frequency === "weekly") {
+                        const characterWeeklyClears = countWeeklyClears(currentCharacter);
+                        const worldWeeklyClears = Object.values(currentWorld).reduce(
+                            (acc, character) => acc + countWeeklyClears(character),
+                            0,
+                        );
+
+                        if (characterWeeklyClears >= WEEKLY_CHARACTER_CLEAR_LIMIT) {
+                            toast.error(
+                                t("todoList.toast.weeklyCharacterLimit", {
+                                    limit: WEEKLY_CHARACTER_CLEAR_LIMIT,
+                                }),
+                            );
+                            return previous;
+                        }
+
+                        if (worldWeeklyClears >= WEEKLY_WORLD_CLEAR_LIMIT) {
+                            toast.error(
+                                t("todoList.toast.weeklyWorldLimit", {
+                                    limit: WEEKLY_WORLD_CLEAR_LIMIT,
+                                }),
+                            );
+                            return previous;
+                        }
+                    }
+
                     currentCharacter[bossId] = { clearedAt: new Date().toISOString() };
                 } else if (currentCharacter[bossId]) {
                     delete currentCharacter[bossId];
@@ -278,7 +328,7 @@ const TodoListPage = () => {
                 return updated;
             });
         },
-        [persistWeekly],
+        [persistWeekly, t],
     );
 
     const handleToggleMonthly = useCallback(
@@ -333,6 +383,28 @@ const TodoListPage = () => {
         [persistMemos],
     );
 
+    const handleUpdateMemo = useCallback(
+        async (memoId: string, payload: { text: string; dueDate?: string | null }) => {
+            setMemos((prev) => {
+                const nextList = sortMemos(
+                    prev.map((memo) =>
+                        memo.id === memoId
+                            ? {
+                                  ...memo,
+                                  text: payload.text,
+                                  dueDate: payload.dueDate ?? undefined,
+                                  updatedAt: new Date().toISOString(),
+                              }
+                            : memo,
+                    ),
+                );
+                void persistMemos(nextList, prev, "todoList.toast.memoUpdated");
+                return nextList;
+            });
+        },
+        [persistMemos],
+    );
+
     const handleCreateEvent = useCallback(
         async ({ title, friends, memo }: { title: string; friends: string[]; memo?: string }) => {
             const event = createEvent(selectedDateKey, title, friends, memo);
@@ -350,6 +422,33 @@ const TodoListPage = () => {
             setEvents((prev) => {
                 const nextList = prev.filter((event) => event.id !== eventId);
                 void persistEvents(nextList, prev, "todoList.toast.eventRemoved");
+                return nextList;
+            });
+        },
+        [persistEvents],
+    );
+
+    const handleUpdateEvent = useCallback(
+        async (
+            eventId: string,
+            payload: { dateKey: string; title: string; friends: string[]; memo?: string },
+        ) => {
+            setEvents((prev) => {
+                const nextList = sortEvents(
+                    prev.map((event) =>
+                        event.id === eventId
+                            ? {
+                                  ...event,
+                                  title: payload.title,
+                                  friends: payload.friends,
+                                  memo: payload.memo,
+                                  dateKey: payload.dateKey,
+                                  updatedAt: new Date().toISOString(),
+                              }
+                            : event,
+                    ),
+                );
+                void persistEvents(nextList, prev, "todoList.toast.eventUpdated");
                 return nextList;
             });
         },
@@ -391,6 +490,7 @@ const TodoListPage = () => {
                     onSelectDate={handleSelectDate}
                     onCreateEvent={handleCreateEvent}
                     onRemoveEvent={handleRemoveEvent}
+                    onUpdateEvent={handleUpdateEvent}
                 />
             )}
 
@@ -416,6 +516,7 @@ const TodoListPage = () => {
                         onAdd={handleAddMemo}
                         onToggle={handleToggleMemo}
                         onRemove={handleRemoveMemo}
+                        onUpdate={handleUpdateMemo}
                     />
                 )}
             </div>
