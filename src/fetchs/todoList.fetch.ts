@@ -19,7 +19,7 @@ export const TODO_LIST_UNASSIGNED_CHARACTER_KEY = "__unassigned__";
 export type BossClearState = { clearedAt: string | null };
 
 export type WeeklyBossCharacterState = Record<string, BossClearState>;
-export type WeeklyBossWorldState = Record<string, WeeklyBossCharacterState>;
+export type WeeklyBossWorldState = Record<string, Record<string, WeeklyBossCharacterState>>;
 
 export type WeeklyBossState = {
     version: typeof TODO_LIST_WEEKLY_STATE_VERSION;
@@ -152,16 +152,15 @@ const sanitizeWeeklyState = (value: unknown): WeeklyBossState => {
                     return worldAcc;
                 }
 
-                const sanitizedWorld = Object.entries(worldValue as Record<string, unknown>).reduce<WeeklyBossCharacterState>(
-                    (characterAcc, [characterId, bossValue]) => {
-                        const bosses = sanitizeBossEntries(bossValue);
-                        if (Object.keys(bosses).length > 0) {
-                            characterAcc[characterId] = bosses;
-                        }
-                        return characterAcc;
-                    },
-                    {},
-                );
+                const sanitizedWorld = Object.entries(worldValue as Record<string, unknown>).reduce<
+                    Record<string, WeeklyBossCharacterState>
+                >((characterAcc, [characterId, bossValue]) => {
+                    const bosses = sanitizeBossEntries(bossValue);
+                    if (Object.keys(bosses).length > 0) {
+                        characterAcc[characterId] = bosses;
+                    }
+                    return characterAcc;
+                }, {});
 
                 if (Object.keys(sanitizedWorld).length > 0) {
                     worldAcc[worldKey] = sanitizedWorld;
