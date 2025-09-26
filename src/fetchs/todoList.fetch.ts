@@ -34,6 +34,7 @@ export type TodoListMemo = {
     completed: boolean;
     createdAt: string;
     updatedAt?: string | null;
+    dueDate?: string;
 };
 
 export type TodoListEvent = {
@@ -231,7 +232,7 @@ const sanitizeMemos = (value: unknown): TodoListMemo[] => {
     return value
         .map((item) => {
             if (!item || typeof item !== "object") return null;
-            const { id, text, completed, createdAt, updatedAt } = item as Record<string, unknown>;
+            const { id, text, completed, createdAt, updatedAt, dueDate } = item as Record<string, unknown>;
             if (typeof id !== "string" || typeof text !== "string" || typeof createdAt !== "string") {
                 return null;
             }
@@ -241,6 +242,7 @@ const sanitizeMemos = (value: unknown): TodoListMemo[] => {
                 completed: Boolean(completed),
                 createdAt,
                 updatedAt: typeof updatedAt === "string" ? updatedAt : null,
+                dueDate: typeof dueDate === "string" ? dueDate : undefined,
             } satisfies TodoListMemo;
         })
         .filter((item): item is TodoListMemo => Boolean(item));
@@ -429,7 +431,7 @@ export const loadMonthlyBossHistory = async (months: number = 3) => {
     })) ?? [];
 };
 
-export const createMemo = (text: string): TodoListMemo => {
+export const createMemo = (text: string, dueDate?: string | null): TodoListMemo => {
     const now = new Date().toISOString();
     return {
         id: generateId(),
@@ -437,6 +439,7 @@ export const createMemo = (text: string): TodoListMemo => {
         completed: false,
         createdAt: now,
         updatedAt: now,
+        ...(dueDate ? { dueDate } : {}),
     };
 };
 

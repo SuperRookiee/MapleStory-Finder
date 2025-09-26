@@ -1,11 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarRange, ChevronLeft, ChevronRight, Plus, Users } from "lucide-react";
+import { CalendarRange, ChevronLeft, ChevronRight, Pencil, Plus, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TodoListEvent } from "@/fetchs/todoList.fetch";
@@ -32,6 +41,10 @@ type CalendarPanelProps = {
     onSelectDate: (dateKey: string) => void;
     onCreateEvent: (event: { title: string; friends: string[]; memo?: string }) => Promise<void> | void;
     onRemoveEvent: (eventId: string) => Promise<void> | void;
+    onUpdateEvent: (
+        eventId: string,
+        payload: { title: string; friends: string[]; memo?: string; dateKey: string },
+    ) => Promise<void> | void;
 };
 
 const CalendarPanel = ({
@@ -42,6 +55,7 @@ const CalendarPanel = ({
     onSelectDate,
     onCreateEvent,
     onRemoveEvent,
+    onUpdateEvent,
 }: CalendarPanelProps) => {
     const t = useTranslations();
     const { language } = useLanguage();
@@ -50,6 +64,13 @@ const CalendarPanel = ({
     const [friends, setFriends] = useState("");
     const [memo, setMemo] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [editingEventId, setEditingEventId] = useState<string | null>(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [editFriends, setEditFriends] = useState("");
+    const [editMemo, setEditMemo] = useState("");
+    const [editDate, setEditDate] = useState(selectedDateKey);
+    const [isEditing, setIsEditing] = useState(false);
 
     const currentDayNames = language === "ko" ? dayNames.ko : dayNames.en;
 
@@ -97,6 +118,61 @@ const CalendarPanel = ({
         () => formatKstDateLabel(selectedDateKey, language),
         [selectedDateKey, language],
     );
+
+    const monthLimits = useMemo(() => {
+        const [yearStr, monthStr] = monthKey.split("-");
+        const year = Number(yearStr);
+        const month = Number(monthStr);
+        if (Number.isNaN(year) || Number.isNaN(month)) {
+            return { min: undefined as string | undefined, max: undefined as string | undefined };
+        }
+        const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+        return {
+            min: `${yearStr}-${monthStr}-01`,
+            max: `${yearStr}-${monthStr}-${String(lastDay).padStart(2, "0")}`,
+        };
+    }, [monthKey]);
+
+    const handleOpenEdit = (event: TodoListEvent) => {
+        setEditingEventId(event.id);
+        setEditTitle(event.title);
+        setEditFriends(event.friends.join(", "));
+        setEditMemo(event.memo ?? "");
+        setEditDate(event.dateKey);
+        setEditDialogOpen(true);
+    };
+
+    const handleCloseEdit = () => {
+        setEditingEventId(null);
+        setEditTitle("");
+        setEditFriends("");
+        setEditMemo("");
+        setEditDate(selectedDateKey);
+        setEditDialogOpen(false);
+        setIsEditing(false);
+    };
+
+    const handleSubmitEdit = async () => {
+        if (!editingEventId || !editTitle.trim() || !editDate) {
+            return;
+        }
+        setIsEditing(true);
+        try {
+            await onUpdateEvent(editingEventId, {
+                title: editTitle.trim(),
+                friends: parseFriends(editFriends),
+                memo: editMemo.trim() ? editMemo.trim() : undefined,
+                dateKey: editDate,
+            });
+            setEditDialogOpen(false);
+            setEditingEventId(null);
+            if (editDate !== selectedDateKey) {
+                onSelectDate(editDate);
+            }
+        } finally {
+            setIsEditing(false);
+        }
+    };
 
     return (
         <Card className="relative overflow-hidden">
@@ -222,14 +298,25 @@ const CalendarPanel = ({
                                                     <p className="mt-1 text-sm text-muted-foreground">{event.memo}</p>
                                                 ) : null}
                                             </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-8 px-2 text-xs text-destructive hover:text-destructive"
-                                                onClick={() => handleRemoveEvent(event.id)}
-                                            >
-                                                {t("todoList.calendar.remove")}
-                                            </Button>
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-8 px-2 text-xs text-muted-foreground"
+                                                    onClick={() => handleOpenEdit(event)}
+                                                >
+                                                    <Pencil className="mr-1 h-3.5 w-3.5" />
+                                                    {t("todoList.calendar.edit")}
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-8 px-2 text-xs text-destructive hover:text-destructive"
+                                                    onClick={() => handleRemoveEvent(event.id)}
+                                                >
+                                                    {t("todoList.calendar.remove")}
+                                                </Button>
+                                            </div>
                                         </div>
                                         {event.friends.length ? (
                                             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -307,6 +394,80 @@ const CalendarPanel = ({
                                     {isSubmitting
                                         ? t("todoList.calendar.dialog.saving")
                                         : t("todoList.calendar.dialog.save")}
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog open={editDialogOpen} onOpenChange={(open) => { if (!open) handleCloseEdit(); }}>
+                        <DialogContent className="max-w-lg">
+                            <DialogHeader>
+                                <DialogTitle>{t("todoList.calendar.dialog.editTitle")}</DialogTitle>
+                                <DialogDescription>{t("todoList.calendar.dialog.dateHelp")}</DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground">
+                                        {t("todoList.calendar.dialog.titleLabel")}
+                                    </label>
+                                    <Input
+                                        value={editTitle}
+                                        onChange={(event) => setEditTitle(event.target.value)}
+                                        placeholder={t("todoList.calendar.dialog.titlePlaceholder")}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground">
+                                        {t("todoList.calendar.dialog.friendLabel")}
+                                    </label>
+                                    <textarea
+                                        value={editFriends}
+                                        onChange={(event) => setEditFriends(event.target.value)}
+                                        className="min-h-[80px] w-full rounded-lg border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                        placeholder={t("todoList.calendar.dialog.friendPlaceholder")}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        {t("todoList.calendar.dialog.friendHelp")}
+                                    </p>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground">
+                                        {t("todoList.calendar.dialog.memoLabel")}
+                                    </label>
+                                    <textarea
+                                        value={editMemo}
+                                        onChange={(event) => setEditMemo(event.target.value)}
+                                        className="min-h-[80px] w-full rounded-lg border border-border bg-background px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                        placeholder={t("todoList.calendar.dialog.memoPlaceholder")}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground" htmlFor="event-edit-date">
+                                        {t("todoList.calendar.dialog.dateLabel")}
+                                    </label>
+                                    <Input
+                                        id="event-edit-date"
+                                        type="date"
+                                        value={editDate}
+                                        min={monthLimits.min}
+                                        max={monthLimits.max}
+                                        onChange={(event) => setEditDate(event.target.value)}
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button type="button" variant="outline">
+                                        {t("common.cancel")}
+                                    </Button>
+                                </DialogClose>
+                                <Button
+                                    onClick={handleSubmitEdit}
+                                    disabled={isEditing || !editTitle.trim() || !editDate}
+                                    className="w-full sm:w-auto"
+                                >
+                                    {isEditing
+                                        ? t("todoList.calendar.dialog.editSaving")
+                                        : t("todoList.calendar.dialog.update")}
                                 </Button>
                             </DialogFooter>
                         </DialogContent>

@@ -5,8 +5,27 @@ import { Trophy, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TODO_LIST_BOSS_GROUPS, TodoListBoss, TodoListBossGroup } from "@/constants/todoList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+    TODO_LIST_BOSS_GROUPS,
+    TODO_LIST_BOSS_MAP,
+    TodoListBoss,
+    TodoListBossGroup,
+    BossFrequency,
+    WEEKLY_CHARACTER_CLEAR_LIMIT,
+    WEEKLY_WORLD_CLEAR_LIMIT,
+} from "@/constants/todoList";
 import {
     MonthlyBossState,
     WeeklyBossCharacterState,
@@ -48,6 +67,18 @@ type CharacterEarning = CharacterOption & {
     clears: number;
 };
 
+const FREQUENCY_ORDER: BossFrequency[] = ["daily", "weekly", "monthly"];
+
+const isWeeklyBossId = (bossId: string) => TODO_LIST_BOSS_MAP[bossId]?.frequency === "weekly";
+
+const countWeeklyClears = (character: WeeklyBossCharacterState) =>
+    Object.entries(character).reduce((acc, [bossId, state]) => {
+        if (state?.clearedAt && isWeeklyBossId(bossId)) {
+            return acc + 1;
+        }
+        return acc;
+    }, 0);
+
 const DIFFICULTY_LABEL_KEY_MAP: Record<TodoListBoss["difficulty"], string> = {
     Easy: "easy",
     Normal: "normal",
@@ -75,6 +106,8 @@ const WeeklyBossPanel = ({
         return window.localStorage.getItem(WORLD_STORAGE_KEY) ?? TODO_LIST_UNASSIGNED_WORLD_KEY;
     });
     const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
+    const [earningsDialogOpen, setEarningsDialogOpen] = useState(false);
+    const [selectedFrequency, setSelectedFrequency] = useState<BossFrequency>("weekly");
 
     const aggregatedGroups = useMemo<AggregatedBossGroup[]>(() => {
         const difficultyGroups = TODO_LIST_BOSS_GROUPS.map((group) => {
@@ -106,6 +139,19 @@ const WeeklyBossPanel = ({
                 .flatMap((group) => group.aggregatedBosses),
         [aggregatedGroups],
     );
+
+    const frequencyGroups = useMemo(() => {
+        return aggregatedGroups.reduce<Record<BossFrequency, AggregatedBossGroup[]>>(
+            (acc, group) => {
+                if (!acc[group.frequency]) {
+                    acc[group.frequency] = [];
+                }
+                acc[group.frequency].push(group);
+                return acc;
+            },
+            { daily: [], weekly: [], monthly: [] },
+        );
+    }, [aggregatedGroups]);
 
     const worldOptions = useMemo(() => {
         const locales = language === "ko" ? "ko-KR" : "en-US";
@@ -284,6 +330,201 @@ const WeeklyBossPanel = ({
             ? t("todoList.bosses.selectors.world.unassigned")
             : selectedWorld;
 
+    const selectedCharacterWeeklyCount = useMemo(
+        () => countWeeklyClears(selectedCharacterState),
+        [selectedCharacterState],
+    );
+
+    const selectedWorldWeeklyCount = useMemo(
+        () =>
+            Object.values(worldState).reduce(
+                (acc, characterState) => acc + countWeeklyClears(characterState),
+                0,
+            ),
+        [worldState],
+    );
+
+    const renderGroup = useCallback(
+        (group: AggregatedBossGroup) => {
+            return (
+                <div key={group.id} className="space-y-3 rounded-2xl border bg-background/70 p-4 shadow-sm">
+                    <div className="flex items-start justify-between gap-2">
+                        <div>
+                            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                                {t(`todoList.bosses.frequency.${group.frequency}`)}
+                            </p>
+                            <h3 className="text-lg font-semibold text-foreground">
+                                {t(`todoList.bosses.groups.${group.id}.title`)}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                                {t(`todoList.bosses.groups.${group.id}.description`)}
+                            </p>
+                        </div>
+                        <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
+                            {t("todoList.bosses.groupBadge", { count: group.bosses.length })}
+                        </Badge>
+                    </div>
+                    <div className="space-y-2">
+                        {group.aggregatedBosses.map((boss) => {
+                            const key = boss.bosses[0]?.id ?? boss.name;
+                            const isMonthly = group.frequency === "monthly";
+                            const getCleared = (bossId: string) =>
+                                isMonthly
+                                    ? Boolean(monthlyState[bossId]?.clearedAt)
+                                    : Boolean(selectedCharacter && selectedCharacterState[bossId]?.clearedAt);
+                            const anyCleared = boss.bosses.some((entry) => getCleared(entry.id));
+                            const clearedEntry = boss.bosses.find((entry) => getCleared(entry.id));
+
+                            const handleToggleDifficulty = (entry: TodoListBoss, next: boolean) => {
+                                if (isMonthly) {
+                                    if (next) {
+                                        boss.bosses.forEach((other) => {
+                                            if (other.id !== entry.id && Boolean(monthlyState[other.id]?.clearedAt)) {
+                                                onToggleMonthly(other.id, false);
+                                            }
+                                        });
+                                        onToggleMonthly(entry.id, true);
+                                    } else {
+                                        onToggleMonthly(entry.id, false);
+                                    }
+                                } else if (selectedWorld && selectedCharacter) {
+                                    if (next) {
+                                        boss.bosses.forEach((other) => {
+                                            if (
+                                                other.id !== entry.id &&
+                                                Boolean(selectedCharacterState[other.id]?.clearedAt)
+                                            ) {
+                                                onToggleWeekly(selectedWorld, selectedCharacter, other.id, false);
+                                            }
+                                        });
+                                        onToggleWeekly(selectedWorld, selectedCharacter, entry.id, true);
+                                    } else {
+                                        onToggleWeekly(selectedWorld, selectedCharacter, entry.id, false);
+                                    }
+                                }
+                            };
+
+                            return (
+                                <div
+                                    key={key}
+                                    className={cn(
+                                        "flex flex-col gap-3 rounded-xl border px-4 py-3 transition",
+                                        anyCleared
+                                            ? "border-primary/70 bg-primary/10"
+                                            : "border-border/70 bg-background/70 hover:border-primary/40",
+                                    )}
+                                >
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div>
+                                            <p className="text-sm font-semibold text-foreground">{boss.name}</p>
+                                            {clearedEntry ? (
+                                                <p className="text-xs text-muted-foreground">
+                                                    {t("todoList.bosses.rewardLabel", {
+                                                        value: formatCurrency(clearedEntry.reward),
+                                                    })}
+                                                </p>
+                                            ) : null}
+                                        </div>
+                                        <Badge
+                                            variant={anyCleared ? "default" : "outline"}
+                                            className={cn(
+                                                "rounded-full px-3 py-1 text-[11px] font-semibold",
+                                                anyCleared
+                                                    ? "bg-primary text-primary-foreground"
+                                                    : "text-muted-foreground",
+                                            )}
+                                        >
+                                            {anyCleared
+                                                ? t("todoList.bosses.status.done")
+                                                : t("todoList.bosses.status.todo")}
+                                        </Badge>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {boss.bosses.map((entry) => {
+                                            const cleared = getCleared(entry.id);
+                                            const disabled =
+                                                isMonthly
+                                                    ? anyCleared && !cleared
+                                                    : !selectedCharacter || (anyCleared && !cleared);
+                                            const difficultyKey = DIFFICULTY_LABEL_KEY_MAP[entry.difficulty];
+                                            const difficultyLabel = t(
+                                                `todoList.bosses.difficulties.${difficultyKey}`,
+                                            );
+
+                                            const otherCleared = boss.bosses.some(
+                                                (other) =>
+                                                    other.id !== entry.id &&
+                                                    Boolean(selectedCharacterState[other.id]?.clearedAt),
+                                            );
+
+                                            const wouldExceedCharacterLimit =
+                                                !cleared &&
+                                                entry.frequency === "weekly" &&
+                                                !otherCleared &&
+                                                selectedCharacterWeeklyCount >= WEEKLY_CHARACTER_CLEAR_LIMIT;
+
+                                            const wouldExceedWorldLimit =
+                                                !cleared &&
+                                                entry.frequency === "weekly" &&
+                                                !otherCleared &&
+                                                selectedWorldWeeklyCount >= WEEKLY_WORLD_CLEAR_LIMIT;
+
+                                            const wouldExceedLimit =
+                                                wouldExceedCharacterLimit || wouldExceedWorldLimit;
+
+                                            return (
+                                                <Button
+                                                    key={entry.id}
+                                                    type="button"
+                                                    variant={cleared ? "default" : "outline"}
+                                                    size="sm"
+                                                    disabled={disabled}
+                                                    onClick={() => handleToggleDifficulty(entry, !cleared)}
+                                                    className={cn(
+                                                        "h-8 rounded-full px-3 text-xs font-semibold",
+                                                        !cleared && "text-muted-foreground",
+                                                        wouldExceedLimit && "ring-1 ring-destructive/60",
+                                                    )}
+                                                    title={
+                                                        wouldExceedCharacterLimit
+                                                            ? t("todoList.toast.weeklyCharacterLimit", {
+                                                                  limit: WEEKLY_CHARACTER_CLEAR_LIMIT,
+                                                              })
+                                                            : wouldExceedWorldLimit
+                                                            ? t("todoList.toast.weeklyWorldLimit", {
+                                                                  limit: WEEKLY_WORLD_CLEAR_LIMIT,
+                                                              })
+                                                            : t("todoList.bosses.rewardLabel", {
+                                                                  value: formatCurrency(entry.reward),
+                                                              })
+                                                    }
+                                                >
+                                                    {`${difficultyLabel} · ${formatCurrency(entry.reward)}`}
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        },
+        [
+            formatCurrency,
+            monthlyState,
+            onToggleMonthly,
+            onToggleWeekly,
+            selectedCharacter,
+            selectedCharacterState,
+            selectedCharacterWeeklyCount,
+            selectedWorld,
+            selectedWorldWeeklyCount,
+            t,
+        ],
+    );
+
     return (
         <Card className="relative overflow-hidden">
             <div className="pointer-events-none absolute inset-0 opacity-30">
@@ -396,179 +637,123 @@ const WeeklyBossPanel = ({
                                 {t("todoList.bosses.characterEarnings.description", { world: selectedWorldLabel })}
                             </p>
                         </div>
-                        <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-                            {t("todoList.bosses.characterEarnings.totalLabel", {
-                                value: formatCurrency(worldSummary.reward),
-                            })}
-                        </Badge>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
+                                {t("todoList.bosses.characterEarnings.totalLabel", {
+                                    value: formatCurrency(worldSummary.reward),
+                                })}
+                            </Badge>
+                            <Dialog open={earningsDialogOpen} onOpenChange={setEarningsDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-9 rounded-full"
+                                        disabled={characterEarnings.length === 0}
+                                    >
+                                        {t("todoList.bosses.characterEarnings.openDialog")}
+                                    </Button>
+                                </DialogTrigger>
+                                {characterEarnings.length > 0 ? (
+                                    <DialogContent className="max-w-2xl">
+                                        <DialogHeader className="space-y-1">
+                                            <DialogTitle>
+                                                {t("todoList.bosses.characterEarnings.dialogTitle")}
+                                            </DialogTitle>
+                                            <DialogDescription>
+                                                {t("todoList.bosses.characterEarnings.dialogDescription", {
+                                                    world: selectedWorldLabel,
+                                                })}
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <ScrollArea className="max-h-[420px] pr-4">
+                                            <div className="space-y-3">
+                                                {characterEarnings.map((entry) => (
+                                                    <div
+                                                        key={entry.id}
+                                                        className={cn(
+                                                            "flex items-center justify-between gap-4 rounded-xl border px-4 py-3",
+                                                            entry.id === selectedCharacter
+                                                                ? "border-primary/70 bg-primary/10"
+                                                                : "border-border/70 bg-background/80",
+                                                        )}
+                                                    >
+                                                        <div>
+                                                            <p className="text-sm font-semibold text-foreground">
+                                                                {entry.name}
+                                                            </p>
+                                                            {entry.helper ? (
+                                                                <p className="text-xs text-muted-foreground">
+                                                                    {entry.helper}
+                                                                </p>
+                                                            ) : null}
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-sm font-semibold text-primary">
+                                                                {formatCurrency(entry.reward)}
+                                                            </p>
+                                                            <p className="text-xs text-muted-foreground">
+                                                                {t("todoList.bosses.characterEarnings.clears", {
+                                                                    count: entry.clears,
+                                                                })}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </ScrollArea>
+                                        <DialogFooter>
+                                            <Badge variant="secondary" className="w-fit">
+                                                {t("todoList.bosses.characterEarnings.characterCount", {
+                                                    count: characterEarnings.length,
+                                                })}
+                                            </Badge>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                ) : null}
+                            </Dialog>
+                        </div>
                     </div>
                     {characterEarnings.length === 0 ? (
                         <p className="mt-3 text-sm text-muted-foreground">
                             {t("todoList.bosses.characterEarnings.empty")}
                         </p>
-                    ) : (
-                        <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                            {characterEarnings.map((entry) => (
-                                <div
-                                    key={entry.id}
-                                    className={cn(
-                                        "flex items-center justify-between rounded-xl border px-4 py-3 shadow-sm",
-                                        entry.id === selectedCharacter
-                                            ? "border-primary/70 bg-primary/10"
-                                            : "border-border/70 bg-background/80",
-                                    )}
-                                >
-                                    <div>
-                                        <p className="text-sm font-semibold text-foreground">{entry.name}</p>
-                                        {entry.helper ? (
-                                            <p className="text-xs text-muted-foreground">{entry.helper}</p>
-                                        ) : null}
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-sm font-semibold text-primary">
-                                            {formatCurrency(entry.reward)}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {t("todoList.bosses.characterEarnings.clears", { count: entry.clears })}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    ) : null}
                 </div>
             </CardHeader>
             <CardContent className="relative z-10 space-y-6">
-                <div className="grid gap-4 xl:grid-cols-3">
-                    {aggregatedGroups.map((group) => (
-                        <div key={group.id} className="space-y-3 rounded-2xl border bg-background/70 p-4 shadow-sm">
-                            <div className="flex items-start justify-between gap-2">
-                                <div>
-                                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                                        {t(`todoList.bosses.frequency.${group.frequency}`)}
-                                    </p>
-                                    <h3 className="text-lg font-semibold text-foreground">
-                                        {t(`todoList.bosses.groups.${group.id}.title`)}
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        {t(`todoList.bosses.groups.${group.id}.description`)}
-                                    </p>
+                <Tabs value={selectedFrequency} onValueChange={(value) => setSelectedFrequency(value as BossFrequency)}>
+                    <TabsList className="bg-background/80">
+                        {FREQUENCY_ORDER.filter((frequency) => frequencyGroups[frequency]?.length).map((frequency) => (
+                            <TabsTrigger key={frequency} value={frequency} className="min-w-[96px]">
+                                {t(`todoList.bosses.frequency.${frequency}`)}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                    {FREQUENCY_ORDER.map((frequency) => {
+                        const groups = frequencyGroups[frequency];
+                        if (!groups || groups.length === 0) {
+                            return null;
+                        }
+                        return (
+                            <TabsContent key={frequency} value={frequency} className="mt-4">
+                                <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+                                    {groups.map((group) => renderGroup(group))}
                                 </div>
-                                <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-                                    {t("todoList.bosses.groupBadge", { count: group.bosses.length })}
-                                </Badge>
-                            </div>
-                            <div className="space-y-2">
-                                {group.aggregatedBosses.map((boss) => {
-                                    const key = boss.bosses[0]?.id ?? boss.name;
-                                    const isMonthly = group.frequency === "monthly";
-                                    const getCleared = (bossId: string) =>
-                                        isMonthly
-                                            ? Boolean(monthlyState[bossId]?.clearedAt)
-                                            : Boolean(selectedCharacter && selectedCharacterState[bossId]?.clearedAt);
-                                    const anyCleared = boss.bosses.some((entry) => getCleared(entry.id));
-                                    const clearedEntry = boss.bosses.find((entry) => getCleared(entry.id));
-
-                                    const handleToggleDifficulty = (entry: TodoListBoss, next: boolean) => {
-                                        if (isMonthly) {
-                                            onToggleMonthly(entry.id, next);
-                                            if (next) {
-                                                boss.bosses.forEach((other) => {
-                                                    if (other.id !== entry.id && Boolean(monthlyState[other.id]?.clearedAt)) {
-                                                        onToggleMonthly(other.id, false);
-                                                    }
-                                                });
-                                            }
-                                        } else if (selectedWorld && selectedCharacter) {
-                                            onToggleWeekly(selectedWorld, selectedCharacter, entry.id, next);
-                                            if (next) {
-                                                boss.bosses.forEach((other) => {
-                                                    if (
-                                                        other.id !== entry.id &&
-                                                        Boolean(selectedCharacterState[other.id]?.clearedAt)
-                                                    ) {
-                                                        onToggleWeekly(selectedWorld, selectedCharacter, other.id, false);
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    };
-
-                                    return (
-                                        <div
-                                            key={key}
-                                            className={cn(
-                                                "flex flex-col gap-3 rounded-xl border px-4 py-3 transition",
-                                                anyCleared
-                                                    ? "border-primary/70 bg-primary/10"
-                                                    : "border-border/70 bg-background/70 hover:border-primary/40",
-                                            )}
-                                        >
-                                            <div className="flex items-center justify-between gap-3">
-                                                <div>
-                                                    <p className="text-sm font-semibold text-foreground">{boss.name}</p>
-                                                    {clearedEntry ? (
-                                                        <p className="text-xs text-muted-foreground">
-                                                            {t("todoList.bosses.rewardLabel", {
-                                                                value: formatCurrency(clearedEntry.reward),
-                                                            })}
-                                                        </p>
-                                                    ) : null}
-                                                </div>
-                                                <Badge
-                                                    variant={anyCleared ? "default" : "outline"}
-                                                    className={cn(
-                                                        "rounded-full px-3 py-1 text-[11px] font-semibold",
-                                                        anyCleared
-                                                            ? "bg-primary text-primary-foreground"
-                                                            : "text-muted-foreground",
-                                                    )}
-                                                >
-                                                    {anyCleared
-                                                        ? t("todoList.bosses.status.done")
-                                                        : t("todoList.bosses.status.todo")}
-                                                </Badge>
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {boss.bosses.map((entry) => {
-                                                    const cleared = getCleared(entry.id);
-                                                    const disabled =
-                                                        isMonthly
-                                                            ? anyCleared && !cleared
-                                                            : !selectedCharacter || (anyCleared && !cleared);
-                                                    const difficultyKey = DIFFICULTY_LABEL_KEY_MAP[entry.difficulty];
-                                                    const difficultyLabel = t(
-                                                        `todoList.bosses.difficulties.${difficultyKey}`,
-                                                    );
-
-                                                    return (
-                                                        <Button
-                                                            key={entry.id}
-                                                            type="button"
-                                                            variant={cleared ? "default" : "outline"}
-                                                            size="sm"
-                                                            disabled={disabled}
-                                                            onClick={() => handleToggleDifficulty(entry, !cleared)}
-                                                            className={cn(
-                                                                "h-8 rounded-full px-3 text-xs font-semibold",
-                                                                !cleared && "text-muted-foreground",
-                                                            )}
-                                                            title={t("todoList.bosses.rewardLabel", {
-                                                                value: formatCurrency(entry.reward),
-                                                            })}
-                                                        >
-                                                            {`${difficultyLabel} · ${formatCurrency(entry.reward)}`}
-                                                        </Button>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                            </TabsContent>
+                        );
+                    })}
+                </Tabs>
+                {selectedWorldWeeklyCount >= WEEKLY_WORLD_CLEAR_LIMIT ? (
+                    <p className="text-xs text-destructive">
+                        {t("todoList.toast.weeklyWorldLimit", { limit: WEEKLY_WORLD_CLEAR_LIMIT })}
+                    </p>
+                ) : null}
+                {selectedCharacterWeeklyCount >= WEEKLY_CHARACTER_CLEAR_LIMIT ? (
+                    <p className="text-xs text-destructive">
+                        {t("todoList.toast.weeklyCharacterLimit", { limit: WEEKLY_CHARACTER_CLEAR_LIMIT })}
+                    </p>
+                ) : null}
             </CardContent>
         </Card>
     );

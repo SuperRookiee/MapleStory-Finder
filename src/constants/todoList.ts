@@ -365,3 +365,7 @@ export const getBossReward = (bossId: string) => TODO_LIST_BOSS_MAP[bossId]?.rew
 export const getWeeklyBossCount = () => Object.keys(TODO_LIST_CHECKLIST_MAP).length;
 
 export const getMonthlyBossCount = () => TODO_LIST_MONTHLY_BOSS_IDS.length;
+
+export const WEEKLY_WORLD_CLEAR_LIMIT = 90;
+
+export const WEEKLY_CHARACTER_CLEAR_LIMIT = 12;
