@@ -26,7 +26,7 @@ const TodoListLayout = ({ children }: { children: React.ReactNode }) => {
     const t = useTranslations();
 
     return (
-        <ScrollArea id="character-detail-scroll" className="h-page">
+        <ScrollArea id="character-detail-scroll" className="h-page z-50">
         <div className="flex h-full w-full flex-col">
             <div className="flex-1">
                 <div className="flex min-h-full flex-col gap-6 pb-6">
@@ -51,7 +51,7 @@ const TodoListLayout = ({ children }: { children: React.ReactNode }) => {
                         </div>
                     </section>
 
-                    <nav className="sticky top-0 z-20 flex flex-wrap gap-3 rounded-2xl border border-border/80 bg-background/95 p-3 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+                    <nav className="sticky top-0 mx-2 z-20 flex flex-wrap gap-3 rounded-2xl border border-border/80 bg-background/95 p-3 backdrop-blur supports-[backdrop-filter]:bg-background/75">
                         {NAV_ITEMS.map((item) => {
                             const Icon = item.icon;
                             const active = pathname === item.href;
