@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { TranslationKey } from "@/constants/i18n/translations";
 import { BossFrequency, TODO_LIST_BOSS_GROUPS, TODO_LIST_BOSS_MAP, TodoListBoss, TodoListBossGroup, WEEKLY_CHARACTER_CLEAR_LIMIT, WEEKLY_WORLD_CLEAR_LIMIT, } from "@/constants/todoList";
 import { MonthlyBossState, TODO_LIST_UNASSIGNED_CHARACTER_KEY, TODO_LIST_UNASSIGNED_WORLD_KEY, WeeklyBossCharacterState, WeeklyBossState, } from "@/fetchs/todoList.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
@@ -57,12 +58,12 @@ const countWeeklyClears = (character: WeeklyBossCharacterState) =>
         return acc;
     }, 0);
 
-const DIFFICULTY_LABEL_KEY_MAP: Record<TodoListBoss["difficulty"], string> = {
-    Easy: "easy",
-    Normal: "normal",
-    Hard: "hard",
-    Chaos: "chaos",
-    Extreme: "extreme",
+const DIFFICULTY_LABEL_KEY_MAP: Record<TodoListBoss["difficulty"], TranslationKey> = {
+    Easy: "todoList.bosses.difficulties.easy",
+    Normal: "todoList.bosses.difficulties.normal",
+    Hard: "todoList.bosses.difficulties.hard",
+    Chaos: "todoList.bosses.difficulties.chaos",
+    Extreme: "todoList.bosses.difficulties.extreme",
 };
 
 const WORLD_STORAGE_KEY = "todoList:selectedWorld";
@@ -424,10 +425,7 @@ const WeeklyBossPanel = ({
                                                 isMonthly
                                                     ? anyCleared && !cleared
                                                     : !selectedCharacter || (anyCleared && !cleared);
-                                            const difficultyKey = DIFFICULTY_LABEL_KEY_MAP[entry.difficulty];
-                                            const difficultyLabel = t(
-                                                `todoList.bosses.difficulties.${difficultyKey}`,
-                                            );
+                                            const difficultyLabel = t(DIFFICULTY_LABEL_KEY_MAP[entry.difficulty]);
 
                                             const otherCleared = boss.bosses.some(
                                                 (other) =>
