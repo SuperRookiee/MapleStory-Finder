@@ -14,6 +14,7 @@ import { BossFrequency, TODO_LIST_BOSS_GROUPS, TODO_LIST_BOSS_MAP, TodoListBoss,
 import { MonthlyBossState, TODO_LIST_UNASSIGNED_CHARACTER_KEY, TODO_LIST_UNASSIGNED_WORLD_KEY, WeeklyBossCharacterState, WeeklyBossState, } from "@/fetchs/todoList.fetch";
 import { ICharacterSummary } from "@/interface/character/ICharacterSummary";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
+import { formatCurrencyWithFallback } from "@/utils/number";
 import { cn } from "@/utils/utils";
 
 interface WeeklyBossPanelProps {
@@ -239,15 +240,11 @@ const WeeklyBossPanel = ({
     }, [selectedCharacter, selectedWorld, worldState]);
 
     const formatCurrency = useCallback(
-        (value: number) => {
-            const isKorean = language === "ko";
-            const formatter = new Intl.NumberFormat(isKorean ? "ko-KR" : "en-US", {
-                maximumFractionDigits: isKorean ? 0 : 1,
-            });
-            const divisor = isKorean ? 10_000 : 1_000_000;
-            const formatted = formatter.format(value / divisor);
-            return isKorean ? `${formatted}만` : `${formatted} M`;
-        },
+        (value: number) =>
+            formatCurrencyWithFallback(value, language, {
+                maximumFractionDigits: 1,
+                englishUnit: { divisor: 1_000_000, suffix: "M", maximumFractionDigits: 1 },
+            }),
         [language],
     );
 
@@ -264,10 +261,7 @@ const WeeklyBossPanel = ({
                 }
                 return acc;
             }, 0);
-            const totalBosses = aggregatedChecklistBosses.length;
-            const progress = totalBosses === 0 ? 0 : Math.round((clears / totalBosses) * 100);
-
-            return { clears, reward, totalBosses, progress };
+            return { clears, reward };
         },
         [aggregatedChecklistBosses],
     );
@@ -519,16 +513,16 @@ const WeeklyBossPanel = ({
                         {t("todoList.bosses.resetInfo")}
                     </Badge>
                 </div>
-                <div className="grid gap-3 rounded-xl border bg-background/60 p-4 shadow-sm sm:grid-cols-4">
+                <div className="grid gap-3 rounded-xl border bg-background/60 p-4 shadow-sm sm:grid-cols-3">
                     <div>
                         <p className="text-xs uppercase text-muted-foreground">
                             {t("todoList.bosses.summary.clears")}
                         </p>
                         <p className="text-xl font-semibold text-foreground">
-                            {selectedCharacterStats.clears}
+                            {selectedCharacterWeeklyCount}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                            {t("todoList.bosses.summary.total", { value: selectedCharacterStats.totalBosses })}
+                            {t("todoList.bosses.summary.clearsHint")}
                         </p>
                     </div>
                     <div>
@@ -539,15 +533,6 @@ const WeeklyBossPanel = ({
                             {formatCurrency(selectedCharacterStats.reward)}
                         </p>
                         <p className="text-xs text-muted-foreground">{t("todoList.bosses.summary.rewardHint")}</p>
-                    </div>
-                    <div>
-                        <p className="text-xs uppercase text-muted-foreground">
-                            {t("todoList.bosses.summary.progress")}
-                        </p>
-                        <p className="text-xl font-semibold text-foreground">
-                            {selectedCharacterStats.progress}%
-                        </p>
-                        <p className="text-xs text-muted-foreground">{t("todoList.bosses.summary.progressHint")}</p>
                     </div>
                     <div>
                         <p className="text-xs uppercase text-muted-foreground">
