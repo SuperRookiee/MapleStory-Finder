@@ -11,7 +11,20 @@ import {
     subtractMonths,
 } from "@/utils/date";
 
-export type WeeklyBossState = Record<string, { clearedAt: string | null }>;
+export const TODO_LIST_WEEKLY_STATE_VERSION = 2;
+
+export const TODO_LIST_UNASSIGNED_WORLD_KEY = "__unassigned__";
+export const TODO_LIST_UNASSIGNED_CHARACTER_KEY = "__unassigned__";
+
+export type BossClearState = { clearedAt: string | null };
+
+export type WeeklyBossCharacterState = Record<string, BossClearState>;
+export type WeeklyBossWorldState = Record<string, WeeklyBossCharacterState>;
+
+export type WeeklyBossState = {
+    version: typeof TODO_LIST_WEEKLY_STATE_VERSION;
+    worlds: WeeklyBossWorldState;
+};
 
 export type MonthlyBossState = Record<string, { clearedAt: string | null }>;
 
@@ -95,22 +108,89 @@ const cleanupOldEntries = async (userId: string) => {
     ]);
 };
 
-const sanitizeWeeklyState = (value: unknown): WeeklyBossState => {
+const createEmptyWeeklyState = (): WeeklyBossState => ({
+    version: TODO_LIST_WEEKLY_STATE_VERSION,
+    worlds: {},
+});
+
+const sanitizeBossEntries = (value: unknown): WeeklyBossCharacterState => {
     if (!value || typeof value !== "object") {
         return {};
     }
-    const entries = Object.entries(value as Record<string, unknown>);
-    return entries.reduce<WeeklyBossState>((acc, [bossId, payload]) => {
+
+    return Object.entries(value as Record<string, unknown>).reduce<WeeklyBossCharacterState>((acc, [bossId, payload]) => {
         if (payload && typeof payload === "object" && "clearedAt" in payload) {
             const clearedAt = (payload as { clearedAt?: unknown }).clearedAt;
-            acc[bossId] = {
-                clearedAt: typeof clearedAt === "string" ? clearedAt : null,
-            };
+            acc[bossId] = { clearedAt: typeof clearedAt === "string" ? clearedAt : null };
         } else {
             acc[bossId] = { clearedAt: null };
         }
         return acc;
     }, {});
+};
+
+const sanitizeWeeklyState = (value: unknown): WeeklyBossState => {
+    if (!value || typeof value !== "object") {
+        return createEmptyWeeklyState();
+    }
+
+    const candidate = value as {
+        version?: unknown;
+        worlds?: unknown;
+    };
+
+    if (
+        typeof candidate.version === "number" &&
+        candidate.version >= TODO_LIST_WEEKLY_STATE_VERSION &&
+        candidate.worlds &&
+        typeof candidate.worlds === "object"
+    ) {
+        const sanitizedWorlds = Object.entries(candidate.worlds as Record<string, unknown>).reduce<WeeklyBossWorldState>(
+            (worldAcc, [worldKey, worldValue]) => {
+                if (!worldValue || typeof worldValue !== "object") {
+                    return worldAcc;
+                }
+
+                const sanitizedWorld = Object.entries(worldValue as Record<string, unknown>).reduce<WeeklyBossCharacterState>(
+                    (characterAcc, [characterId, bossValue]) => {
+                        const bosses = sanitizeBossEntries(bossValue);
+                        if (Object.keys(bosses).length > 0) {
+                            characterAcc[characterId] = bosses;
+                        }
+                        return characterAcc;
+                    },
+                    {},
+                );
+
+                if (Object.keys(sanitizedWorld).length > 0) {
+                    worldAcc[worldKey] = sanitizedWorld;
+                }
+
+                return worldAcc;
+            },
+            {},
+        );
+
+        return {
+            version: TODO_LIST_WEEKLY_STATE_VERSION,
+            worlds: sanitizedWorlds,
+        };
+    }
+
+    const legacyBosses = sanitizeBossEntries(value);
+
+    if (Object.keys(legacyBosses).length === 0) {
+        return createEmptyWeeklyState();
+    }
+
+    return {
+        version: TODO_LIST_WEEKLY_STATE_VERSION,
+        worlds: {
+            [TODO_LIST_UNASSIGNED_WORLD_KEY]: {
+                [TODO_LIST_UNASSIGNED_CHARACTER_KEY]: legacyBosses,
+            },
+        },
+    };
 };
 
 const sanitizeMonthlyState = (value: unknown): MonthlyBossState => {
@@ -275,7 +355,20 @@ export const loadMemos = async (periodKey: string) => {
 
 export const saveMemos = async (periodKey: string, memos: TodoListMemo[]) => {
     const userId = await requireUserId();
-    await upsertRow(userId, "memo", periodKey, memos);
+    if (memos.length === 0) {
+        const { error } = await supabase
+            .from(TABLE)
+            .delete()
+            .eq("user_id", userId)
+            .eq("category", "memo" satisfies TodoListCategory)
+            .eq("period_key", periodKey);
+
+        if (error) {
+            throw new Error(error.message);
+        }
+    } else {
+        await upsertRow(userId, "memo", periodKey, memos);
+    }
     await cleanupOldEntries(userId);
 };
 

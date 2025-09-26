@@ -89,6 +89,28 @@ export const ko = {
                 rewardHint: "기본 메소 보상을 기준으로 계산돼요.",
                 progress: "완료율",
                 progressHint: "현재까지 완료한 보스 비율",
+                worldReward: "{world} 총 수익",
+                worldRewardHint: "선택한 월드에 속한 모든 캐릭터의 합계",
+            },
+            selectors: {
+                world: {
+                    label: "월드 선택",
+                    placeholder: "월드를 선택하세요",
+                    unassigned: "미지정 월드",
+                },
+                character: {
+                    label: "캐릭터 선택",
+                    placeholder: "캐릭터를 선택하세요",
+                    unassigned: "미지정 캐릭터",
+                },
+            },
+            characterEarnings: {
+                title: "캐릭터별 수익",
+                description: "{world}에서 진행한 기록",
+                totalLabel: "합계 {value}",
+                empty: "아직 기록된 캐릭터가 없어요.",
+                clears: "총 {count}회 클리어",
+                helper: "Lv.{level} · {job}",
             },
             groupBadge: "총 {count}개",
             rewardLabel: "보상: {value}",
