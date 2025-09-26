@@ -2,16 +2,18 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { characterListStore } from "@/stores/characterListStore";
 import CalendarPanel from "@/components/todo-list/CalendarPanel";
 import MemoPanel from "@/components/todo-list/MemoPanel";
 import WeeklyBossPanel from "@/components/todo-list/WeeklyBossPanel";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TODO_LIST_CHECKLIST_MAP, TODO_LIST_MONTHLY_BOSS_IDS } from "@/constants/todoList";
+import { TODO_LIST_MONTHLY_BOSS_IDS } from "@/constants/todoList";
 import {
     TodoListEvent,
     TodoListMemo,
     MonthlyBossState,
     WeeklyBossState,
+    TODO_LIST_WEEKLY_STATE_VERSION,
     createEvent,
     createMemo,
     ensureTodoListCleanup,
@@ -32,11 +34,10 @@ import {
 import { useTranslations } from "@/providers/LanguageProvider";
 
 const createInitialWeeklyState = (): WeeklyBossState => {
-    const base: WeeklyBossState = {};
-    Object.keys(TODO_LIST_CHECKLIST_MAP).forEach((bossId) => {
-        base[bossId] = { clearedAt: null };
-    });
-    return base;
+    return {
+        version: TODO_LIST_WEEKLY_STATE_VERSION,
+        worlds: {},
+    };
 };
 
 const createInitialMonthlyState = (): MonthlyBossState => {
@@ -82,6 +83,8 @@ const TodoListPage = () => {
     const [calendarMonthKey, setCalendarMonthKey] = useState(getDefaultCalendarMonthKey);
     const [selectedDateKey, setSelectedDateKey] = useState(getDefaultSelectedDate);
 
+    const { characters, loading: isCharacterLoading, fetchCharacters } = characterListStore();
+
     const [isWeeklyLoading, setWeeklyLoading] = useState(true);
     const [isMonthlyLoading, setMonthlyLoading] = useState(true);
     const [isMemoLoading, setMemoLoading] = useState(true);
@@ -102,18 +105,23 @@ const TodoListPage = () => {
     }, [handleError]);
 
     useEffect(() => {
+        void (async () => {
+            try {
+                await fetchCharacters();
+            } catch (error) {
+                handleError(error, "todoList.toast.error");
+            }
+        })();
+    }, [fetchCharacters, handleError]);
+
+    useEffect(() => {
         setWeeklyLoading(true);
         void (async () => {
             try {
                 const data = await loadWeeklyBossState(weeklyPeriodKey);
-                setWeeklyState(() => {
-                    const base = createInitialWeeklyState();
-                    Object.entries(data).forEach(([bossId, entry]) => {
-                        if (base[bossId]) {
-                            base[bossId] = { clearedAt: entry?.clearedAt ?? null };
-                        }
-                    });
-                    return base;
+                setWeeklyState({
+                    version: data.version ?? TODO_LIST_WEEKLY_STATE_VERSION,
+                    worlds: data.worlds ?? {},
                 });
             } catch (error) {
                 handleError(error, "todoList.toast.error");
@@ -232,13 +240,41 @@ const TodoListPage = () => {
     );
 
     const handleToggleWeekly = useCallback(
-        (bossId: string, next: boolean) => {
+        (world: string, characterId: string, bossId: string, next: boolean) => {
+            if (!world || !characterId) {
+                return;
+            }
+
             setWeeklyState((prev) => {
+                const previous = prev;
+                const worlds = { ...previous.worlds };
+                const currentWorld = { ...(worlds[world] ?? {}) };
+                const currentCharacter = { ...(currentWorld[characterId] ?? {}) };
+
+                if (next) {
+                    currentCharacter[bossId] = { clearedAt: new Date().toISOString() };
+                } else if (currentCharacter[bossId]) {
+                    delete currentCharacter[bossId];
+                }
+
+                if (Object.keys(currentCharacter).length > 0) {
+                    currentWorld[characterId] = currentCharacter;
+                } else {
+                    delete currentWorld[characterId];
+                }
+
+                if (Object.keys(currentWorld).length > 0) {
+                    worlds[world] = currentWorld;
+                } else {
+                    delete worlds[world];
+                }
+
                 const updated: WeeklyBossState = {
-                    ...prev,
-                    [bossId]: { clearedAt: next ? new Date().toISOString() : null },
+                    version: TODO_LIST_WEEKLY_STATE_VERSION,
+                    worlds,
                 };
-                void persistWeekly(updated, prev);
+
+                void persistWeekly(updated, previous);
                 return updated;
             });
         },
@@ -365,6 +401,8 @@ const TodoListPage = () => {
                     <WeeklyBossPanel
                         weeklyState={weeklyState}
                         monthlyState={monthlyState}
+                        characters={characters}
+                        charactersLoading={isCharacterLoading}
                         onToggleWeekly={handleToggleWeekly}
                         onToggleMonthly={handleToggleMonthly}
                     />

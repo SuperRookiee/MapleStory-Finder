@@ -90,6 +90,28 @@ export const en = {
                 rewardHint: "Calculated from base meso rewards.",
                 progress: "Completion rate",
                 progressHint: "Share of bosses cleared so far",
+                worldReward: "{world} total",
+                worldRewardHint: "Combined reward across every character in this world.",
+            },
+            selectors: {
+                world: {
+                    label: "Choose world",
+                    placeholder: "Select a world",
+                    unassigned: "Unassigned world",
+                },
+                character: {
+                    label: "Choose character",
+                    placeholder: "Select a character",
+                    unassigned: "Unassigned character",
+                },
+            },
+            characterEarnings: {
+                title: "Earnings by character",
+                description: "Runs recorded in {world}",
+                totalLabel: "Total {value}",
+                empty: "No character runs recorded yet.",
+                clears: "Cleared {count} time(s)",
+                helper: "Lv.{level} · {job}",
             },
             groupBadge: "{count} bosses",
             rewardLabel: "Reward: {value}",
