@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth, isGuestAccessiblePath, isUnauthenticatedAccessiblePath } from "@/providers/AuthProvider";
+import { isGuestAccessiblePath, isUnauthenticatedAccessiblePath, useAuth } from "@/providers/AuthProvider";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
     const { isLoading, status } = useAuth();
@@ -36,7 +36,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <main className="flex h-screen flex-col">
             <Header />
-            <main className="h-[calc(100vh-var(--header-height))] w-full flex-1 overflow-hidden px-6 py-2">
+            <main className="h-[calc(100vh-var(--header-height))] w-full flex-1 overflow-hidden py-2 px-2 sm:px-6">
                 {children}
             </main>
         </main>
