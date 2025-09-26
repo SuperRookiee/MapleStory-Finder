@@ -35,6 +35,7 @@ export const en = {
     todoList: {
         navigation: {
             overview: "To Do list",
+            symbol: "Symbol quests",
             dashboard: "Dashboard",
         },
         hero: {
@@ -99,6 +100,35 @@ export const en = {
                 clearDate: "Remove date",
                 saving: "Updating...",
                 save: "Save changes",
+            },
+        },
+        symbol: {
+            badge: "Finder symbol planner",
+            title: "Track Arcane River and Grandis symbol quests at a glance",
+            description: "Keep tabs on this week's daily and weekly symbol quests before the Thursday reset.",
+            summary: "Completed {count}/{total}",
+            reward: "{value} symbols",
+            area: "Area: {area}",
+            status: {
+                todo: "Pending",
+            },
+            frequency: {
+                daily: "Daily quest",
+                weekly: "Weekly quest",
+            },
+            actions: {
+                markComplete: 'Mark "{quest}" as completed',
+                markIncomplete: 'Mark "{quest}" as pending',
+            },
+            regions: {
+                "arcane-river": {
+                    title: "Arcane River",
+                    description: "Daily symbol quests reset every Thursday at 00:00 (KST).",
+                },
+                grandis: {
+                    title: "Grandis",
+                    description: "Record whether you've cleared the weekly symbol quests.",
+                },
             },
         },
         bosses: {

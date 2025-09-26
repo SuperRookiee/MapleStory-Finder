@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, CalendarCheck } from "lucide-react";
+import { BarChart3, CalendarCheck, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTranslations } from "@/providers/LanguageProvider";
@@ -10,9 +10,14 @@ import { cn } from "@/utils/utils";
 
 const NAV_ITEMS = [
     {
-        href: "/todo_list",
+        href: "/todo_list/boss",
         labelKey: "todoList.navigation.overview",
         icon: CalendarCheck,
+    },
+    {
+        href: "/todo_list/symbol",
+        labelKey: "todoList.navigation.symbol",
+        icon: Sparkles,
     },
     {
         href: "/todo_list/dashboard",

@@ -34,6 +34,7 @@ export const ko = {
     todoList: {
         navigation: {
             overview: "보스 To Do 리스트",
+            symbol: "심볼 퀘스트",
             dashboard: "대시보드",
         },
         hero: {
@@ -98,6 +99,35 @@ export const ko = {
                 clearDate: "날짜 지우기",
                 saving: "수정 중...",
                 save: "변경 사항 저장",
+            },
+        },
+        symbol: {
+            badge: "Finder 심볼 플래너",
+            title: "아케인 리버·그란디스 심볼 퀘스트를 한눈에",
+            description: "이번 주에 완료한 일일·주간 심볼 퀘스트를 체크하고 목요일 초기화 전에 빠짐없이 챙겨 보세요.",
+            summary: "완료 {count}/{total}",
+            reward: "{value} 심볼",
+            area: "{area}",
+            status: {
+                todo: "미완료",
+            },
+            frequency: {
+                daily: "일일 퀘스트",
+                weekly: "주간 퀘스트",
+            },
+            actions: {
+                markComplete: '"{quest}" 완료로 표시',
+                markIncomplete: '"{quest}" 미완료로 표시',
+            },
+            regions: {
+                "arcane-river": {
+                    title: "아케인 리버",
+                    description: "일일 심볼 퀘스트는 매주 목요일 00시에 초기화돼요.",
+                },
+                grandis: {
+                    title: "그란디스",
+                    description: "주간 심볼 퀘스트 진행 여부를 기록해 두세요.",
+                },
             },
         },
         bosses: {
