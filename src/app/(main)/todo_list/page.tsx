@@ -11,6 +11,7 @@ import { type TranslationKey } from "@/constants/i18n/translations";
 import { TODO_LIST_BOSS_MAP, TODO_LIST_MONTHLY_BOSS_IDS, WEEKLY_CHARACTER_CLEAR_LIMIT, WEEKLY_WORLD_CLEAR_LIMIT, } from "@/constants/todoList";
 import { createEvent, createMemo, ensureTodoListCleanup, getAdjacentMonthKey, getCurrentMonthlyPeriodKey, getCurrentWeeklyPeriodKey, getDefaultCalendarMonthKey, getDefaultSelectedDate, loadCalendarEvents, loadMemos, loadMonthlyBossState, loadWeeklyBossState, MonthlyBossState, saveCalendarEvents, saveMemos, saveMonthlyBossState, saveWeeklyBossState, TODO_LIST_WEEKLY_STATE_VERSION, TodoListEvent, TodoListMemo, WeeklyBossCharacterState, WeeklyBossState, } from "@/fetchs/todoList.fetch";
 import { useTranslations } from "@/providers/LanguageProvider";
+import { formatKstDateKey } from "@/utils/date";
 
 const createInitialWeeklyState = (): WeeklyBossState => {
     return {
@@ -46,6 +47,47 @@ const sortEvents = (items: TodoListEvent[]) =>
         }
         return a.dateKey.localeCompare(b.dateKey);
     });
+
+const parseDateKey = (dateKey: string) => {
+    const [yearStr, monthStr, dayStr] = dateKey.split("-");
+    const year = Number(yearStr);
+    const month = Number(monthStr);
+    const day = Number(dayStr);
+    if ([year, month, day].some((value) => Number.isNaN(value))) {
+        return null;
+    }
+    return new Date(Date.UTC(year, month - 1, day));
+};
+
+const getRecurringDateKeys = (
+    startKey: string,
+    options: { repeatWeekly?: boolean; repeatUntil?: string } = {},
+) => {
+    if (!options.repeatWeekly) {
+        return [startKey];
+    }
+
+    const startDate = parseDateKey(startKey);
+    const endDate = parseDateKey(options.repeatUntil ?? startKey);
+
+    if (!startDate || !endDate) {
+        return [startKey];
+    }
+
+    if (endDate.getTime() < startDate.getTime()) {
+        return [startKey];
+    }
+
+    const keys: string[] = [];
+    const current = new Date(startDate.getTime());
+
+    while (current.getTime() <= endDate.getTime()) {
+        keys.push(formatKstDateKey(new Date(current.getTime())));
+        current.setUTCDate(current.getUTCDate() + 7);
+    }
+
+    return keys;
+};
 
 const countWeeklyClears = (character: WeeklyBossCharacterState) =>
     Object.entries(character).reduce((acc, [bossId, state]) => {
@@ -383,15 +425,59 @@ const TodoListPage = () => {
     );
 
     const handleCreateEvent = useCallback(
-        async ({ title, friends, memo }: { title: string; friends: string[]; memo?: string }) => {
-            const event = createEvent(selectedDateKey, title, friends, memo);
-            setEvents((prev) => {
-                const nextList = sortEvents([...prev, event]);
-                void persistEvents(nextList, prev, "todoList.toast.eventAdded");
-                return nextList;
+        async (
+            payload: {
+                title: string;
+                friends: string[];
+                memo?: string;
+                repeatWeekly?: boolean;
+                repeatUntil?: string;
+            },
+        ) => {
+            const dateKeys = getRecurringDateKeys(selectedDateKey, {
+                repeatWeekly: payload.repeatWeekly,
+                repeatUntil: payload.repeatUntil,
             });
+
+            const eventsByMonth = dateKeys.reduce<Map<string, TodoListEvent[]>>((acc, dateKey) => {
+                const monthKey = dateKey.slice(0, 7);
+                const list = acc.get(monthKey) ?? [];
+                list.push(createEvent(dateKey, payload.title, payload.friends, payload.memo));
+                acc.set(monthKey, list);
+                return acc;
+            }, new Map());
+
+            const currentMonthEvents = eventsByMonth.get(calendarMonthKey) ?? [];
+            if (currentMonthEvents.length > 0) {
+                eventsByMonth.delete(calendarMonthKey);
+                setEvents((prev) => {
+                    const nextList = sortEvents([...prev, ...currentMonthEvents]);
+                    void persistEvents(nextList, prev, "todoList.toast.eventAdded");
+                    return nextList;
+                });
+            }
+
+            let otherMonthError = false;
+            if (eventsByMonth.size > 0) {
+                await Promise.all(
+                    Array.from(eventsByMonth.entries()).map(async ([monthKey, newEvents]) => {
+                        try {
+                            const existing = await loadCalendarEvents(monthKey);
+                            const nextList = sortEvents([...existing, ...newEvents]);
+                            await saveCalendarEvents(monthKey, nextList);
+                        } catch (error) {
+                            otherMonthError = true;
+                            handleError(error, "todoList.toast.error");
+                        }
+                    }),
+                );
+            }
+
+            if (currentMonthEvents.length === 0 && !otherMonthError) {
+                toast.success(t("todoList.toast.eventAdded"));
+            }
         },
-        [persistEvents, selectedDateKey],
+        [calendarMonthKey, handleError, persistEvents, selectedDateKey, t],
     );
 
     const handleRemoveEvent = useCallback(
