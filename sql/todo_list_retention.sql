@@ -10,7 +10,7 @@ security definer
 set search_path = public, pg_temp
 as $$
 begin
-    delete from public.todo_list_entries as entries
+    delete from public.todo_list as entries
     where entries.category in ('weekly_boss', 'monthly_boss', 'memo', 'calendar')
       and coalesce(
             entries.updated_at,
