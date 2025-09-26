@@ -7,6 +7,7 @@ import CalendarPanel from "@/components/todo-list/CalendarPanel";
 import MemoPanel from "@/components/todo-list/MemoPanel";
 import WeeklyBossPanel from "@/components/todo-list/WeeklyBossPanel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { type TranslationKey } from "@/constants/i18n/translations";
 import {
     TODO_LIST_MONTHLY_BOSS_IDS,
     TODO_LIST_BOSS_MAP,
@@ -114,7 +115,7 @@ const TodoListPage = () => {
     const [isEventsLoading, setEventsLoading] = useState(true);
 
     const handleError = useCallback(
-        (error: unknown, fallbackKey: string) => {
+        (error: unknown, fallbackKey: TranslationKey) => {
             const message = error instanceof Error ? error.message : t(fallbackKey);
             toast.error(message);
         },
