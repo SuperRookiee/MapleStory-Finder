@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CalendarRange, ChevronLeft, ChevronRight, Pencil, Plus, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,7 +39,15 @@ type CalendarPanelProps = {
     selectedDateKey: string;
     onMonthChange: (amount: number) => void;
     onSelectDate: (dateKey: string) => void;
-    onCreateEvent: (event: { title: string; friends: string[]; memo?: string }) => Promise<void> | void;
+    onCreateEvent: (
+        event: {
+            title: string;
+            friends: string[];
+            memo?: string;
+            repeatWeekly?: boolean;
+            repeatUntil?: string;
+        },
+    ) => Promise<void> | void;
     onRemoveEvent: (eventId: string) => Promise<void> | void;
     onUpdateEvent: (
         eventId: string,
@@ -63,6 +71,8 @@ const CalendarPanel = ({
     const [title, setTitle] = useState("");
     const [friends, setFriends] = useState("");
     const [memo, setMemo] = useState("");
+    const [repeatWeekly, setRepeatWeekly] = useState(false);
+    const [repeatUntil, setRepeatUntil] = useState(selectedDateKey);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [editingEventId, setEditingEventId] = useState<string | null>(null);
@@ -87,6 +97,23 @@ const CalendarPanel = ({
 
     const selectedEvents = eventMap[selectedDateKey] ?? [];
 
+    useEffect(() => {
+        if (!dialogOpen) {
+            setRepeatUntil(selectedDateKey);
+        }
+    }, [dialogOpen, selectedDateKey]);
+
+    const handleDialogOpenChange = (open: boolean) => {
+        setDialogOpen(open);
+        if (!open) {
+            setTitle("");
+            setFriends("");
+            setMemo("");
+            setRepeatWeekly(false);
+            setRepeatUntil(selectedDateKey);
+        }
+    };
+
     const handleSubmit = async () => {
         if (!title.trim()) return;
         setIsSubmitting(true);
@@ -95,10 +122,18 @@ const CalendarPanel = ({
                 title: title.trim(),
                 friends: parseFriends(friends),
                 memo: memo.trim() ? memo.trim() : undefined,
+                repeatWeekly,
+                repeatUntil: repeatWeekly
+                    ? !repeatUntil || repeatUntil < selectedDateKey
+                        ? selectedDateKey
+                        : repeatUntil
+                    : undefined,
             });
             setTitle("");
             setFriends("");
             setMemo("");
+            setRepeatWeekly(false);
+            setRepeatUntil(selectedDateKey);
             setDialogOpen(false);
         } finally {
             setIsSubmitting(false);
@@ -337,7 +372,7 @@ const CalendarPanel = ({
                             )}
                         </div>
                     </ScrollArea>
-                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
                         <DialogTrigger asChild>
                             <Button className="w-full gap-2">
                                 <Plus className="h-4 w-4" />
@@ -384,6 +419,41 @@ const CalendarPanel = ({
                                         placeholder={t("todoList.calendar.dialog.memoPlaceholder")}
                                     />
                                 </div>
+                                <div className="space-y-2">
+                                    <label className="flex items-center gap-2 text-sm font-medium text-foreground">
+                                        <input
+                                            id="event-repeat-weekly"
+                                            type="checkbox"
+                                            className="h-4 w-4 rounded border border-border text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                            checked={repeatWeekly}
+                                            onChange={(event) => setRepeatWeekly(event.target.checked)}
+                                        />
+                                        {t("todoList.calendar.dialog.repeatWeeklyLabel")}
+                                    </label>
+                                    <p className="text-xs text-muted-foreground">
+                                        {t("todoList.calendar.dialog.repeatWeeklyDescription")}
+                                    </p>
+                                </div>
+                                {repeatWeekly ? (
+                                    <div className="space-y-2">
+                                        <label
+                                            className="text-sm font-medium text-foreground"
+                                            htmlFor="event-repeat-until"
+                                        >
+                                            {t("todoList.calendar.dialog.repeatUntilLabel")}
+                                        </label>
+                                        <Input
+                                            id="event-repeat-until"
+                                            type="date"
+                                            value={repeatUntil}
+                                            min={selectedDateKey}
+                                            onChange={(event) => setRepeatUntil(event.target.value)}
+                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            {t("todoList.calendar.dialog.repeatUntilHelp")}
+                                        </p>
+                                    </div>
+                                ) : null}
                             </div>
                             <DialogFooter>
                                 <Button
