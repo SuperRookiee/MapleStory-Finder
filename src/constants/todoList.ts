@@ -222,8 +222,8 @@ export type TodoListBoss = {
     frequency: BossFrequency;
 };
 
-export type TodoListBossGroup = {
-    id: string;
+type TodoListBossGroupBase<Id extends string = string> = {
+    id: Id;
     title: string;
     description: string;
     frequency: BossFrequency;
@@ -242,13 +242,13 @@ const createBoss = (priceId: BossPriceEntry["id"]): TodoListBoss => {
     };
 };
 
-const createGroup = (
-    id: string,
+const createGroup = <Id extends string>(
+    id: Id,
     title: string,
     description: string,
     frequency: BossFrequency,
     bossIds: BossPriceEntry["id"][],
-): TodoListBossGroup => ({
+): TodoListBossGroupBase<Id> => ({
     id,
     title,
     description,
@@ -316,7 +316,7 @@ export const TODO_LIST_DAILY_BOSS_IDS = [...DAILY_BOSS_IDS];
 export const TODO_LIST_WEEKLY_BOSS_IDS = [...WEEKLY_BOSS_IDS];
 export const TODO_LIST_MONTHLY_BOSS_IDS = [...MONTHLY_BOSS_IDS];
 
-export const TODO_LIST_BOSS_GROUPS: TodoListBossGroup[] = [
+export const TODO_LIST_BOSS_GROUPS = [
     createGroup(
         "daily-bosses",
         "Daily Bosses",
@@ -338,7 +338,11 @@ export const TODO_LIST_BOSS_GROUPS: TodoListBossGroup[] = [
         "monthly",
         MONTHLY_BOSS_IDS,
     ),
-];
+] satisfies readonly TodoListBossGroupBase[];
+
+export type TodoListBossGroupId = (typeof TODO_LIST_BOSS_GROUPS)[number]["id"];
+
+export type TodoListBossGroup = TodoListBossGroupBase<TodoListBossGroupId>;
 
 export const TODO_LIST_CHECKLIST_GROUPS = TODO_LIST_BOSS_GROUPS.filter((group) => group.frequency !== "monthly");
 
