@@ -220,7 +220,7 @@ export const ko = {
                 barLabel: "월간 보스 클리어 수",
                 tooltipLabel: "월간 클리어",
                 tooltipValue: "{total}개 중 {value}개 완료",
-                summary: "최근 기록에서 월간 보스를 총 {value, plural, one {한 번} other {#번}} 완료했어요. (현재 {total}종)",
+                summary: "최근 기록에서 월간 보스를 총 {valueText} 완료했어요. (현재 {total}종)",
             },
         },
     },

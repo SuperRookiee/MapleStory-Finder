@@ -116,6 +116,14 @@ const DashboardPage = () => {
         }, 0);
     }, [monthlyHistory]);
 
+    const monthlyClearsText = useMemo(() => {
+        if (language === "ko") {
+            return monthlyClears === 1 ? "한 번" : `${monthlyClears}번`;
+        }
+
+        return monthlyClears === 1 ? "once" : `${monthlyClears} times`;
+    }, [language, monthlyClears]);
+
     const weeklyChartData = useMemo(() => {
         return weeklyHistory.map((entry) => {
             const summary = summarizeWeeklyState(entry.state);
@@ -370,7 +378,7 @@ const DashboardPage = () => {
                         <div className="rounded-xl border bg-background/60 p-4 text-sm text-muted-foreground">
                             <p>
                                 {t("todoList.dashboard.monthly.summary", {
-                                    value: monthlyClears,
+                                    valueText: monthlyClearsText,
                                     total: TODO_LIST_MONTHLY_BOSS_IDS.length,
                                 })}
                             </p>

@@ -221,7 +221,7 @@ export const en = {
                 barLabel: "Monthly boss clears",
                 tooltipLabel: "Monthly clears",
                 tooltipValue: "Cleared {value} of {total}",
-                summary: "Monthly bosses were cleared {value, plural, one {once} other {# times}} in total. ({total} available)",
+                summary: "Monthly bosses were cleared {valueText} in total. ({total} available)",
             },
         },
     },
