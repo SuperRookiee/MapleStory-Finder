@@ -97,6 +97,17 @@ GOOGLE_API_KEY=your_gemini_api_key
 > [!TIP]
 > Nexon Open API 키는 [공식 개발자 포털](https://openapi.nexon.com/)에서 발급받을 수 있습니다.
 
+
+## 💾 DB
+| 테이블명          | 역할(저장 데이터)                                | 초기화 / 정리 주기                          | 실행 시각(KST) |
+|-------------------|---------------------------------------------|----------------------------------------|---------------|
+| **todo_boss**     | 주간/월간 보스 체크리스트 상태 (`weekly_boss`, `monthly_boss`) | 보존 기간 6개월 초과 시 삭제 (cleanup 함수)   | 매일 00:00    |
+| **todo_schedule** | 메모(`memo`), 캘린더(`calendar`) 데이터             | 보존 기간 6개월 초과 시 삭제 (cleanup 함수)   | 매일 00:00    |
+| **todo_symbol**   | 아케인/그란디스 심볼 퀘스트 체크리스트             | ① 지난 주차 데이터 삭제 (cleanup 함수)<br>② 모든 데이터 초기화 후 새 주기 생성 (reset 함수) | 매일 00:00    |
+| **공통 트리거**   | `update_updated_at_column` (수정 시 `updated_at` 자동 갱신) | 항상 동작                                   | -             |
+
+
+
 ## 🧾 Available Scripts
 | 명령어 | 설명 |
 | --- | --- |
@@ -108,7 +119,3 @@ GOOGLE_API_KEY=your_gemini_api_key
 ## 🙏 Acknowledgements
 - Nexon Open API를 사용하고 있습니다.
 - MapleStory 및 MapleStory 로고는 Nexon의 등록 상표입니다.
-
----
-
-*본 프로젝트는 Nexon Open API를 사용하고 있습니다.*
