@@ -4,6 +4,8 @@ import { buildCalendarMatrix, formatKstDateKey, formatKstMonthKey, getMonthlyRes
 
 export const TODO_LIST_WEEKLY_STATE_VERSION = 2;
 
+export const TODO_LIST_RETENTION_MONTHS = 6;
+
 export const TODO_LIST_UNASSIGNED_WORLD_KEY = "__unassigned__";
 export const TODO_LIST_UNASSIGNED_CHARACTER_KEY = "__unassigned__";
 
@@ -81,8 +83,9 @@ const requireUserId = async () => {
 
 const cleanupOldEntries = async (userId: string) => {
     const now = new Date();
-    const weeklyCutoff = getWeeklyResetKey(subtractMonths(now, 3));
-    const monthlyCutoff = getMonthlyResetKey(subtractMonths(now, 3));
+    const retentionCutoff = subtractMonths(now, TODO_LIST_RETENTION_MONTHS);
+    const weeklyCutoff = getWeeklyResetKey(retentionCutoff);
+    const monthlyCutoff = getMonthlyResetKey(retentionCutoff);
 
     await Promise.all([
         supabase
@@ -380,7 +383,9 @@ export const saveCalendarEvents = async (monthKey: string, events: TodoListEvent
     await cleanupOldEntries(userId);
 };
 
-export const loadWeeklyBossHistory = async (months: number = 3) => {
+export const loadWeeklyBossHistory = async (
+    months: number = TODO_LIST_RETENTION_MONTHS,
+) => {
     const userId = await requireUserId();
     const cutoff = getWeeklyResetKey(subtractMonths(new Date(), months));
     const { data, error } = await supabase
@@ -402,7 +407,9 @@ export const loadWeeklyBossHistory = async (months: number = 3) => {
     })) ?? [];
 };
 
-export const loadMonthlyBossHistory = async (months: number = 3) => {
+export const loadMonthlyBossHistory = async (
+    months: number = TODO_LIST_RETENTION_MONTHS,
+) => {
     const userId = await requireUserId();
     const cutoff = getMonthlyResetKey(subtractMonths(new Date(), months));
     const { data, error } = await supabase
