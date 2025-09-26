@@ -8,36 +8,8 @@ import MemoPanel from "@/components/todo-list/MemoPanel";
 import WeeklyBossPanel from "@/components/todo-list/WeeklyBossPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type TranslationKey } from "@/constants/i18n/translations";
-import {
-    TODO_LIST_MONTHLY_BOSS_IDS,
-    TODO_LIST_BOSS_MAP,
-    WEEKLY_CHARACTER_CLEAR_LIMIT,
-    WEEKLY_WORLD_CLEAR_LIMIT,
-} from "@/constants/todoList";
-import {
-    TodoListEvent,
-    TodoListMemo,
-    MonthlyBossState,
-    WeeklyBossState,
-    WeeklyBossCharacterState,
-    TODO_LIST_WEEKLY_STATE_VERSION,
-    createEvent,
-    createMemo,
-    ensureTodoListCleanup,
-    getAdjacentMonthKey,
-    getCurrentMonthlyPeriodKey,
-    getCurrentWeeklyPeriodKey,
-    getDefaultCalendarMonthKey,
-    getDefaultSelectedDate,
-    loadCalendarEvents,
-    loadMemos,
-    loadMonthlyBossState,
-    loadWeeklyBossState,
-    saveCalendarEvents,
-    saveMemos,
-    saveMonthlyBossState,
-    saveWeeklyBossState,
-} from "@/fetchs/todoList.fetch";
+import { TODO_LIST_BOSS_MAP, TODO_LIST_MONTHLY_BOSS_IDS, WEEKLY_CHARACTER_CLEAR_LIMIT, WEEKLY_WORLD_CLEAR_LIMIT, } from "@/constants/todoList";
+import { createEvent, createMemo, ensureTodoListCleanup, getAdjacentMonthKey, getCurrentMonthlyPeriodKey, getCurrentWeeklyPeriodKey, getDefaultCalendarMonthKey, getDefaultSelectedDate, loadCalendarEvents, loadMemos, loadMonthlyBossState, loadWeeklyBossState, MonthlyBossState, saveCalendarEvents, saveMemos, saveMonthlyBossState, saveWeeklyBossState, TODO_LIST_WEEKLY_STATE_VERSION, TodoListEvent, TodoListMemo, WeeklyBossCharacterState, WeeklyBossState, } from "@/fetchs/todoList.fetch";
 import { useTranslations } from "@/providers/LanguageProvider";
 
 const createInitialWeeklyState = (): WeeklyBossState => {
@@ -234,7 +206,7 @@ const TodoListPage = () => {
     );
 
     const persistMemos = useCallback(
-        async (nextMemos: TodoListMemo[], previous: TodoListMemo[], successKey?: string) => {
+        async (nextMemos: TodoListMemo[], previous: TodoListMemo[], successKey?: TranslationKey) => {
             try {
                 await saveMemos(weeklyPeriodKey, nextMemos);
                 if (successKey) {
@@ -249,7 +221,11 @@ const TodoListPage = () => {
     );
 
     const persistEvents = useCallback(
-        async (nextEvents: TodoListEvent[], previous: TodoListEvent[], successKey?: string) => {
+        async (
+            nextEvents: TodoListEvent[],
+            previous: TodoListEvent[],
+            successKey?: TranslationKey,
+        ) => {
             try {
                 await saveCalendarEvents(calendarMonthKey, nextEvents);
                 if (successKey) {

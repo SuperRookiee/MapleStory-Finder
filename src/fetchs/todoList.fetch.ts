@@ -1,15 +1,6 @@
 import { supabase } from "@/libs/supabaseClient";
 import { TODO_LIST_MONTHLY_BOSS_IDS } from "@/constants/todoList";
-import {
-    buildCalendarMatrix,
-    formatKstDateKey,
-    formatKstMonthKey,
-    getMonthlyResetKey,
-    getMonthStartFromKey,
-    getWeeklyResetKey,
-    shiftMonthKey,
-    subtractMonths,
-} from "@/utils/date";
+import { buildCalendarMatrix, formatKstDateKey, formatKstMonthKey, getMonthlyResetKey, getMonthStartFromKey, getWeeklyResetKey, shiftMonthKey, subtractMonths, } from "@/utils/date";
 
 export const TODO_LIST_WEEKLY_STATE_VERSION = 2;
 
@@ -228,56 +219,59 @@ const sanitizeMemos = (value: unknown): TodoListMemo[] => {
     if (!Array.isArray(value)) {
         return [];
     }
-    return value
-        .map((item) => {
-            if (!item || typeof item !== "object") return null;
-            const { id, text, completed, createdAt, updatedAt, dueDate } = item as Record<string, unknown>;
-            if (typeof id !== "string" || typeof text !== "string" || typeof createdAt !== "string") {
-                return null;
-            }
-            return {
-                id,
-                text,
-                completed: Boolean(completed),
-                createdAt,
-                updatedAt: typeof updatedAt === "string" ? updatedAt : null,
-                dueDate: typeof dueDate === "string" ? dueDate : undefined,
-            } satisfies TodoListMemo;
-        })
-        .filter((item): item is TodoListMemo => Boolean(item));
+    return value.flatMap((item) => {
+        if (!item || typeof item !== "object") return [];
+        const { id, text, completed, createdAt, updatedAt, dueDate } =
+            item as Record<string, unknown>;
+        if (
+            typeof id !== "string" ||
+            typeof text !== "string" ||
+            typeof createdAt !== "string"
+        ) {
+            return [];
+        }
+        return [{
+            id,
+            text,
+            completed: Boolean(completed),
+            createdAt,
+            updatedAt: typeof updatedAt === "string" ? updatedAt : null,
+            dueDate: typeof dueDate === "string" ? dueDate : undefined,
+        }];
+    });
 };
 
 const sanitizeEvents = (value: unknown): TodoListEvent[] => {
     if (!Array.isArray(value)) {
         return [];
     }
-    return value
-        .map((item) => {
-            if (!item || typeof item !== "object") return null;
-            const { id, title, friends, memo, createdAt, updatedAt, dateKey } = item as Record<string, unknown>;
-            if (
-                typeof id !== "string" ||
-                typeof title !== "string" ||
-                typeof createdAt !== "string" ||
-                typeof dateKey !== "string"
-            ) {
-                return null;
-            }
-            const friendList = Array.isArray(friends)
-                ? friends.filter((friend): friend is string => typeof friend === "string")
-                : [];
-            return {
-                id,
-                title,
-                friends: friendList,
-                memo: typeof memo === "string" ? memo : undefined,
-                dateKey,
-                createdAt,
-                updatedAt: typeof updatedAt === "string" ? updatedAt : null,
-            } satisfies TodoListEvent;
-        })
-        .filter((item): item is TodoListEvent => Boolean(item));
+    return value.flatMap((item) => {
+        if (!item || typeof item !== "object") return [];
+        const { id, title, friends, memo, createdAt, updatedAt, dateKey } =
+            item as Record<string, unknown>;
+        if (
+            typeof id !== "string" ||
+            typeof title !== "string" ||
+            typeof createdAt !== "string" ||
+            typeof dateKey !== "string"
+        ) {
+            return [];
+        }
+        const friendList = Array.isArray(friends)
+            ? friends.filter((friend): friend is string => typeof friend === "string")
+            : [];
+        return [{
+            id,
+            title,
+            friends: friendList,
+            memo: typeof memo === "string" ? memo : undefined,
+            dateKey,
+            createdAt,
+            updatedAt: typeof updatedAt === "string" ? updatedAt : null,
+        }];
+    });
 };
+
 
 const fetchSingleRow = async <T>(
     userId: string,
