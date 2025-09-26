@@ -31,6 +31,7 @@ import {
 } from "@/fetchs/todoList.fetch";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
 import { formatKstDateLabel, formatKstMonthLabel } from "@/utils/date";
+import { formatCurrencyWithFallback } from "@/utils/number";
 
 const DashboardPage = () => {
     const t = useTranslations();
@@ -63,12 +64,11 @@ const DashboardPage = () => {
     const latestWeekly = weeklyHistory.at(-1);
 
     const formatReward = useCallback(
-        (value: number) => {
-            if (language === "ko") {
-                return `${new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 1 }).format(value / 1_000_000_000)}억`;
-            }
-            return `${new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(value / 1_000_000_000)} B`;
-        },
+        (value: number) =>
+            formatCurrencyWithFallback(value, language, {
+                maximumFractionDigits: 1,
+                englishUnit: { divisor: 1_000_000_000, suffix: "B", maximumFractionDigits: 1 },
+            }),
         [language],
     );
 

@@ -3,6 +3,7 @@ import type { Language } from "@/constants/i18n/translations";
 import { getJobInfoByName } from "@/constants/job.constant";
 import { ICharacterStat } from "@/interface/character/ICharacter";
 import { useLanguage, useTranslations } from "@/providers/LanguageProvider";
+import { formatKoreanCurrency } from "@/utils/number";
 import { cn } from "@/utils/utils";
 
 interface StatProps {
@@ -17,40 +18,7 @@ const formatNumberByLanguage = (value: number, language: Language) => {
     }
 
     if (language === "ko") {
-        const sign = value < 0 ? -1 : 1;
-        const absValue = Math.abs(value);
-        const hundredMillion = 100_000_000;
-        const tenThousand = 10_000;
-
-        if (absValue < tenThousand) {
-            const signedValue = sign * absValue;
-            if (Number.isInteger(signedValue)) {
-                return signedValue.toLocaleString("ko-KR");
-            }
-            return (sign * absValue).toString();
-        }
-
-        const hundredMillions = Math.floor(absValue / hundredMillion);
-        const remainderAfterHundred = absValue % hundredMillion;
-        const tenThousands = Math.floor(remainderAfterHundred / tenThousand);
-        const remainder = Math.floor(remainderAfterHundred % tenThousand);
-
-        const parts: string[] = [];
-
-        if (hundredMillions > 0) {
-            parts.push(`${hundredMillions}억`);
-        }
-
-        if (tenThousands > 0) {
-            parts.push(`${tenThousands}만`);
-        }
-
-        if (remainder > 0 || parts.length === 0) {
-            parts.push(remainder.toLocaleString("ko-KR"));
-        }
-
-        const formatted = parts.join(" ");
-        return sign < 0 ? `-${formatted}` : formatted;
+        return formatKoreanCurrency(value, { style: "detailed" });
     }
 
     const locale = language === "en" ? "en-US" : undefined;
