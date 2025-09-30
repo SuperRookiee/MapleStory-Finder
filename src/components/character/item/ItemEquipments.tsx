@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment, type CSSProperties } from "react";
+import { Fragment, useMemo, type CSSProperties } from "react";
 import ItemEquipDetail from "@/components/character/item/ItemEquipDetail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -46,17 +46,26 @@ const slotPosition: Record<string, { col: number; row: number }> = {
     "훈장": { col: 5, row: 3 },
 };
 
+const slotStyle: CSSProperties = {
+    width: "clamp(2rem, 7vw, 3.5rem)",
+    height: "clamp(2rem, 7vw, 3.5rem)",
+    padding: "clamp(0.2rem, 0.8vw, 0.45rem)",
+};
+
+const skeletonStyle: CSSProperties = {
+    width: "clamp(1.5rem, 4.5vw, 2.5rem)",
+    height: "clamp(1.5rem, 4.5vw, 2.5rem)",
+};
+
 const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
     const t = useTranslations();
-    const slotStyle: CSSProperties = {
-        width: "clamp(2rem, 7vw, 3.5rem)",
-        height: "clamp(2rem, 7vw, 3.5rem)",
-        padding: "clamp(0.2rem, 0.8vw, 0.45rem)",
-    };
-    const skeletonStyle: CSSProperties = {
-        width: "clamp(1.5rem, 4.5vw, 2.5rem)",
-        height: "clamp(1.5rem, 4.5vw, 2.5rem)",
-    };
+    const equipmentBySlot = useMemo(() => {
+        const mapping = new Map<string, IItemEquipment>();
+        for (const item of items) {
+            mapping.set(item.item_equipment_slot, item);
+        }
+        return mapping;
+    }, [items]);
 
     return (
         <Card className="w-full">
@@ -66,7 +75,7 @@ const ItemEquipments = ({ items = [], loading }: IEquipmentGrid) => {
             <CardContent className="flex w-full justify-center px-2 sm:px-4">
                 <div className="grid grid-cols-5 grid-rows-6 gap-1.5 sm:gap-2 p-2 sm:p-3 md:p-4 bg-muted rounded-lg w-fit">
                     {Object.entries(slotPosition).map(([slot, pos]) => {
-                        const equip = items.find((item) => item.item_equipment_slot === slot);
+                        const equip = equipmentBySlot.get(slot);
 
                         if (equip && !loading) {
                             return (
