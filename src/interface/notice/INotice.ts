@@ -36,18 +36,3 @@ export interface IEventNoticeDetail extends INoticeDetail {
     date_event_end: string | null;
 }
 
-export interface ICashshopNoticeArticle extends INoticeArticle {
-    date_sale_start: string | null;
-    date_sale_end: string | null;
-    ongoing_flag: string | null;
-}
-
-export type ICashshopNoticeListPayload = {
-    cashshop_notice: ICashshopNoticeArticle[];
-};
-
-export interface ICashshopNoticeDetail extends INoticeDetail {
-    date_sale_start: string | null;
-    date_sale_end: string | null;
-    ongoing_flag: string | null;
-}

@@ -471,35 +471,25 @@ export const en = {
     },
     notice: {
         title: "Official MapleStory notices",
-        description:
-            "Browse the latest announcements, update notes, event guides, and cash shop news in one place.",
+        description: "Browse the latest announcements, update notes, and event guides in one place.",
         tabs: {
             notice: "Announcements",
             update: "Updates",
             event: "Events",
-            cashshop: "Cash Shop",
         },
         table: {
             headers: {
                 title: "Title",
                 date: "Published",
                 period: "Event period",
-                salePeriod: "Sales period",
-                status: "Status",
             },
             empty: "No posts are available right now.",
             noData: "—",
-        },
-        status: {
-            ongoing: "Ongoing",
-            ended: "Ended",
-            unknown: "Unknown",
         },
         detail: {
             loading: "Loading notice...",
             postedAt: "Posted on {date}",
             eventPeriod: "Event period",
-            salePeriod: "Sales period",
             error: "We couldn't load this notice.",
             openOriginal: "Open original post",
         },

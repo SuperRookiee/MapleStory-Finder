@@ -28,14 +28,6 @@ const endpointMap: Record<string, { url: string; successMessage: string }> = {
         url: "https://open.api.nexon.com/maplestory/v1/notice-event/detail",
         successMessage: "이벤트 공지 상세 조회 성공",
     },
-    "notice-cashshop": {
-        url: "https://open.api.nexon.com/maplestory/v1/notice-cashshop",
-        successMessage: "캐시샵 공지 조회 성공",
-    },
-    "notice-cashshop-detail": {
-        url: "https://open.api.nexon.com/maplestory/v1/notice-cashshop/detail",
-        successMessage: "캐시샵 공지 상세 조회 성공",
-    },
 };
 
 export const GET = async (

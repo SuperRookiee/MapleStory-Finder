@@ -2,7 +2,6 @@
 
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ExternalLink, Loader2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -10,8 +9,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  findCashshopNoticeDetail,
-  findCashshopNoticeList,
   findEventNoticeDetail,
   findEventNoticeList,
   findNoticeDetail,
@@ -20,8 +17,6 @@ import {
   findUpdateNoticeList,
 } from '@/fetchs/notice.fetch';
 import {
-  ICashshopNoticeArticle,
-  ICashshopNoticeDetail,
   IEventNoticeArticle,
   IEventNoticeDetail,
   INoticeArticle,
@@ -29,11 +24,11 @@ import {
 } from '@/interface/notice/INotice';
 import { useTranslations } from '@/providers/LanguageProvider';
 
-type NoticeCategory = 'notice' | 'update' | 'event' | 'cashshop';
+type NoticeCategory = 'notice' | 'update' | 'event';
 
-type NoticeSummary = INoticeArticle | IEventNoticeArticle | ICashshopNoticeArticle;
+type NoticeSummary = INoticeArticle | IEventNoticeArticle;
 
-type NoticeDetailData = INoticeDetail | IEventNoticeDetail | ICashshopNoticeDetail;
+type NoticeDetailData = INoticeDetail | IEventNoticeDetail;
 
 type NoticeListState = {
   items: NoticeSummary[];
@@ -48,7 +43,6 @@ const createInitialListStates = (): NoticeListStates => ({
   notice: { items: [], loading: false, error: null, fetched: false },
   update: { items: [], loading: false, error: null, fetched: false },
   event: { items: [], loading: false, error: null, fetched: false },
-  cashshop: { items: [], loading: false, error: null, fetched: false },
 });
 
 const initialDetailState = {
@@ -123,11 +117,6 @@ const NoticePage = () => {
             items = response.data.event_notice ?? [];
             break;
           }
-          case 'cashshop': {
-            const response = await findCashshopNoticeList();
-            items = response.data.cashshop_notice ?? [];
-            break;
-          }
           default:
             return;
         }
@@ -196,25 +185,6 @@ const NoticePage = () => {
     [formatDateTime, t],
   );
 
-  const isOngoingSale = useCallback((flag: string | null | undefined) => {
-    if (typeof flag !== 'string') return false;
-    const normalized = flag.toLowerCase();
-    return normalized === 'true' || normalized === 'y' || normalized === 'yes';
-  }, []);
-
-  const resolveSaleStatus = useCallback(
-    (flag: string | null | undefined) => {
-      if (isOngoingSale(flag)) {
-        return t('notice.status.ongoing');
-      }
-      if (typeof flag === 'string') {
-        return t('notice.status.ended');
-      }
-      return t('notice.status.unknown');
-    },
-    [isOngoingSale, t],
-  );
-
   const handleRetry = useCallback(
     (category: NoticeCategory) => {
       void loadCategory(category, { force: true });
@@ -247,9 +217,6 @@ const NoticePage = () => {
               break;
             case 'event':
               response = await findEventNoticeDetail(summary.notice_id);
-              break;
-            case 'cashshop':
-              response = await findCashshopNoticeDetail(summary.notice_id);
               break;
             default:
               return;
@@ -390,19 +357,6 @@ const NoticePage = () => {
                         )}
                       </p>
                     ) : null}
-                    {category === 'cashshop' ? (
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:hidden">
-                        <span>
-                          {formatPeriod(
-                            (item as ICashshopNoticeArticle).date_sale_start ?? null,
-                            (item as ICashshopNoticeArticle).date_sale_end ?? null,
-                          )}
-                        </span>
-                        <Badge variant={isOngoingSale((item as ICashshopNoticeArticle).ongoing_flag) ? 'default' : 'outline'}>
-                          {resolveSaleStatus((item as ICashshopNoticeArticle).ongoing_flag)}
-                        </Badge>
-                      </div>
-                    ) : null}
                   </div>
                 </TableCell>
                 <TableCell className="hidden w-48 text-sm text-muted-foreground sm:table-cell">
@@ -438,36 +392,6 @@ const NoticePage = () => {
     });
   };
 
-  const renderCashshopList = () => {
-    return renderList('cashshop', listStates.cashshop, {
-      renderHeaderCells: () => (
-        <>
-          <TableHead className="hidden min-w-[240px] text-right text-sm text-muted-foreground lg:table-cell">
-            {t('notice.table.headers.salePeriod')}
-          </TableHead>
-          <TableHead className="hidden w-32 text-right text-sm text-muted-foreground lg:table-cell">
-            {t('notice.table.headers.status')}
-          </TableHead>
-        </>
-      ),
-      renderRowCells: (item) => (
-        <>
-          <TableCell className="hidden text-sm text-muted-foreground lg:table-cell">
-            {formatPeriod(
-              (item as ICashshopNoticeArticle).date_sale_start ?? null,
-              (item as ICashshopNoticeArticle).date_sale_end ?? null,
-            )}
-          </TableCell>
-          <TableCell className="hidden lg:table-cell">
-            <Badge variant={isOngoingSale((item as ICashshopNoticeArticle).ongoing_flag) ? 'default' : 'outline'}>
-              {resolveSaleStatus((item as ICashshopNoticeArticle).ongoing_flag)}
-            </Badge>
-          </TableCell>
-        </>
-      ),
-    });
-  };
-
   const detailDate = detailState.data?.date ?? detailState.summary?.date ?? null;
   const detailLink = detailState.data?.url ?? detailState.summary?.url ?? null;
 
@@ -481,25 +405,6 @@ const NoticePage = () => {
     detailState.category === 'event'
       ? (detailState.data as IEventNoticeDetail | null)?.date_event_end ??
         (detailState.summary as IEventNoticeArticle | null)?.date_event_end ??
-        null
-      : null;
-
-  const saleStart =
-    detailState.category === 'cashshop'
-      ? (detailState.data as ICashshopNoticeDetail | null)?.date_sale_start ??
-        (detailState.summary as ICashshopNoticeArticle | null)?.date_sale_start ??
-        null
-      : null;
-  const saleEnd =
-    detailState.category === 'cashshop'
-      ? (detailState.data as ICashshopNoticeDetail | null)?.date_sale_end ??
-        (detailState.summary as ICashshopNoticeArticle | null)?.date_sale_end ??
-        null
-      : null;
-  const saleFlag =
-    detailState.category === 'cashshop'
-      ? (detailState.data as ICashshopNoticeDetail | null)?.ongoing_flag ??
-        (detailState.summary as ICashshopNoticeArticle | null)?.ongoing_flag ??
         null
       : null;
 
@@ -524,9 +429,6 @@ const NoticePage = () => {
               <TabsTrigger value="event" className="flex-1 sm:flex-none">
                 {t('notice.tabs.event')}
               </TabsTrigger>
-              <TabsTrigger value="cashshop" className="flex-1 sm:flex-none">
-                {t('notice.tabs.cashshop')}
-              </TabsTrigger>
             </TabsList>
             <TabsContent value="notice" className="mt-4 space-y-4">
               {renderNoticeList()}
@@ -536,9 +438,6 @@ const NoticePage = () => {
             </TabsContent>
             <TabsContent value="event" className="mt-4 space-y-4">
               {renderEventList()}
-            </TabsContent>
-            <TabsContent value="cashshop" className="mt-4 space-y-4">
-              {renderCashshopList()}
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -561,19 +460,6 @@ const NoticePage = () => {
               {formatPeriod(eventStart, eventEnd)}
             </div>
           ) : null}
-
-          {detailState.category === 'cashshop' ? (
-            <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <span className="font-medium text-foreground">{t('notice.detail.salePeriod')}:</span>{' '}
-                {formatPeriod(saleStart, saleEnd)}
-              </div>
-              <Badge variant={isOngoingSale(saleFlag) ? 'default' : 'outline'}>
-                {resolveSaleStatus(saleFlag)}
-              </Badge>
-            </div>
-          ) : null}
-
           <ScrollArea className="mt-4 max-h-[60vh] rounded-md border">
             <div className="p-4">
               {detailState.loading ? (

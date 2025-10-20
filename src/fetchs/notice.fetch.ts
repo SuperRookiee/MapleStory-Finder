@@ -1,7 +1,5 @@
 import { createApiCaller, createRequestRunner, type ApiParams } from "@/fetchs/apiClient";
 import {
-    ICashshopNoticeDetail,
-    ICashshopNoticeListPayload,
     IEventNoticeDetail,
     IEventNoticeListPayload,
     INoticeDetail,
@@ -34,8 +32,3 @@ export const findEventNoticeList = () =>
 export const findEventNoticeDetail = (noticeId: number | string) =>
     callNoticeApi<IEventNoticeDetail>("notice-event-detail", { notice_id: noticeId });
 
-export const findCashshopNoticeList = () =>
-    callNoticeApi<ICashshopNoticeListPayload>("notice-cashshop");
-
-export const findCashshopNoticeDetail = (noticeId: number | string) =>
-    callNoticeApi<ICashshopNoticeDetail>("notice-cashshop-detail", { notice_id: noticeId });
