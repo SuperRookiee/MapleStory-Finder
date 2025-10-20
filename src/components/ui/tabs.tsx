@@ -26,7 +26,7 @@ const TabsList = ({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "bg-muted text-muted-foreground flex h-9 w-full max-w-full items-center justify-start rounded-lg p-[3px] overflow-x-auto sm:w-fit sm:justify-center sm:overflow-visible data-[orientation=vertical]:flex-col",
+        "flex h-auto w-full max-w-full flex-wrap items-center gap-2 rounded-full bg-transparent p-1 text-muted-foreground sm:w-fit sm:flex-nowrap sm:justify-center data-[orientation=vertical]:h-auto data-[orientation=vertical]:w-full data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch data-[orientation=vertical]:gap-2 data-[orientation=vertical]:rounded-xl data-[orientation=vertical]:bg-transparent data-[orientation=vertical]:p-0",
         className
       )}
       {...props}
@@ -42,7 +42,7 @@ const TabsTrigger = ({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "hover:cursor-pointer data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-shrink-0 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm sm:flex-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "inline-flex min-h-9 flex-shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-primary/30 bg-transparent px-4 py-2 text-sm font-semibold text-primary transition-[background-color,color,border-color,box-shadow] hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm sm:flex-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 dark:border-primary/40 dark:text-primary/90 dark:hover:bg-primary/20",
         className
       )}
       {...props}
