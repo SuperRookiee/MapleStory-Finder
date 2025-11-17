@@ -18,6 +18,8 @@
   <a href="https://supabase.com/"><img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=000" alt="Supabase" /></a>
 </p>
 
+<img width="1880" height="1040" alt="image" src="https://github.com/user-attachments/assets/492cdc58-984d-4f90-9929-a89e8d632363" />
+
 ---
 
 ## 📌 Quick Links
